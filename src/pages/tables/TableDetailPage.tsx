@@ -1,30 +1,30 @@
-import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useTableStore } from '../../store/tableStore'
 import { OrderCard } from '../../components/waiter/OrderCard'
+import { useOrders } from '../../hooks/useOrders'
 import { orderService } from '../../services/orderService'
-import type { Order } from '../../types'
 
 export function TableDetailPage() {
   const { tableId } = useParams<{ tableId: string }>()
   const navigate = useNavigate()
   const { tables } = useTableStore()
 
-  const [orders, setOrders] = useState<Order[]>([])
-  const [loading, setLoading] = useState(true)
+  const { orders, connected } = useOrders(tableId)
 
   const table = tables.find(t => t.id === tableId)
-  const total = orders.reduce((acc, o) => acc + o.totalAmount, 0)
+  const visibleOrders = orders.filter(o => o.status !== 'Cancelled')
+  const total = visibleOrders
+    .filter(o => o.status !== 'Delivered')
+    .reduce((acc, o) => acc + o.totalAmount, 0)
   const hasReady = orders.some(o => o.status === 'Ready')
 
-  useEffect(() => {
-    if (!tableId) return
-    setLoading(true)
-    orderService.getOrdersByTable(tableId)
-      .then(setOrders)
-      .catch(console.error)
-      .finally(() => setLoading(false))
-  }, [tableId])
+  async function handleDeliver(orderId: string) {
+    try {
+      await orderService.updateStatus(orderId, 'Delivered')
+    } catch (e) {
+      console.error(e)
+    }
+  }
 
   if (!table) {
     return (
@@ -51,7 +51,7 @@ export function TableDetailPage() {
               Mesa {String(table.number).padStart(2, '0')}
             </h1>
             <p className="text-zinc-500 text-sm">
-              {loading ? 'Carregando...' : `${orders.length} pedido${orders.length !== 1 ? 's' : ''} · Total: R$ ${total.toFixed(2)}`}
+              {!connected ? 'Conectando...' : `${visibleOrders.length} pedido${visibleOrders.length !== 1 ? 's' : ''} · Total: R$ ${total.toFixed(2)}`}
             </p>
           </div>
         </div>
@@ -67,21 +67,25 @@ export function TableDetailPage() {
       {/* Pedidos */}
       <div className="px-5 py-4 flex flex-col gap-3">
         <p className="text-zinc-500 text-xs font-medium uppercase tracking-wider">
-          Pedidos ativos
+          Pedidos da mesa
         </p>
 
-        {loading ? (
+        {!connected ? (
           <div className="flex items-center justify-center py-12">
-            <p className="text-zinc-500">Carregando pedidos...</p>
+            <p className="text-zinc-500">Conectando...</p>
           </div>
-        ) : orders.length === 0 ? (
+        ) : visibleOrders.length === 0 ? (
           <div className="flex items-center justify-center py-12 flex-col gap-3">
             <i className="ti ti-clipboard-list text-zinc-600 text-4xl" />
             <p className="text-zinc-500">Nenhum pedido nesta mesa</p>
           </div>
         ) : (
-          orders.map(order => (
-            <OrderCard key={order.id} order={order} />
+          visibleOrders.map(order => (
+            <OrderCard
+              key={order.id}
+              order={order}
+              onDeliver={order.status === 'Ready' ? handleDeliver : undefined}
+            />
           ))
         )}
       </div>
@@ -96,7 +100,7 @@ export function TableDetailPage() {
           Novo pedido
         </button>
 
-        {orders.length > 0 && (
+        {visibleOrders.length > 0 && (
           <button
             onClick={() => navigate(`/tables/${tableId}/account`)}
             className="w-full py-3.5 rounded-xl bg-zinc-800 text-zinc-300 font-medium text-sm flex items-center justify-center gap-2 cursor-pointer hover:bg-zinc-700 transition-colors"

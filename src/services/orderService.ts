@@ -21,4 +21,8 @@ export const orderService = {
     const { data } = await bffOperacional.get<Order[]>('/api/orders')
     return data
   },
+
+  async updateStatus(orderId: string, status: string): Promise<void> {
+    await bffOperacional.patch(`/api/orders/${orderId}/status`, { status })
+  },
 }

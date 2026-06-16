@@ -3,6 +3,7 @@ import type { Order } from '../../types'
 interface OrderCardProps {
   order: Order
   onCancel?: (orderId: string) => void
+  onDeliver?: (orderId: string) => void
 }
 
 const statusConfig: Record<string, { label: string; bg: string; text: string }> = {
@@ -19,16 +20,18 @@ function getElapsedMinutes(createdAt: string): number {
   return Math.floor((Date.now() - date.getTime()) / 60000)
 }
 
-export function OrderCard({ order, onCancel }: OrderCardProps) {
+export function OrderCard({ order, onCancel, onDeliver }: OrderCardProps) {
   const config = statusConfig[order.status] ?? statusConfig.Pending
   const elapsed = getElapsedMinutes(order.createdAt)
 
   return (
-    <div className="bg-zinc-900 rounded-xl border border-zinc-800 overflow-hidden">
+    <div className={`bg-zinc-900 rounded-xl border overflow-hidden ${
+      order.status === 'Ready' ? 'border-emerald-900' : 'border-zinc-800'
+    }`}>
       <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-800">
         <div>
           <span className="text-white font-medium text-sm">
-            #{order.id.slice(-6).toUpperCase()}
+            #{((order.id ?? (order as any).Id) || '??????').toString().slice(-6).toUpperCase()}
           </span>
           <span className="ml-2 text-xs text-zinc-500">{elapsed} min atrás</span>
         </div>
@@ -58,14 +61,24 @@ export function OrderCard({ order, onCancel }: OrderCardProps) {
         <span className="text-white font-medium text-sm">
           Total: R$ {order.totalAmount.toFixed(2)}
         </span>
-        {order.status === 'Pending' && onCancel && (
-          <button
-            onClick={() => onCancel(order.id)}
-            className="text-xs px-3 py-1.5 rounded-lg bg-red-950 text-red-400 border border-red-900 hover:bg-red-900 transition-colors cursor-pointer"
-          >
-            Cancelar
-          </button>
-        )}
+        <div className="flex gap-2">
+          {order.status === 'Pending' && onCancel && (
+            <button
+              onClick={() => onCancel(order.id)}
+              className="text-xs px-3 py-1.5 rounded-lg bg-red-950 text-red-400 border border-red-900 hover:bg-red-900 transition-colors cursor-pointer"
+            >
+              Cancelar
+            </button>
+          )}
+          {order.status === 'Ready' && onDeliver && (
+            <button
+              onClick={() => onDeliver(order.id)}
+              className="text-xs px-3 py-1.5 rounded-lg bg-emerald-950 text-emerald-400 border border-emerald-900 hover:bg-emerald-900 transition-colors cursor-pointer"
+            >
+              Confirmar entrega
+            </button>
+          )}
+        </div>
       </div>
     </div>
   )

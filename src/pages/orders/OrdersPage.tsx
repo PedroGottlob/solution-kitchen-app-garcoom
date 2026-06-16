@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { OrderCard } from '../../components/waiter/OrderCard'
-import { orderService } from '../../services/orderService'
-import type { Order } from '../../types'
+import { useOrders } from '../../hooks/useOrders'
 
 type FilterStatus = 'all' | 'Pending' | 'Preparing' | 'Ready'
 
@@ -13,16 +12,8 @@ const filters: { label: string; value: FilterStatus }[] = [
 ]
 
 export function OrdersPage() {
-  const [orders, setOrders] = useState<Order[]>([])
-  const [loading, setLoading] = useState(true)
+  const { orders, connected } = useOrders()
   const [activeFilter, setActiveFilter] = useState<FilterStatus>('all')
-
-  useEffect(() => {
-    orderService.getAllOrders()
-      .then(setOrders)
-      .catch(console.error)
-      .finally(() => setLoading(false))
-  }, [])
 
   const filtered = orders.filter(o =>
     activeFilter === 'all' ? true : o.status === activeFilter
@@ -38,7 +29,7 @@ export function OrdersPage() {
         <div className="flex items-center justify-between mb-3">
           <h1 className="text-white text-xl font-medium">Pedidos</h1>
           <span className="text-zinc-500 text-sm">
-            {loading ? 'Carregando...' : `Hoje · ${orders.length} pedidos`}
+            {!connected ? 'Conectando...' : `Hoje · ${orders.length} pedidos`}
           </span>
         </div>
         <div className="flex gap-2 overflow-x-auto pb-1">
@@ -74,9 +65,9 @@ export function OrdersPage() {
       </div>
 
       <div className="px-5 flex flex-col gap-3">
-        {loading ? (
+        {!connected ? (
           <div className="flex items-center justify-center py-12">
-            <p className="text-zinc-500">Carregando pedidos...</p>
+            <p className="text-zinc-500">Conectando...</p>
           </div>
         ) : filtered.length === 0 ? (
           <div className="flex items-center justify-center py-12 flex-col gap-3">
