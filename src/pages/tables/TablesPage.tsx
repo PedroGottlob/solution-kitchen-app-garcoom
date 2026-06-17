@@ -15,11 +15,14 @@ export function TablesPage() {
   const [showNotifications, setShowNotifications] = useState(false)
 
   useEffect(() => {
-    tableService.getTableStatus()
-      .then(statusList => {
+    tableService.getTables()
+      .then(tableList => {
         tables.forEach(t => updateTableStatus(t.id, 'free', 0))
-        statusList.forEach(s => {
-          updateTableStatus(s.tableId, s.status as Table['status'], s.orderCount)
+        tableList.forEach(t => {
+          const status = t.status === 'Occupied' ? 'occupied'
+            : t.status === 'Closed' ? 'free'
+            : 'free'
+          updateTableStatus(t.id, status as Table['status'])
         })
       })
       .catch(console.error)

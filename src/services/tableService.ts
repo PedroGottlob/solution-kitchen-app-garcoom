@@ -1,14 +1,22 @@
 import { bffOperacional } from './api'
 
 export interface TableStatus {
-  tableId: string
-  status: 'occupied' | 'ready' | 'free'
-  orderCount: number
+  id: string
+  number: number
+  name?: string
+  status: 'Free' | 'Occupied' | 'Closed'
+  capacity: number
+  createdAt: string
+  occupiedAt?: string
 }
 
 export const tableService = {
-  async getTableStatus(): Promise<TableStatus[]> {
-    const { data } = await bffOperacional.get<TableStatus[]>('/api/tables/status')
+  async getTables(): Promise<TableStatus[]> {
+    const { data } = await bffOperacional.get<TableStatus[]>('/api/tables')
     return data
+  },
+
+  async closeTable(tableId: string): Promise<void> {
+    await bffOperacional.post(`/api/tables/${tableId}/close`)
   },
 }

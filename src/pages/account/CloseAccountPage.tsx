@@ -1,28 +1,8 @@
+import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useTableStore } from '../../store/tableStore'
-
-const mockAccountOrders = [
-  {
-    id: 'cb28ed3d',
-    items: [
-      { name: 'X-Burguer', quantity: 2, unitPrice: 25.90, notes: 'sem cebola' },
-      { name: 'Coca-Cola', quantity: 2, unitPrice: 8.00 },
-    ]
-  },
-  {
-    id: 'aaf51438',
-    items: [
-      { name: 'X-Burguer', quantity: 1, unitPrice: 25.90, notes: 'bem passado' },
-    ]
-  },
-  {
-    id: 'c0bdb115',
-    items: [
-      { name: 'Batata frita', quantity: 1, unitPrice: 18.00 },
-      { name: 'Suco de laranja', quantity: 2, unitPrice: 10.00 },
-    ]
-  },
-]
+import { useOrders } from '../../hooks/useOrders'
+import { tableService } from '../../services/tableService'
 
 const paymentMethods = [
   { id: 'pix', label: 'PIX', icon: 'ti-qrcode' },
@@ -35,16 +15,27 @@ export function CloseAccountPage() {
   const { tableId } = useParams<{ tableId: string }>()
   const navigate = useNavigate()
   const { tables, updateTableStatus } = useTableStore()
+  const { orders } = useOrders(tableId)
+  const [loading, setLoading] = useState(false)
+  const [split, setSplit] = useState(1)
 
   const table = tables.find(t => t.id === tableId)
+  const allItems = orders.flatMap(o => o.items)
+  const total = orders.reduce((acc, o) => acc + o.totalAmount, 0)
+  const splitTotal = total / split
 
-  const allItems = mockAccountOrders.flatMap(o => o.items)
-  const subtotal = allItems.reduce((acc, i) => acc + i.unitPrice * i.quantity, 0)
-  const total = subtotal
-
-  function handleCloseAccount(method: string) {
-    updateTableStatus(tableId!, 'free')
-    navigate('/')
+  async function handleCloseAccount(method: string) {
+    if (!tableId) return
+    setLoading(true)
+    try {
+      await tableService.closeTable(tableId)
+      updateTableStatus(tableId, 'free', 0)
+      navigate('/')
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -75,27 +66,33 @@ export function CloseAccountPage() {
         </p>
 
         <div className="bg-zinc-900 rounded-xl border border-zinc-800 overflow-hidden">
-          {allItems.map((item, i) => (
-            <div
-              key={i}
-              className={`flex items-center justify-between px-4 py-3 ${
-                i < allItems.length - 1 ? 'border-b border-zinc-800' : ''
-              }`}
-            >
-              <div>
-                <p className="text-white text-sm">
-                  <span className="text-violet-400">{item.quantity}× </span>
-                  {item.name}
-                </p>
-                {item.notes && (
-                  <p className="text-zinc-500 text-xs">{item.notes}</p>
-                )}
-              </div>
-              <span className="text-zinc-300 text-sm">
-                R$ {(item.unitPrice * item.quantity).toFixed(2)}
-              </span>
+          {allItems.length === 0 ? (
+            <div className="px-4 py-6 text-center text-zinc-500 text-sm">
+              Carregando pedidos...
             </div>
-          ))}
+          ) : (
+            allItems.map((item, i) => (
+              <div
+                key={i}
+                className={`flex items-center justify-between px-4 py-3 ${
+                  i < allItems.length - 1 ? 'border-b border-zinc-800' : ''
+                }`}
+              >
+                <div>
+                  <p className="text-white text-sm">
+                    <span className="text-violet-400">{item.quantity}× </span>
+                    {item.name}
+                  </p>
+                  {item.notes && (
+                    <p className="text-zinc-500 text-xs">{item.notes}</p>
+                  )}
+                </div>
+                <span className="text-zinc-300 text-sm">
+                  R$ {(item.unitPrice * item.quantity).toFixed(2)}
+                </span>
+              </div>
+            ))
+          )}
 
           <div className="flex items-center justify-between px-4 py-3 border-t border-zinc-700 bg-zinc-800">
             <span className="text-white font-medium">Total</span>
@@ -115,12 +112,22 @@ export function CloseAccountPage() {
           {[1, 2, 3, 4].map(n => (
             <button
               key={n}
-              className="flex-1 py-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-300 text-sm cursor-pointer hover:border-violet-900 hover:text-violet-400 hover:bg-violet-950 transition-colors"
+              onClick={() => setSplit(n)}
+              className={`flex-1 py-2.5 rounded-xl border text-sm cursor-pointer transition-colors ${
+                split === n
+                  ? 'bg-violet-950 border-violet-900 text-violet-400'
+                  : 'bg-zinc-900 border-zinc-800 text-zinc-300 hover:border-violet-900 hover:text-violet-400 hover:bg-violet-950'
+              }`}
             >
               {n === 1 ? 'Sem dividir' : `÷ ${n}`}
             </button>
           ))}
         </div>
+        {split > 1 && (
+          <p className="text-zinc-500 text-xs mt-2 text-center">
+            R$ {splitTotal.toFixed(2)} por pessoa
+          </p>
+        )}
       </div>
 
       {/* Formas de pagamento */}
@@ -133,14 +140,15 @@ export function CloseAccountPage() {
             <button
               key={method.id}
               onClick={() => handleCloseAccount(method.id)}
-              className="bg-zinc-900 border border-zinc-800 rounded-xl py-4 flex flex-col items-center gap-2 cursor-pointer hover:border-violet-900 hover:bg-violet-950 transition-colors group"
+              disabled={loading}
+              className="bg-zinc-900 border border-zinc-800 rounded-xl py-4 flex flex-col items-center gap-2 cursor-pointer hover:border-violet-900 hover:bg-violet-950 transition-colors group disabled:opacity-50"
             >
               <i className={`ti ${method.icon} text-2xl text-zinc-400 group-hover:text-violet-400`} />
               <span className="text-zinc-300 text-sm group-hover:text-violet-400">
                 {method.label}
               </span>
               <span className="text-zinc-500 text-xs">
-                R$ {total.toFixed(2)}
+                R$ {splitTotal.toFixed(2)}
               </span>
             </button>
           ))}
