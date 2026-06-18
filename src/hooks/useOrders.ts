@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import type { Order } from '../types'
-
-const BASE_URL = import.meta.env.VITE_BFF_OPERACIONAL_URL || 'http://localhost:5159'
-const TENANT_ID = import.meta.env.VITE_TENANT_ID || '00000000-0000-0000-0000-000000000001'
+import { signalRService } from '../services/signalRService'
+import { useTableStore } from '../store/tableStore'
 
 function mapOrder(raw: any): Order {
   return {
@@ -23,36 +22,32 @@ function mapOrder(raw: any): Order {
 }
 
 export function useOrders(tableId?: string) {
-  const [orders, setOrders] = useState<Order[]>([])
-  const [connected, setConnected] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const { orders, setOrders } = useTableStore()
+
+  const filtered = tableId
+    ? orders.filter(o => o.tableId === tableId)
+    : orders
 
   useEffect(() => {
-    const url = tableId
-      ? `${BASE_URL}/api/orders/stream?tableId=${tableId}&tenantId=${TENANT_ID}`
-      : `${BASE_URL}/api/orders/stream?tenantId=${TENANT_ID}`
+    if (tableId) {
+      signalRService.joinTable(tableId)
+    }
 
-    const source = new EventSource(url)
-
-    source.onmessage = (event: MessageEvent) => {
+    const unsubscribe = signalRService.onOrdersUpdated((data: string) => {
       try {
-        const raw = JSON.parse(event.data)
-        const data = Array.isArray(raw) ? raw.map(mapOrder) : []
-        setOrders(data)
-        setConnected(true)
-        setError(null)
+        const raw = JSON.parse(data)
+        const allOrders = Array.isArray(raw) ? raw.map(mapOrder) : []
+        setOrders(allOrders)
       } catch (e) {
-        console.error('Erro ao parsear SSE:', e)
+        console.error('Erro ao parsear mensagem SignalR:', e)
       }
-    }
+    })
 
-    source.onerror = () => {
-      setConnected(false)
-      setError('Conexão perdida. Reconectando...')
+    return () => {
+      unsubscribe()
+      if (tableId) signalRService.leaveTable(tableId)
     }
-
-    return () => source.close()
   }, [tableId])
 
-  return { orders, connected, error }
+  return { orders: filtered, connected: true, error: null }
 }
