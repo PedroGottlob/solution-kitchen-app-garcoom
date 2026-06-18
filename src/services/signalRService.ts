@@ -24,10 +24,25 @@ class SignalRService {
 
     this.connection.onreconnected(async () => {
       await this.connection!.invoke('JoinTenant', TENANT_ID)
+      await this.fetchAndNotify()
     })
 
     await this.connection.start()
     await this.connection.invoke('JoinTenant', TENANT_ID)
+    await this.fetchAndNotify()
+  }
+
+  private async fetchAndNotify() {
+    try {
+      const response = await fetch(`${BASE_URL}/api/orders`, {
+        headers: { 'X-Tenant-Id': TENANT_ID }
+      })
+      const orders = await response.json()
+      const data = JSON.stringify(orders)
+      this.listeners.get('OrdersUpdated')?.forEach(cb => cb(data))
+    } catch (e) {
+      console.error('Erro ao buscar pedidos iniciais:', e)
+    }
   }
 
   async joinTable(tableId: string) {

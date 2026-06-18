@@ -5,16 +5,21 @@ import { useNotificationStore } from '../../store/notificationStore'
 import { TableCard } from '../../components/waiter/TableCard'
 import { NotificationDropdown } from '../../components/common/NotificationDropdown'
 import { tableService } from '../../services/tableService'
-import type { Table } from '../../types'
+import { orderService } from '../../services/orderService'
+import { useOrders } from '../../hooks/useOrders'
+import type { Table, Order } from '../../types'
 
 export function TablesPage() {
-  const { tables, updateTableStatus, selectTable } = useTableStore()
+  const { tables, updateTableStatus, selectTable, setOrders } = useTableStore()
   const navigate = useNavigate()
   const unreadCount = useNotificationStore(state => state.unreadCount)
   const unread = unreadCount()
   const [showNotifications, setShowNotifications] = useState(false)
 
+  useOrders() // Mantém listener ativo para atualizar orderCount das mesas
+
   useEffect(() => {
+    // Busca status das mesas
     tableService.getTables()
       .then(tableList => {
         tables.forEach(t => updateTableStatus(t.id, 'free', 0))
@@ -23,6 +28,22 @@ export function TablesPage() {
             : t.status === 'Closed' ? 'free'
             : 'free'
           updateTableStatus(t.id, status as Table['status'])
+        })
+      })
+      .catch(console.error)
+
+    // Busca pedidos iniciais para popular orderCount
+    orderService.getAllOrders()
+      .then(orders => {
+        setOrders(orders)
+        const countByTable = orders.reduce((acc: Record<string, number>, o: Order) => {
+          if (o.status !== 'Cancelled') {
+            acc[o.tableId] = (acc[o.tableId] ?? 0) + 1
+          }
+          return acc
+        }, {})
+        Object.entries(countByTable).forEach(([tid, count]) => {
+          updateTableStatus(tid, 'occupied', count)
         })
       })
       .catch(console.error)

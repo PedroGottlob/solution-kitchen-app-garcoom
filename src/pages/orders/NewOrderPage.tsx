@@ -1,14 +1,17 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useCartStore } from '../../store/cartStore'
+import { useTableStore } from '../../store/tableStore'
 import { orderService } from '../../services/orderService'
 import { menuService } from '../../services/menuService'
 import type { MenuItem } from '../../services/menuService'
+import type { Order } from '../../types'
 
 export function NewOrderPage() {
   const { tableId } = useParams<{ tableId: string }>()
   const navigate = useNavigate()
   const { items, addItem, incrementItem, decrementItem, clearCart, total } = useCartStore()
+  const { orders: allOrders, setOrders } = useTableStore()
   const [activeCategory, setActiveCategory] = useState('Todos')
   const [loading, setLoading] = useState(false)
   const [menuItems, setMenuItems] = useState<MenuItem[]>([])
@@ -31,16 +34,38 @@ export function NewOrderPage() {
   async function handleConfirm() {
     if (items.length === 0) return
     setLoading(true)
+
+    const optimisticOrder: Order = {
+      id: `optimistic-${Date.now()}`,
+      tableId: tableId!,
+      status: 'Pending',
+      source: 'waiter',
+      totalAmount: total(),
+      createdAt: new Date().toISOString(),
+      items: items.map(i => ({
+        itemId: i.itemId,
+        name: i.name,
+        quantity: i.quantity,
+        unitPrice: i.unitPrice,
+        notes: notes[i.itemId],
+      })),
+    }
+
+    setOrders([...allOrders, optimisticOrder])
+    clearCart()
+    navigate(`/tables/${tableId}`)
+
     try {
       await orderService.createOrder({
         tableId: tableId!,
         source: 'waiter',
         items: items.map(i => ({ ...i, notes: notes[i.itemId] })),
       })
-      clearCart()
-      navigate(`/tables/${tableId}`)
+      // SignalR vai substituir o optimistic com o pedido real
     } catch (e) {
       console.error(e)
+      // Remove o optimistic em caso de erro
+      setOrders(allOrders.filter(o => o.id !== optimisticOrder.id))
     } finally {
       setLoading(false)
     }

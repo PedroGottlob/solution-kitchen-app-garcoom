@@ -22,7 +22,7 @@ function mapOrder(raw: any): Order {
 }
 
 export function useOrders(tableId?: string) {
-  const { orders, setOrders } = useTableStore()
+  const { orders, setOrders, updateTableStatus } = useTableStore()
 
   const filtered = tableId
     ? orders.filter(o => o.tableId === tableId)
@@ -38,6 +38,17 @@ export function useOrders(tableId?: string) {
         const raw = JSON.parse(data)
         const allOrders = Array.isArray(raw) ? raw.map(mapOrder) : []
         setOrders(allOrders)
+
+        const countByTable = allOrders.reduce((acc: Record<string, number>, o: Order) => {
+          if (o.status !== 'Cancelled') {
+            acc[o.tableId] = (acc[o.tableId] ?? 0) + 1
+          }
+          return acc
+        }, {})
+
+        Object.entries(countByTable).forEach(([tid, count]) => {
+          updateTableStatus(tid, 'occupied', count)
+        })
       } catch (e) {
         console.error('Erro ao parsear mensagem SignalR:', e)
       }
