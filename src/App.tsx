@@ -9,6 +9,7 @@ import { NewOrderPage } from './pages/orders/NewOrderPage'
 import { CloseAccountPage } from './pages/account/CloseAccountPage'
 import { ProfilePage } from './pages/profile/ProfilePage'
 import { setTenantId } from './services/api'
+import { signalRService } from './services/signalRService'
 
 const NAMESPACE = 'https://solution-kitchen.com'
 
@@ -54,8 +55,10 @@ function App() {
     )
   }
 
-  // Injeta o tenantId do JWT nas instâncias do axios
+  // Injeta o tenantId do JWT nas instâncias do axios e SignalR
   setTenantId(tenantId)
+  signalRService.setTenantId(tenantId)
+  signalRService.connect().catch(console.error)
 
   return (
     <BrowserRouter>
