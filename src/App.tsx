@@ -8,6 +8,7 @@ import { TableDetailPage } from './pages/tables/TableDetailPage'
 import { NewOrderPage } from './pages/orders/NewOrderPage'
 import { CloseAccountPage } from './pages/account/CloseAccountPage'
 import { ProfilePage } from './pages/profile/ProfilePage'
+import { setTenantId } from './services/api'
 
 const NAMESPACE = 'https://solution-kitchen.com'
 
@@ -53,7 +54,8 @@ function App() {
     )
   }
 
-  console.log('[Auth] Role:', roles, '| TenantId:', tenantId)
+  // Injeta o tenantId do JWT nas instâncias do axios
+  setTenantId(tenantId)
 
   return (
     <BrowserRouter>
