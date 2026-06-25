@@ -26,6 +26,10 @@ class SignalRService {
       this.listeners.get('OrdersUpdated')?.forEach(cb => cb(data))
     })
 
+    this.connection.on('PaymentConfirmed', (data: string) => {
+      this.listeners.get('PaymentConfirmed')?.forEach(cb => cb(data))
+    })
+
     this.connection.onreconnected(async () => {
       await this.connection!.invoke('JoinTenant', this.tenantId)
       await this.fetchAndNotify()
@@ -67,6 +71,14 @@ class SignalRService {
     }
     this.listeners.get('OrdersUpdated')!.add(callback)
     return () => this.listeners.get('OrdersUpdated')?.delete(callback)
+  }
+
+  onPaymentConfirmed(callback: (data: string) => void) {
+    if (!this.listeners.has('PaymentConfirmed')) {
+      this.listeners.set('PaymentConfirmed', new Set())
+    }
+    this.listeners.get('PaymentConfirmed')!.add(callback)
+    return () => this.listeners.get('PaymentConfirmed')?.delete(callback)
   }
 
   get state() {

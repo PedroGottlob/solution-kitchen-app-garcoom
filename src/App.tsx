@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useAuth0 } from '@auth0/auth0-react'
 import { BottomNav } from './components/common/BottomNav'
 import { TablesPage } from './pages/tables/TablesPage'
@@ -8,6 +8,7 @@ import { TableDetailPage } from './pages/tables/TableDetailPage'
 import { NewOrderPage } from './pages/orders/NewOrderPage'
 import { CloseAccountPage } from './pages/account/CloseAccountPage'
 import { ProfilePage } from './pages/profile/ProfilePage'
+import { DashboardPage } from './pages/dashboard/DashboardPage'
 import { setTenantId } from './services/api'
 import { signalRService } from './services/signalRService'
 
@@ -18,6 +19,7 @@ function App() {
 
   const roles: string[] = user?.[`${NAMESPACE}/roles`] ?? []
   const tenantId: string = user?.[`${NAMESPACE}/tenant_id`] ?? '00000000-0000-0000-0000-000000000001'
+  const isGerente = roles.includes('gerente')
 
   if (isLoading) {
     return (
@@ -55,7 +57,6 @@ function App() {
     )
   }
 
-  // Injeta o tenantId do JWT nas instâncias do axios e SignalR
   setTenantId(tenantId)
   signalRService.setTenantId(tenantId)
   signalRService.connect().catch(console.error)
@@ -71,8 +72,12 @@ function App() {
           <Route path="/tables/:tableId/new-order" element={<NewOrderPage />} />
           <Route path="/tables/:tableId/account" element={<CloseAccountPage />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route
+            path="/dashboard"
+            element={isGerente ? <DashboardPage /> : <Navigate to="/" replace />}
+          />
         </Routes>
-        <BottomNav />
+        <BottomNav isGerente={isGerente} />
       </div>
     </BrowserRouter>
   )

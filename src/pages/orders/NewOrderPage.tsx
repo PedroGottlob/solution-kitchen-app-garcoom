@@ -15,7 +15,7 @@ export function NewOrderPage() {
   const [activeCategory, setActiveCategory] = useState('Todos')
   const [loading, setLoading] = useState(false)
   const [menuItems, setMenuItems] = useState<MenuItem[]>([])
-  const [notes, setNotes] = useState<Record<string, string>>({})
+  const [notes] = useState<Record<string, string>>({})
 
   useEffect(() => {
     menuService.getMenuItems().then(setMenuItems).catch(console.error)

@@ -1,14 +1,15 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useTableStore } from '../../store/tableStore'
 import { useOrders } from '../../hooks/useOrders'
-import { tableService } from '../../services/tableService'
+import { paymentService, type PaymentMethod, type PaymentResponse } from '../../services/paymentService'
+import { signalRService } from '../../services/signalRService'
 
-const paymentMethods = [
-  { id: 'pix', label: 'PIX', icon: 'ti-qrcode' },
-  { id: 'credit', label: 'Crédito', icon: 'ti-credit-card' },
-  { id: 'debit', label: 'Débito', icon: 'ti-credit-card' },
-  { id: 'cash', label: 'Dinheiro', icon: 'ti-cash' },
+const paymentMethods: { id: PaymentMethod; label: string; icon: string }[] = [
+  { id: 'Pix', label: 'PIX', icon: 'ti-qrcode' },
+  { id: 'CreditCard', label: 'Crédito', icon: 'ti-credit-card' },
+  { id: 'DebitCard', label: 'Débito', icon: 'ti-credit-card' },
+  { id: 'Cash', label: 'Dinheiro', icon: 'ti-cash' },
 ]
 
 export function CloseAccountPage() {
@@ -18,17 +19,50 @@ export function CloseAccountPage() {
   const { orders } = useOrders(tableId)
   const [loading, setLoading] = useState(false)
   const [split, setSplit] = useState(1)
+  const [pixPayment, setPixPayment] = useState<PaymentResponse | null>(null)
 
   const table = tables.find(t => t.id === tableId)
   const allItems = orders.flatMap(o => o.items)
   const total = orders.reduce((acc, o) => acc + o.totalAmount, 0)
   const splitTotal = total / split
 
-  async function handleCloseAccount(method: string) {
+  useEffect(() => {
+    if (!pixPayment || !tableId) return
+
+    signalRService.joinTable(tableId)
+
+    const unsubscribe = signalRService.onPaymentConfirmed((data: string) => {
+      const payload = JSON.parse(data)
+      console.log('PaymentConfirmed recebido:', payload)
+      console.log('tableId local:', tableId)
+      console.log('são iguais?', payload.tableId === tableId)
+      if (payload.tableId === tableId) {
+        updateTableStatus(tableId, 'free', 0)
+        navigate('/')
+      }
+    })
+
+    return () => {
+      unsubscribe()
+      signalRService.leaveTable(tableId)
+    }
+  }, [pixPayment, tableId])
+
+  async function handleCloseAccount(method: PaymentMethod) {
     if (!tableId) return
     setLoading(true)
     try {
-      await tableService.closeTable(tableId)
+      const payment = await paymentService.createPayment({
+        tableId,
+        amount: total,
+        method
+      })
+
+      if (method === 'Pix') {
+        setPixPayment(payment)
+        return
+      }
+
       updateTableStatus(tableId, 'free', 0)
       navigate('/')
     } catch (e) {
@@ -36,6 +70,46 @@ export function CloseAccountPage() {
     } finally {
       setLoading(false)
     }
+  }
+
+  // Tela do QR Code PIX
+  if (pixPayment) {
+    return (
+      <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center px-5 gap-6">
+        <div className="text-center">
+          <h1 className="text-white text-xl font-medium mb-1">Pague com PIX</h1>
+          <p className="text-zinc-500 text-sm">Escaneie o QR Code abaixo</p>
+        </div>
+
+        {pixPayment.pixQrCodeBase64 && (
+          <div className="bg-white p-4 rounded-2xl">
+            <img
+              src={`data:image/png;base64,${pixPayment.pixQrCodeBase64}`}
+              alt="QR Code PIX"
+              className="w-56 h-56"
+            />
+          </div>
+        )}
+
+        <div className="w-full bg-zinc-900 rounded-xl p-4">
+          <p className="text-zinc-500 text-xs mb-2">Copia e cola</p>
+          <p className="text-white text-xs break-all">{pixPayment.pixQrCode}</p>
+        </div>
+
+        <p className="text-violet-400 text-2xl font-medium">
+          R$ {total.toFixed(2)}
+        </p>
+
+        <p className="text-zinc-500 text-sm">Aguardando pagamento...</p>
+
+        <button
+          onClick={() => setPixPayment(null)}
+          className="text-zinc-500 text-sm underline cursor-pointer"
+        >
+          Voltar
+        </button>
+      </div>
+    )
   }
 
   return (
@@ -64,7 +138,6 @@ export function CloseAccountPage() {
         <p className="text-zinc-500 text-xs font-medium uppercase tracking-wider mb-3">
           Resumo do consumo
         </p>
-
         <div className="bg-zinc-900 rounded-xl border border-zinc-800 overflow-hidden">
           {allItems.length === 0 ? (
             <div className="px-4 py-6 text-center text-zinc-500 text-sm">
@@ -93,7 +166,6 @@ export function CloseAccountPage() {
               </div>
             ))
           )}
-
           <div className="flex items-center justify-between px-4 py-3 border-t border-zinc-700 bg-zinc-800">
             <span className="text-white font-medium">Total</span>
             <span className="text-white font-medium text-lg">

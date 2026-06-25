@@ -1,15 +1,24 @@
 import { useLocation, useNavigate } from 'react-router-dom'
 
-const tabs = [
+const baseTabs = [
   { path: '/', icon: 'ti-layout-grid', label: 'Mesas' },
   { path: '/orders', icon: 'ti-clipboard-list', label: 'Pedidos' },
   { path: '/account', icon: 'ti-receipt', label: 'Conta' },
   { path: '/profile', icon: 'ti-user', label: 'Perfil' },
 ]
 
-export function BottomNav() {
+const gerenteTabs = [
+  { path: '/', icon: 'ti-layout-grid', label: 'Mesas' },
+  { path: '/orders', icon: 'ti-clipboard-list', label: 'Pedidos' },
+  { path: '/account', icon: 'ti-receipt', label: 'Conta' },
+  { path: '/dashboard', icon: 'ti-chart-bar', label: 'Dashboard' },
+  { path: '/profile', icon: 'ti-user', label: 'Perfil' },
+]
+
+export function BottomNav({ isGerente }: { isGerente: boolean }) {
   const location = useLocation()
   const navigate = useNavigate()
+  const tabs = isGerente ? gerenteTabs : baseTabs
 
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-zinc-900 border-t border-zinc-800 flex z-50">
