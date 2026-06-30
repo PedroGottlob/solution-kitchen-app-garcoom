@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import type { Order } from '../types'
 import { signalRService } from '../services/signalRService'
 import { useTableStore } from '../store/tableStore'
@@ -22,39 +22,25 @@ function mapOrder(raw: any): Order {
 }
 
 export function useOrders(tableId?: string) {
-  const { orders, setOrders, updateTableStatus, tables } = useTableStore()
-
-  const filtered = tableId
-    ? orders.filter(o => o.tableId === tableId)
-    : orders
+  const storedOrders = useTableStore(state => state.orders)
+  const setStoredOrders = useTableStore(state => state.setOrders)
+  const [localOrders, setLocalOrders] = useState<Order[]>(storedOrders)
 
   useEffect(() => {
-    if (tableId) {
-      signalRService.joinTable(tableId)
-    }
+    setLocalOrders(storedOrders)
+  }, [storedOrders])
+
+  useEffect(() => {
+    if (tableId) signalRService.joinTable(tableId)
 
     const unsubscribe = signalRService.onOrdersUpdated((data: string) => {
       try {
         const raw = JSON.parse(data)
-        const allOrders = Array.isArray(raw) ? raw.map(mapOrder) : []
-        setOrders(allOrders)
-
-        const countByTable = allOrders.reduce((acc: Record<string, number>, o: Order) => {
-          if (o.status !== 'Cancelled') {
-            acc[o.tableId] = (acc[o.tableId] ?? 0) + 1
-          }
-          return acc
-        }, {})
-
-        tables.forEach(t => {
-          if (countByTable[t.id]) {
-            updateTableStatus(t.id, 'occupied', countByTable[t.id])
-          } else {
-            updateTableStatus(t.id, 'free', 0)
-          }
-        })
+        const all = Array.isArray(raw) ? raw.map(mapOrder) : []
+        setLocalOrders(all)
+        setStoredOrders(all)
       } catch (e) {
-        console.error('Erro ao parsear mensagem SignalR:', e)
+        console.error('Erro ao parsear orders:', e)
       }
     })
 
@@ -63,6 +49,10 @@ export function useOrders(tableId?: string) {
       if (tableId) signalRService.leaveTable(tableId)
     }
   }, [tableId])
+
+  const filtered = tableId
+    ? localOrders.filter(o => o.tableId === tableId)
+    : localOrders
 
   return { orders: filtered, connected: true, error: null }
 }

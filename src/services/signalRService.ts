@@ -12,7 +12,14 @@ class SignalRService {
   }
 
   async connect() {
-    if (this.connection?.state === signalR.HubConnectionState.Connected) return
+    if (this.connection) {
+      const state = this.connection.state
+      if (
+        state === signalR.HubConnectionState.Connected ||
+        state === signalR.HubConnectionState.Connecting ||
+        state === signalR.HubConnectionState.Reconnecting
+      ) return
+    }
 
     this.connection = new signalR.HubConnectionBuilder()
       .withUrl(`${BASE_URL}/hubs/orders`, {
@@ -35,9 +42,14 @@ class SignalRService {
       await this.fetchAndNotify()
     })
 
-    await this.connection.start()
-    await this.connection.invoke('JoinTenant', this.tenantId)
-    await this.fetchAndNotify()
+    try {
+      await this.connection.start()
+      await this.connection.invoke('JoinTenant', this.tenantId)
+      await this.fetchAndNotify()
+    } catch (e) {
+      console.error('Erro ao conectar SignalR:', e)
+      this.connection = null
+    }
   }
 
   private async fetchAndNotify() {
@@ -46,8 +58,7 @@ class SignalRService {
         headers: { 'X-Tenant-Id': this.tenantId }
       })
       const orders = await response.json()
-      const data = JSON.stringify(orders)
-      this.listeners.get('OrdersUpdated')?.forEach(cb => cb(data))
+      this.listeners.get('OrdersUpdated')?.forEach(cb => cb(JSON.stringify(orders)))
     } catch (e) {
       console.error('Erro ao buscar pedidos iniciais:', e)
     }

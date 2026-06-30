@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useAuth0 } from '@auth0/auth0-react'
 import { BottomNav } from './components/common/BottomNav'
@@ -11,6 +12,7 @@ import { ProfilePage } from './pages/profile/ProfilePage'
 import { DashboardPage } from './pages/dashboard/DashboardPage'
 import { setTenantId } from './services/api'
 import { signalRService } from './services/signalRService'
+import { MenuManagementPage } from './pages/menu/MenuManagementPage'
 
 const NAMESPACE = 'https://solution-kitchen.com'
 
@@ -20,6 +22,16 @@ function App() {
   const roles: string[] = user?.[`${NAMESPACE}/roles`] ?? []
   const tenantId: string = user?.[`${NAMESPACE}/tenant_id`] ?? '00000000-0000-0000-0000-000000000001'
   const isGerente = roles.includes('gerente')
+
+  useEffect(() => {
+    if (!isAuthenticated) return
+    if (!user) return
+    if (!roles.includes('garcom') && !roles.includes('gerente')) return
+
+    setTenantId(tenantId)
+    signalRService.setTenantId(tenantId)
+    signalRService.connect().catch(console.error)
+  }, [isAuthenticated, user, tenantId])
 
   if (isLoading) {
     return (
@@ -57,10 +69,6 @@ function App() {
     )
   }
 
-  setTenantId(tenantId)
-  signalRService.setTenantId(tenantId)
-  signalRService.connect().catch(console.error)
-
   return (
     <BrowserRouter>
       <div className="min-h-screen bg-zinc-950">
@@ -75,6 +83,10 @@ function App() {
           <Route
             path="/dashboard"
             element={isGerente ? <DashboardPage /> : <Navigate to="/" replace />}
+          />
+          <Route
+            path="/menu"
+            element={isGerente ? <MenuManagementPage /> : <Navigate to="/" replace />}
           />
         </Routes>
         <BottomNav isGerente={isGerente} />

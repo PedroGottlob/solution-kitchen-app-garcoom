@@ -10,7 +10,7 @@ const baseTabs = [
 const gerenteTabs = [
   { path: '/', icon: 'ti-layout-grid', label: 'Mesas' },
   { path: '/orders', icon: 'ti-clipboard-list', label: 'Pedidos' },
-  { path: '/account', icon: 'ti-receipt', label: 'Conta' },
+  { path: '/menu', icon: 'ti-book', label: 'Cardápio' },
   { path: '/dashboard', icon: 'ti-chart-bar', label: 'Dashboard' },
   { path: '/profile', icon: 'ti-user', label: 'Perfil' },
 ]
