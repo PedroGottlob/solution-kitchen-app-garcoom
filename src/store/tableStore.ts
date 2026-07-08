@@ -13,20 +13,7 @@ interface TableStore {
 }
 
 export const useTableStore = create<TableStore>((set) => ({
-  tables: [
-    { id: '00000000-0000-0000-0000-000000000001', number: 1, status: 'free' },
-    { id: '00000000-0000-0000-0000-000000000002', number: 2, status: 'free' },
-    { id: '00000000-0000-0000-0000-000000000003', number: 3, status: 'free' },
-    { id: '00000000-0000-0000-0000-000000000004', number: 4, status: 'free' },
-    { id: '00000000-0000-0000-0000-000000000005', number: 5, status: 'free' },
-    { id: '00000000-0000-0000-0000-000000000006', number: 6, status: 'free' },
-    { id: '00000000-0000-0000-0000-000000000007', number: 7, status: 'free' },
-    { id: '00000000-0000-0000-0000-000000000008', number: 8, status: 'free' },
-    { id: '00000000-0000-0000-0000-000000000009', number: 9, status: 'free' },
-    { id: '00000000-0000-0000-0000-000000000010', number: 10, status: 'free' },
-    { id: '00000000-0000-0000-0000-000000000011', number: 11, status: 'free' },
-    { id: '00000000-0000-0000-0000-000000000012', number: 12, status: 'free' },
-  ],
+  tables: [],
   selectedTable: null,
   orders: [],
   setTables: (tables) => set({ tables }),

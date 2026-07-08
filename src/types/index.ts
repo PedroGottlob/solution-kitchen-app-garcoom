@@ -1,7 +1,9 @@
 export interface Table {
   id: string
   number: number
+  name?: string
   status: 'free' | 'occupied' | 'ready'
+  capacity?: number
   orderCount?: number
 }
 

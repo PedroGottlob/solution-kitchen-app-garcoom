@@ -13,6 +13,7 @@ import { DashboardPage } from './pages/dashboard/DashboardPage'
 import { setTenantId } from './services/api'
 import { signalRService } from './services/signalRService'
 import { MenuManagementPage } from './pages/menu/MenuManagementPage'
+import { TableManagementPage } from './pages/tables/TableManagementPage'
 
 const NAMESPACE = 'https://solution-kitchen.com'
 
@@ -73,9 +74,13 @@ function App() {
     <BrowserRouter>
       <div className="min-h-screen bg-zinc-950">
         <Routes>
-          <Route path="/" element={<TablesPage />} />
+          <Route path="/" element={<TablesPage isGerente={isGerente} />} />
           <Route path="/orders" element={<OrdersPage />} />
           <Route path="/account" element={<AccountPage />} />
+          <Route
+            path="/tables/manage"
+            element={isGerente ? <TableManagementPage /> : <Navigate to="/" replace />}
+          />
           <Route path="/tables/:tableId" element={<TableDetailPage />} />
           <Route path="/tables/:tableId/new-order" element={<NewOrderPage />} />
           <Route path="/tables/:tableId/account" element={<CloseAccountPage />} />

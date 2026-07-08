@@ -18,8 +18,13 @@ class SignalRService {
         state === signalR.HubConnectionState.Connected ||
         state === signalR.HubConnectionState.Connecting ||
         state === signalR.HubConnectionState.Reconnecting
-      ) return
+      ) {
+        console.log(`[SignalR] connect() ignorado, estado já é: ${state}`)
+        return
+      }
     }
+
+    console.log('[SignalR] Iniciando nova conexão...')
 
     this.connection = new signalR.HubConnectionBuilder()
       .withUrl(`${BASE_URL}/hubs/orders`, {
@@ -30,6 +35,7 @@ class SignalRService {
       .build()
 
     this.connection.on('OrdersUpdated', (data: string) => {
+      console.log(`[SignalR] OrdersUpdated recebido do servidor, ${this.listeners.get('OrdersUpdated')?.size ?? 0} listeners registrados`)
       this.listeners.get('OrdersUpdated')?.forEach(cb => cb(data))
     })
 
@@ -38,16 +44,27 @@ class SignalRService {
     })
 
     this.connection.onreconnected(async () => {
+      console.log('[SignalR] Reconectado!')
       await this.connection!.invoke('JoinTenant', this.tenantId)
       await this.fetchAndNotify()
     })
 
+    this.connection.onreconnecting(() => {
+      console.log('[SignalR] Reconectando...')
+    })
+
+    this.connection.onclose((error) => {
+      console.log('[SignalR] Conexão fechada.', error)
+    })
+
     try {
       await this.connection.start()
+      console.log('[SignalR] Conexão estabelecida com sucesso. State:', this.connection.state)
       await this.connection.invoke('JoinTenant', this.tenantId)
+      console.log('[SignalR] JoinTenant concluído')
       await this.fetchAndNotify()
     } catch (e) {
-      console.error('Erro ao conectar SignalR:', e)
+      console.error('[SignalR] Erro ao conectar:', e)
       this.connection = null
     }
   }
@@ -58,21 +75,26 @@ class SignalRService {
         headers: { 'X-Tenant-Id': this.tenantId }
       })
       const orders = await response.json()
+      console.log(`[SignalR] fetchAndNotify: ${orders.length} pedidos carregados inicialmente`)
       this.listeners.get('OrdersUpdated')?.forEach(cb => cb(JSON.stringify(orders)))
     } catch (e) {
-      console.error('Erro ao buscar pedidos iniciais:', e)
+      console.error('[SignalR] Erro ao buscar pedidos iniciais:', e)
     }
   }
 
   async joinTable(tableId: string) {
     if (this.connection?.state === signalR.HubConnectionState.Connected) {
       await this.connection.invoke('JoinTable', this.tenantId, tableId)
+      console.log(`[SignalR] JoinTable concluído: ${tableId}`)
+    } else {
+      console.warn(`[SignalR] joinTable chamado mas connection não está Connected. State: ${this.connection?.state}`)
     }
   }
 
   async leaveTable(tableId: string) {
     if (this.connection?.state === signalR.HubConnectionState.Connected) {
       await this.connection.invoke('LeaveTable', this.tenantId, tableId)
+      console.log(`[SignalR] LeaveTable concluído: ${tableId}`)
     }
   }
 
@@ -81,7 +103,11 @@ class SignalRService {
       this.listeners.set('OrdersUpdated', new Set())
     }
     this.listeners.get('OrdersUpdated')!.add(callback)
-    return () => this.listeners.get('OrdersUpdated')?.delete(callback)
+    console.log(`[SignalR] onOrdersUpdated registrado, total agora: ${this.listeners.get('OrdersUpdated')!.size}`)
+    return () => {
+      this.listeners.get('OrdersUpdated')?.delete(callback)
+      console.log(`[SignalR] onOrdersUpdated removido, total agora: ${this.listeners.get('OrdersUpdated')?.size}`)
+    }
   }
 
   onPaymentConfirmed(callback: (data: string) => void) {

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import type { Order } from '../types'
 import { signalRService } from '../services/signalRService'
-import { useTableStore } from '../store/tableStore'
 
 function mapOrder(raw: any): Order {
   return {
@@ -22,37 +21,44 @@ function mapOrder(raw: any): Order {
 }
 
 export function useOrders(tableId?: string) {
-  const storedOrders = useTableStore(state => state.orders)
-  const setStoredOrders = useTableStore(state => state.setOrders)
-  const [localOrders, setLocalOrders] = useState<Order[]>(storedOrders)
+  const [orders, setOrders] = useState<Order[]>([])
 
   useEffect(() => {
-    setLocalOrders(storedOrders)
-  }, [storedOrders])
+    console.log(`[useOrders] Montando hook para tableId=${tableId ?? 'ALL'}`)
 
-  useEffect(() => {
-    if (tableId) signalRService.joinTable(tableId)
+    if (tableId) {
+      signalRService.joinTable(tableId)
+      console.log(`[useOrders] joinTable chamado: ${tableId}`)
+    }
 
     const unsubscribe = signalRService.onOrdersUpdated((data: string) => {
+      console.log(`[useOrders] Evento OrdersUpdated recebido (tableId=${tableId ?? 'ALL'})`)
       try {
         const raw = JSON.parse(data)
         const all = Array.isArray(raw) ? raw.map(mapOrder) : []
-        setLocalOrders(all)
-        setStoredOrders(all)
+        const relevantOrder = tableId ? all.find(o => o.tableId === tableId) : null
+        if (relevantOrder) {
+          console.log(`[useOrders] Pedido relevante encontrado: ${relevantOrder.id} status=${relevantOrder.status}`)
+        }
+        setOrders(all)
+        console.log(`[useOrders] setOrders chamado com ${all.length} pedidos`)
       } catch (e) {
-        console.error('Erro ao parsear orders:', e)
+        console.error('[useOrders] Erro ao parsear orders:', e)
       }
     })
 
+    console.log(`[useOrders] Listener registrado para tableId=${tableId ?? 'ALL'}`)
+
     return () => {
+      console.log(`[useOrders] Desmontando hook, removendo listener (tableId=${tableId ?? 'ALL'})`)
       unsubscribe()
       if (tableId) signalRService.leaveTable(tableId)
     }
   }, [tableId])
 
   const filtered = tableId
-    ? localOrders.filter(o => o.tableId === tableId)
-    : localOrders
+    ? orders.filter(o => o.tableId === tableId)
+    : orders
 
   return { orders: filtered, connected: true, error: null }
 }

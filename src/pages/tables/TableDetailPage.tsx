@@ -11,6 +11,8 @@ export function TableDetailPage() {
 
   const { orders, connected } = useOrders(tableId)
 
+  console.log('[TableDetailPage] Renderizando. Orders:', orders.map(o => `${o.id.slice(0,6)}:${o.status}`))
+
   const table = tables.find(t => t.id === tableId)
   const visibleOrders = orders.filter(o => o.status !== 'Cancelled')
   const total = visibleOrders

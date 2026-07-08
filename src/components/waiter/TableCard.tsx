@@ -31,7 +31,6 @@ const statusConfig = {
 
 export function TableCard({ table, onClick }: TableCardProps) {
   const config = statusConfig[table.status]
-
   return (
     <button
       onClick={() => onClick(table)}
@@ -40,6 +39,9 @@ export function TableCard({ table, onClick }: TableCardProps) {
       <span className={`text-xl font-medium ${config.text}`}>
         {String(table.number).padStart(2, '0')}
       </span>
+      {table.name && (
+        <span className="text-zinc-500 text-[10px] truncate max-w-full">{table.name}</span>
+      )}
       <span className={`text-xs ${config.labelColor}`}>
         {table.status === 'free' ? 'Livre' : `${table.orderCount} pedido${table.orderCount !== 1 ? 's' : ''}`}
       </span>
