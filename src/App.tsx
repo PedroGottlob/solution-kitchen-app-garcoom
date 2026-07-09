@@ -16,18 +16,21 @@ import { MenuManagementPage } from './pages/menu/MenuManagementPage'
 import { TableManagementPage } from './pages/tables/TableManagementPage'
 
 const NAMESPACE = 'https://solution-kitchen.com'
+const DEV_FALLBACK_TENANT_ID = '00000000-0000-0000-0000-000000000001'
 
 function App() {
   const { isLoading, isAuthenticated, loginWithRedirect, user } = useAuth0()
 
   const roles: string[] = user?.[`${NAMESPACE}/roles`] ?? []
-  const tenantId: string = user?.[`${NAMESPACE}/tenant_id`] ?? '00000000-0000-0000-0000-000000000001'
+  const rawTenantId: string | undefined = user?.[`${NAMESPACE}/tenant_id`]
+  const tenantId: string | undefined = rawTenantId ?? (import.meta.env.DEV ? DEV_FALLBACK_TENANT_ID : undefined)
   const isGerente = roles.includes('gerente')
 
   useEffect(() => {
     if (!isAuthenticated) return
     if (!user) return
     if (!roles.includes('garcom') && !roles.includes('gerente')) return
+    if (!tenantId) return
 
     setTenantId(tenantId)
     signalRService.setTenantId(tenantId)
@@ -65,6 +68,17 @@ function App() {
         <div className="text-center">
           <p className="text-white text-lg font-medium mb-2">Acesso negado</p>
           <p className="text-zinc-500 text-sm">Você não tem permissão para acessar este app.</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (!tenantId) {
+    return (
+      <div className="min-h-screen bg-zinc-950 flex items-center justify-center px-8">
+        <div className="text-center">
+          <p className="text-white text-lg font-medium mb-2">Conta sem restaurante vinculado</p>
+          <p className="text-zinc-500 text-sm">Sua conta não está associada a nenhum restaurante. Entre em contato com o suporte.</p>
         </div>
       </div>
     )
