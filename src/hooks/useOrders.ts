@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import type { Order } from '../types'
 import { signalRService } from '../services/signalRService'
+import { orderService } from '../services/orderService'
 
 function mapOrder(raw: any): Order {
   return {
@@ -24,33 +25,35 @@ export function useOrders(tableId?: string) {
   const [orders, setOrders] = useState<Order[]>([])
 
   useEffect(() => {
-    console.log(`[useOrders] Montando hook para tableId=${tableId ?? 'ALL'}`)
-
     if (tableId) {
       signalRService.joinTable(tableId)
-      console.log(`[useOrders] joinTable chamado: ${tableId}`)
     }
 
+    // Busca inicial via REST — sem ela, a lista fica vazia até o próximo
+    // evento SignalR chegar (causa do "flash de R$0" no CloseAccountPage)
+    let cancelled = false
+    const fetchInitial = tableId
+      ? orderService.getOrdersByTable(tableId)
+      : orderService.getAllOrders()
+
+    fetchInitial
+      .then(initial => {
+        if (!cancelled) setOrders(initial.map(mapOrder))
+      })
+      .catch(e => console.error('[useOrders] Erro na busca inicial:', e))
+
     const unsubscribe = signalRService.onOrdersUpdated((data: string) => {
-      console.log(`[useOrders] Evento OrdersUpdated recebido (tableId=${tableId ?? 'ALL'})`)
       try {
         const raw = JSON.parse(data)
         const all = Array.isArray(raw) ? raw.map(mapOrder) : []
-        const relevantOrder = tableId ? all.find(o => o.tableId === tableId) : null
-        if (relevantOrder) {
-          console.log(`[useOrders] Pedido relevante encontrado: ${relevantOrder.id} status=${relevantOrder.status}`)
-        }
         setOrders(all)
-        console.log(`[useOrders] setOrders chamado com ${all.length} pedidos`)
       } catch (e) {
         console.error('[useOrders] Erro ao parsear orders:', e)
       }
     })
 
-    console.log(`[useOrders] Listener registrado para tableId=${tableId ?? 'ALL'}`)
-
     return () => {
-      console.log(`[useOrders] Desmontando hook, removendo listener (tableId=${tableId ?? 'ALL'})`)
+      cancelled = true
       unsubscribe()
       if (tableId) signalRService.leaveTable(tableId)
     }

@@ -18,7 +18,7 @@ export interface OrderItem {
 export interface Order {
   id: string
   tableId: string
-  status: 'Pending' | 'Preparing' | 'Ready' | 'Delivered' | 'Cancelled'
+  status: 'Pending' | 'Confirmed' | 'Preparing' | 'Ready' | 'Delivered' | 'Cancelled' | 'Closed'
   source: string
   totalAmount: number
   createdAt: string

@@ -11,14 +11,10 @@ export function TableDetailPage() {
 
   const { orders, connected } = useOrders(tableId)
 
-  console.log('[TableDetailPage] Renderizando. Orders:', orders.map(o => `${o.id.slice(0,6)}:${o.status}`))
-
   const table = tables.find(t => t.id === tableId)
-  const visibleOrders = orders.filter(o => o.status !== 'Cancelled')
-  const total = visibleOrders
-    .filter(o => o.status !== 'Delivered')
-    .reduce((acc, o) => acc + o.totalAmount, 0)
-  const hasReady = orders.some(o => o.status === 'Ready')
+  const visibleOrders = orders.filter(o => o.status !== 'Cancelled' && o.status !== 'Closed')
+  const total = visibleOrders.reduce((acc, o) => acc + o.totalAmount, 0)
+  const hasReady = visibleOrders.some(o => o.status === 'Ready')
 
   async function handleDeliver(orderId: string) {
     try {
@@ -53,7 +49,7 @@ export function TableDetailPage() {
               Mesa {String(table.number).padStart(2, '0')}
             </h1>
             <p className="text-zinc-500 text-sm">
-              {!connected ? 'Conectando...' : `${visibleOrders.length} pedido${visibleOrders.length !== 1 ? 's' : ''} · Total: R$ ${total.toFixed(2)}`}
+              {!connected ? 'Conectando...' : `${visibleOrders.length} pedido${visibleOrders.length !== 1 ? 's' : ''}`}
             </p>
           </div>
         </div>
