@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { type DashboardData, getDashboard } from '../../services/dashboardService'
 
 function MetricCard({ label, value, sub }: { label: string; value: string; sub?: string }) {
@@ -36,6 +37,7 @@ function translateStatus(status: string) {
 
 export function DashboardPage() {
   const [data, setData] = useState<DashboardData | null>(null)
+  const navigate = useNavigate()
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
 
@@ -109,7 +111,7 @@ export function DashboardPage() {
         </div>
       </section>
 
-      {/* Top itens */}
+     {/* Top itens */}
       <section className="mb-6">
         <h2 className="text-zinc-500 text-xs uppercase tracking-wider mb-3">Itens mais vendidos</h2>
         <div className="bg-zinc-900 rounded-xl divide-y divide-zinc-800">
@@ -125,6 +127,23 @@ export function DashboardPage() {
             </div>
           ))}
         </div>
+      </section>
+
+      {/* Relatório com IA */}
+      <section className="mb-6">
+        <button
+          onClick={() => navigate('/reports')}
+          className="w-full bg-gradient-to-br from-violet-600 to-violet-800 rounded-xl p-4 flex items-center gap-3 cursor-pointer hover:from-violet-500 hover:to-violet-700 transition-colors"
+        >
+          <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">
+            <i className="ti ti-sparkles text-white text-xl" />
+          </div>
+          <div className="flex-1 text-left">
+            <p className="text-white text-sm font-medium">Relatório semanal com IA</p>
+            <p className="text-violet-100 text-xs">Análise, tendências e sugestões</p>
+          </div>
+          <i className="ti ti-chevron-right text-white text-xl" />
+        </button>
       </section>
 
       {/* Vendas por dia da semana */}

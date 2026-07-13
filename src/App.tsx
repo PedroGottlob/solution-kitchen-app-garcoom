@@ -14,6 +14,7 @@ import { setTenantId } from './services/api'
 import { signalRService } from './services/signalRService'
 import { MenuManagementPage } from './pages/menu/MenuManagementPage'
 import { TableManagementPage } from './pages/tables/TableManagementPage'
+import { ReportsPage } from './pages/reports/ReportsPage'
 
 const NAMESPACE = 'https://solution-kitchen.com'
 const DEV_FALLBACK_TENANT_ID = '00000000-0000-0000-0000-000000000001'
@@ -84,7 +85,7 @@ function App() {
     )
   }
 
-  return (
+ return (
     <BrowserRouter>
       <div className="min-h-screen bg-zinc-950">
         <Routes>
@@ -107,11 +108,14 @@ function App() {
             path="/menu"
             element={isGerente ? <MenuManagementPage /> : <Navigate to="/" replace />}
           />
+          <Route
+            path="/reports"
+            element={isGerente ? <ReportsPage /> : <Navigate to="/" replace />}
+          />
         </Routes>
         <BottomNav isGerente={isGerente} />
       </div>
     </BrowserRouter>
   )
 }
-
 export default App
