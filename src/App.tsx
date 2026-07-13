@@ -15,6 +15,8 @@ import { signalRService } from './services/signalRService'
 import { MenuManagementPage } from './pages/menu/MenuManagementPage'
 import { TableManagementPage } from './pages/tables/TableManagementPage'
 import { ReportsPage } from './pages/reports/ReportsPage'
+import { useOrderNotifications } from './hooks/useOrderNotifications'
+import { Toaster } from 'sonner'
 
 const NAMESPACE = 'https://solution-kitchen.com'
 const DEV_FALLBACK_TENANT_ID = '00000000-0000-0000-0000-000000000001'
@@ -37,6 +39,8 @@ function App() {
     signalRService.setTenantId(tenantId)
     signalRService.connect().catch(console.error)
   }, [isAuthenticated, user, tenantId])
+
+  useOrderNotifications()
 
   if (isLoading) {
     return (
@@ -85,7 +89,7 @@ function App() {
     )
   }
 
- return (
+  return (
     <BrowserRouter>
       <div className="min-h-screen bg-zinc-950">
         <Routes>
@@ -114,6 +118,13 @@ function App() {
           />
         </Routes>
         <BottomNav isGerente={isGerente} />
+        <Toaster
+          position="top-right"
+          theme="dark"
+          richColors
+          closeButton
+          duration={6000}
+        />
       </div>
     </BrowserRouter>
   )
