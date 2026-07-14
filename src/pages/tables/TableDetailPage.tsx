@@ -1,8 +1,10 @@
+import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useTableStore } from '../../store/tableStore'
 import { OrderCard } from '../../components/waiter/OrderCard'
 import { useOrders } from '../../hooks/useOrders'
 import { orderService } from '../../services/orderService'
+import { tableService } from '../../services/tableService'
 
 export function TableDetailPage() {
   const { tableId } = useParams<{ tableId: string }>()
@@ -16,11 +18,27 @@ export function TableDetailPage() {
   const total = visibleOrders.reduce((acc, o) => acc + o.totalAmount, 0)
   const hasReady = visibleOrders.some(o => o.status === 'Ready')
 
+  const [confirmClose, setConfirmClose] = useState(false)
+  const [closing, setClosing] = useState(false)
+
   async function handleDeliver(orderId: string) {
     try {
       await orderService.updateStatus(orderId, 'Delivered')
     } catch (e) {
       console.error(e)
+    }
+  }
+
+  async function handleCloseTable() {
+    if (!tableId) return
+    setClosing(true)
+    try {
+      await tableService.closeTable(tableId)
+      navigate('/')
+    } catch (e) {
+      console.error(e)
+      setClosing(false)
+      setConfirmClose(false)
     }
   }
 
@@ -86,6 +104,15 @@ export function TableDetailPage() {
             />
           ))
         )}
+
+        {/* Botão de fechar mesa manualmente — escape hatch */}
+        <button
+          onClick={() => setConfirmClose(true)}
+          className="mt-4 py-2.5 rounded-xl border border-zinc-800 text-zinc-500 text-sm cursor-pointer hover:bg-zinc-900 hover:text-zinc-300 transition-colors flex items-center justify-center gap-2"
+        >
+          <i className="ti ti-lock" />
+          Fechar mesa manualmente
+        </button>
       </div>
 
       {/* Actions */}
@@ -108,6 +135,34 @@ export function TableDetailPage() {
           </button>
         )}
       </div>
+
+      {/* Modal de confirmação */}
+      {confirmClose && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 px-5">
+          <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5 max-w-sm w-full">
+            <h2 className="text-white text-lg font-medium mb-2">Fechar mesa?</h2>
+            <p className="text-zinc-400 text-sm mb-5">
+              Todos os pedidos abertos serão marcados como fechados e a mesa será liberada. Use apenas se o pagamento foi feito fora do app ou o cliente foi embora.
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setConfirmClose(false)}
+                disabled={closing}
+                className="flex-1 py-2.5 rounded-xl bg-zinc-800 text-zinc-300 font-medium text-sm cursor-pointer hover:bg-zinc-700 transition-colors disabled:opacity-50"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleCloseTable}
+                disabled={closing}
+                className="flex-1 py-2.5 rounded-xl bg-red-900 text-red-100 font-medium text-sm cursor-pointer hover:bg-red-800 transition-colors disabled:opacity-50"
+              >
+                {closing ? 'Fechando...' : 'Fechar mesa'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
