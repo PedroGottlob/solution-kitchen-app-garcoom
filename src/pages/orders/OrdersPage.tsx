@@ -1,14 +1,17 @@
 import { useState } from 'react'
 import { OrderCard } from '../../components/waiter/OrderCard'
 import { useOrders } from '../../hooks/useOrders'
+import { orderService } from '../../services/orderService'
 
-type FilterStatus = 'all' | 'Pending' | 'Preparing' | 'Ready'
+type FilterStatus = 'all' | 'Pending' | 'Preparing' | 'Ready' | 'Delivered' | 'Cancelled'
 
 const filters: { label: string; value: FilterStatus }[] = [
   { label: 'Todos', value: 'all' },
   { label: 'Pendentes', value: 'Pending' },
   { label: 'Em preparo', value: 'Preparing' },
   { label: 'Prontos', value: 'Ready' },
+  { label: 'Entregues', value: 'Delivered' },
+  { label: 'Cancelados', value: 'Cancelled' },
 ]
 
 export function OrdersPage() {
@@ -23,15 +26,34 @@ export function OrdersPage() {
   const preparing = orders.filter(o => o.status === 'Preparing').length
   const ready = orders.filter(o => o.status === 'Ready').length
 
+  async function handleDeliver(orderId: string) {
+    try {
+      await orderService.updateStatus(orderId, 'Delivered')
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  async function handleCancel(orderId: string) {
+    try {
+      await orderService.updateStatus(orderId, 'Cancelled')
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-zinc-950 flex flex-col pb-20">
+
+      {/* Header */}
       <div className="bg-zinc-900 border-b border-zinc-800 px-5 py-4">
         <div className="flex items-center justify-between mb-3">
           <h1 className="text-white text-xl font-medium">Pedidos</h1>
           <span className="text-zinc-500 text-sm">
-            {!connected ? 'Conectando...' : `Hoje · ${orders.length} pedidos`}
+            {!connected ? 'Conectando...' : `${orders.length} pedido${orders.length !== 1 ? 's' : ''} ativo${orders.length !== 1 ? 's' : ''}`}
           </span>
         </div>
+
         <div className="flex gap-2 overflow-x-auto pb-1">
           {filters.map(f => (
             <button
@@ -49,19 +71,35 @@ export function OrdersPage() {
         </div>
       </div>
 
+      {/* Cards de contagem (clicáveis) */}
       <div className="px-5 py-4 flex gap-3">
-        <div className="flex-1 bg-zinc-900 rounded-xl p-3 text-center border border-zinc-800">
+        <button
+          onClick={() => setActiveFilter('Pending')}
+          className={`flex-1 bg-zinc-900 rounded-xl p-3 text-center border cursor-pointer transition-colors ${
+            activeFilter === 'Pending' ? 'border-amber-900' : 'border-zinc-800 hover:border-zinc-700'
+          }`}
+        >
           <div className="text-amber-400 text-lg font-medium">{pending}</div>
           <div className="text-zinc-500 text-xs">Pendentes</div>
-        </div>
-        <div className="flex-1 bg-zinc-900 rounded-xl p-3 text-center border border-zinc-800">
+        </button>
+        <button
+          onClick={() => setActiveFilter('Preparing')}
+          className={`flex-1 bg-zinc-900 rounded-xl p-3 text-center border cursor-pointer transition-colors ${
+            activeFilter === 'Preparing' ? 'border-violet-900' : 'border-zinc-800 hover:border-zinc-700'
+          }`}
+        >
           <div className="text-violet-400 text-lg font-medium">{preparing}</div>
           <div className="text-zinc-500 text-xs">Em preparo</div>
-        </div>
-        <div className="flex-1 bg-zinc-900 rounded-xl p-3 text-center border border-zinc-800">
+        </button>
+        <button
+          onClick={() => setActiveFilter('Ready')}
+          className={`flex-1 bg-zinc-900 rounded-xl p-3 text-center border cursor-pointer transition-colors ${
+            activeFilter === 'Ready' ? 'border-emerald-900' : 'border-zinc-800 hover:border-zinc-700'
+          }`}
+        >
           <div className="text-emerald-400 text-lg font-medium">{ready}</div>
           <div className="text-zinc-500 text-xs">Prontos</div>
-        </div>
+        </button>
       </div>
 
       <div className="px-5 flex flex-col gap-3">
@@ -76,7 +114,12 @@ export function OrdersPage() {
           </div>
         ) : (
           filtered.map(order => (
-            <OrderCard key={order.id} order={order} />
+            <OrderCard
+              key={order.id}
+              order={order}
+              onDeliver={order.status === 'Ready' ? handleDeliver : undefined}
+              onCancel={order.status === 'Pending' ? handleCancel : undefined}
+            />
           ))
         )}
       </div>

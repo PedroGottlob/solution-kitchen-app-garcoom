@@ -1,4 +1,5 @@
 import type { Order } from '../../types'
+import { useTableStore } from '../../store/tableStore'
 
 interface OrderCardProps {
   order: Order
@@ -12,6 +13,7 @@ const statusConfig: Record<string, { label: string; bg: string; text: string }> 
   Ready: { label: 'Pronto para servir', bg: 'bg-emerald-950', text: 'text-emerald-400' },
   Delivered: { label: 'Entregue', bg: 'bg-zinc-800', text: 'text-zinc-400' },
   Cancelled: { label: 'Cancelado', bg: 'bg-red-950', text: 'text-red-400' },
+  Closed: { label: 'Fechado', bg: 'bg-zinc-800', text: 'text-zinc-500' },
 }
 
 function getElapsedMinutes(createdAt: string): number {
@@ -23,17 +25,24 @@ function getElapsedMinutes(createdAt: string): number {
 export function OrderCard({ order, onCancel, onDeliver }: OrderCardProps) {
   const config = statusConfig[order.status] ?? statusConfig.Pending
   const elapsed = getElapsedMinutes(order.createdAt)
+  const table = useTableStore(s => s.tables.find(t => t.id === order.tableId))
+  const tableLabel = table ? `Mesa ${String(table.number).padStart(2, '0')}` : 'Mesa'
 
   return (
     <div className={`bg-zinc-900 rounded-xl border overflow-hidden ${
       order.status === 'Ready' ? 'border-emerald-900' : 'border-zinc-800'
     }`}>
       <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-800">
-        <div>
+        <div className="flex items-center gap-2">
           <span className="text-white font-medium text-sm">
+            {tableLabel}
+          </span>
+          <span className="text-zinc-600">·</span>
+          <span className="text-xs text-zinc-500">
             #{((order.id ?? (order as any).Id) || '??????').toString().slice(-6).toUpperCase()}
           </span>
-          <span className="ml-2 text-xs text-zinc-500">{elapsed} min atrás</span>
+          <span className="text-zinc-600">·</span>
+          <span className="text-xs text-zinc-500">{elapsed} min</span>
         </div>
         <span className={`text-xs px-2 py-1 rounded-full ${config.bg} ${config.text}`}>
           {config.label}
@@ -44,7 +53,7 @@ export function OrderCard({ order, onCancel, onDeliver }: OrderCardProps) {
         {order.items.map((item, i) => (
           <div key={i} className="flex items-start gap-2">
             <span className="text-violet-400 text-sm font-medium">{item.quantity}×</span>
-            <div>
+            <div className="flex-1">
               <div className="text-zinc-100 text-sm">{item.name}</div>
               {item.notes && (
                 <div className="text-zinc-500 text-xs">{item.notes}</div>
