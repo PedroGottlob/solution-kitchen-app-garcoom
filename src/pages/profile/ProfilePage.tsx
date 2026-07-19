@@ -1,11 +1,47 @@
+import { useEffect, useState } from 'react'
 import { useAuth0 } from '@auth0/auth0-react'
+import { tenantService, type TenantInfo } from '../../services/tenantService'
+
+const NAMESPACE = 'https://solution-kitchen.com'
+
+const ROLE_LABELS: Record<string, string> = {
+  gerente: 'Gerente',
+  garcom: 'Garçom',
+  chef: 'Chef',
+}
+
+const PLAN_LABELS: Record<string, string> = {
+  basic: 'Básico',
+  premium: 'Premium',
+}
+
+function formatRoles(roles: string[]): string {
+  if (roles.length === 0) return '—'
+  const labels = roles.map(r => ROLE_LABELS[r] ?? r)
+  if (labels.length === 1) return labels[0]
+  if (labels.length === 2) return labels.join(' · ')
+  return `${labels.slice(0, -1).join(', ')} e ${labels[labels.length - 1]}`
+}
 
 export function ProfilePage() {
   const { user, logout } = useAuth0()
 
+  const [tenant, setTenant] = useState<TenantInfo | null>(null)
+  const [tenantLoading, setTenantLoading] = useState(true)
+
+  const roles: string[] = user?.[`${NAMESPACE}/roles`] ?? []
+  const roleLabel = formatRoles(roles)
+
   const initials = user?.name
     ? user.name.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2)
     : '??'
+
+  useEffect(() => {
+    tenantService.getCurrent()
+      .then(setTenant)
+      .catch(console.error)
+      .finally(() => setTenantLoading(false))
+  }, [])
 
   return (
     <div className="min-h-screen bg-zinc-950 flex flex-col pb-20">
@@ -40,39 +76,31 @@ export function ProfilePage() {
           Informações
         </p>
         <div className="bg-zinc-900 rounded-xl border border-zinc-800 overflow-hidden">
+
           <div className="flex items-center gap-3 px-4 py-3 border-b border-zinc-800">
             <i className="ti ti-building-store text-zinc-400 text-lg" />
-            <div>
+            <div className="flex-1">
               <p className="text-zinc-400 text-xs">Estabelecimento</p>
-              <p className="text-white text-sm">Restaurante Dev</p>
+              {tenantLoading ? (
+                <p className="text-zinc-500 text-sm italic">Carregando...</p>
+              ) : tenant ? (
+                <div>
+                  <p className="text-white text-sm">{tenant.name}</p>
+                  <p className="text-zinc-500 text-xs">Plano {PLAN_LABELS[tenant.plan] ?? tenant.plan}</p>
+                </div>
+              ) : (
+                <p className="text-zinc-500 text-sm italic">Não disponível</p>
+              )}
             </div>
           </div>
+
           <div className="flex items-center gap-3 px-4 py-3">
             <i className="ti ti-id-badge text-zinc-400 text-lg" />
             <div>
               <p className="text-zinc-400 text-xs">Função</p>
-              <p className="text-white text-sm">Garçom</p>
+              <p className="text-white text-sm">{roleLabel}</p>
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* Configurações */}
-      <div className="px-5 mb-6">
-        <p className="text-zinc-500 text-xs font-medium uppercase tracking-wider mb-3">
-          Configurações
-        </p>
-        <div className="bg-zinc-900 rounded-xl border border-zinc-800 overflow-hidden">
-          <button className="w-full flex items-center gap-3 px-4 py-3 border-b border-zinc-800 cursor-pointer hover:bg-zinc-800 transition-colors">
-            <i className="ti ti-bell text-zinc-400 text-lg" />
-            <span className="text-white text-sm flex-1 text-left">Notificações</span>
-            <i className="ti ti-chevron-right text-zinc-600 text-sm" />
-          </button>
-          <button className="w-full flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-zinc-800 transition-colors">
-            <i className="ti ti-moon text-zinc-400 text-lg" />
-            <span className="text-white text-sm flex-1 text-left">Tema escuro</span>
-            <i className="ti ti-chevron-right text-zinc-600 text-sm" />
-          </button>
         </div>
       </div>
 
