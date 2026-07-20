@@ -49,7 +49,7 @@ export function MenuManagementPage() {
 
   function load() {
     setLoading(true)
-    menuService.getMenuItems()
+    menuService.getMenuItems(true)
       .then(setItems)
       .catch(e => {
         console.error(e)
@@ -58,9 +58,10 @@ export function MenuManagementPage() {
       .finally(() => setLoading(false))
   }
 
-  useEffect(() => {
-    load()
-  }, [])
+  useEffect(() => { load() }, [])
+
+  const activeItems = useMemo(() => items.filter(i => i.status === 'Active'), [items])
+  const inactiveItems = useMemo(() => items.filter(i => i.status === 'Inactive'), [items])
 
   function openCreate(categoryId?: string) {
     setEditingId(null)
@@ -81,19 +82,9 @@ export function MenuManagementPage() {
   }
 
   async function handleSave() {
-    // Validação com feedback visual
-    if (!form.name.trim()) {
-      toast.error('Informe o nome do item')
-      return
-    }
-    if (!form.price || Number(form.price) <= 0) {
-      toast.error('Informe um preço de venda válido')
-      return
-    }
-    if (form.cost === '' || Number(form.cost) < 0) {
-      toast.error('Informe o custo (pode ser 0)')
-      return
-    }
+    if (!form.name.trim()) { toast.error('Informe o nome do item'); return }
+    if (!form.price || Number(form.price) <= 0) { toast.error('Informe um preço de venda válido'); return }
+    if (form.cost === '' || Number(form.cost) < 0) { toast.error('Informe o custo (pode ser 0)'); return }
 
     setSaving(true)
     const payload: CreateMenuItemPayload = {
@@ -135,14 +126,25 @@ export function MenuManagementPage() {
     }
   }
 
+  async function handleActivate(itemId: string) {
+    try {
+      await menuService.activateMenuItem(itemId)
+      toast.success('Item reativado no cardápio')
+      load()
+    } catch (e) {
+      console.error(e)
+      toast.error('Falha ao reativar item')
+    }
+  }
+
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase()
-    if (!q) return items
-    return items.filter(i =>
+    if (!q) return activeItems
+    return activeItems.filter(i =>
       i.name.toLowerCase().includes(q) ||
       (i.description?.toLowerCase().includes(q) ?? false)
     )
-  }, [items, search])
+  }, [activeItems, search])
 
   const grouped = useMemo(() => {
     return filtered.reduce((acc: Record<string, MenuItem[]>, item) => {
@@ -164,7 +166,8 @@ export function MenuManagementPage() {
           <div>
             <h1 className="text-white text-xl font-medium">Cardápio</h1>
             <p className="text-zinc-500 text-sm">
-              {items.length} ite{items.length !== 1 ? 'ns' : 'm'}
+              {activeItems.length} ite{activeItems.length !== 1 ? 'ns' : 'm'}
+              {inactiveItems.length > 0 && ` · ${inactiveItems.length} inativo${inactiveItems.length !== 1 ? 's' : ''}`}
             </p>
           </div>
           <button
@@ -175,7 +178,6 @@ export function MenuManagementPage() {
           </button>
         </div>
 
-        {/* Busca */}
         <div className="relative">
           <i className="ti ti-search text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2 text-sm" />
           <input
@@ -192,22 +194,23 @@ export function MenuManagementPage() {
         <div className="flex items-center justify-center py-12">
           <p className="text-zinc-500">Carregando cardápio...</p>
         </div>
-      ) : items.length === 0 ? (
+      ) : activeItems.length === 0 && inactiveItems.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 gap-3">
           <i className="ti ti-book text-zinc-600 text-4xl" />
           <p className="text-zinc-500">Nenhum item no cardápio</p>
           <p className="text-zinc-600 text-xs">Toque no botão + para adicionar o primeiro</p>
         </div>
-      ) : filtered.length === 0 ? (
+      ) : filtered.length === 0 && search.trim() ? (
         <div className="flex flex-col items-center justify-center py-16 gap-2">
           <i className="ti ti-search text-zinc-600 text-3xl" />
           <p className="text-zinc-500 text-sm">Nenhum item encontrado</p>
         </div>
       ) : (
         <div className="px-5 py-4 flex flex-col gap-6">
+
+          {/* Itens ativos por categoria */}
           {categories.map(cat => {
             const categoryItems = grouped[cat.name] ?? []
-            // Se tem busca ativa e essa categoria não tem itens filtrados, esconde
             if (search.trim() && categoryItems.length === 0) return null
 
             return (
@@ -226,42 +229,23 @@ export function MenuManagementPage() {
                 </div>
 
                 {categoryItems.length === 0 ? (
-                  <p className="text-zinc-600 text-xs italic py-2">
-                    Nenhum item nesta categoria
-                  </p>
+                  <p className="text-zinc-600 text-xs italic py-2">Nenhum item nesta categoria</p>
                 ) : (
                   categoryItems.map(item => (
-                    <div
-                      key={item.id}
-                      className="bg-zinc-900 rounded-xl border border-zinc-800 px-4 py-3 flex items-center justify-between"
-                    >
+                    <div key={item.id} className="bg-zinc-900 rounded-xl border border-zinc-800 px-4 py-3 flex items-center justify-between">
                       <div className="flex-1">
                         <p className="text-white text-sm font-medium">{item.name}</p>
-                        {item.description && (
-                          <p className="text-zinc-500 text-xs">{item.description}</p>
-                        )}
+                        {item.description && <p className="text-zinc-500 text-xs">{item.description}</p>}
                         <div className="flex items-center gap-3 mt-1 flex-wrap">
-                          <span className="text-violet-400 text-sm font-medium">
-                            {formatBRL(item.price)}
-                          </span>
-                          <span className="text-zinc-600 text-xs">
-                            Custo: {formatBRL(item.cost)} · Margem: {item.margin.toFixed(0)}%
-                          </span>
+                          <span className="text-violet-400 text-sm font-medium">{formatBRL(item.price)}</span>
+                          <span className="text-zinc-600 text-xs">Custo: {formatBRL(item.cost)} · Margem: {item.margin.toFixed(0)}%</span>
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => openEdit(item)}
-                          className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center cursor-pointer hover:bg-zinc-700 transition-colors"
-                          title="Editar"
-                        >
+                        <button onClick={() => openEdit(item)} className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center cursor-pointer hover:bg-zinc-700 transition-colors" title="Editar">
                           <i className="ti ti-pencil text-zinc-400 text-sm" />
                         </button>
-                        <button
-                          onClick={() => setConfirmDeleteId(item.id)}
-                          className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center cursor-pointer hover:bg-red-950 transition-colors"
-                          title="Remover"
-                        >
+                        <button onClick={() => setConfirmDeleteId(item.id)} className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center cursor-pointer hover:bg-red-950 transition-colors" title="Remover">
                           <i className="ti ti-trash text-zinc-400 text-sm" />
                         </button>
                       </div>
@@ -271,108 +255,79 @@ export function MenuManagementPage() {
               </div>
             )
           })}
+
+          {/* Itens inativos */}
+          {inactiveItems.length > 0 && !search.trim() && (
+            <div className="flex flex-col gap-2">
+              <p className="text-zinc-500 text-xs font-medium uppercase tracking-wider">
+                Itens inativos
+              </p>
+              {inactiveItems.map(item => (
+                <div key={item.id} className="bg-zinc-900/50 rounded-xl border border-zinc-800 px-4 py-3 flex items-center justify-between opacity-70">
+                  <div className="flex-1">
+                    <p className="text-zinc-400 text-sm">{item.name}</p>
+                    {item.description && <p className="text-zinc-600 text-xs">{item.description}</p>}
+                    <span className="text-zinc-600 text-xs">{formatBRL(item.price)}</span>
+                  </div>
+                  <button
+                    onClick={() => handleActivate(item.id)}
+                    className="text-xs px-3 py-1.5 rounded-lg bg-zinc-800 text-zinc-300 border border-zinc-700 hover:bg-violet-950 hover:text-violet-400 hover:border-violet-900 transition-colors cursor-pointer"
+                  >
+                    Reativar
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
       {/* Modal de formulário */}
       {showForm && (
         <div className="fixed inset-0 bg-black/60 flex items-end z-[60]" onClick={() => setShowForm(false)}>
-          <div
-            className="bg-zinc-900 rounded-t-2xl w-full p-5 pb-8 flex flex-col gap-4 max-h-[85vh] overflow-y-auto"
-            onClick={e => e.stopPropagation()}
-          >
-            <h2 className="text-white text-lg font-medium">
-              {editingId ? 'Editar item' : 'Novo item'}
-            </h2>
+          <div className="bg-zinc-900 rounded-t-2xl w-full p-5 pb-8 flex flex-col gap-4 max-h-[85vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+            <h2 className="text-white text-lg font-medium">{editingId ? 'Editar item' : 'Novo item'}</h2>
 
             <div className="flex flex-col gap-1">
               <label className="text-zinc-500 text-xs">Categoria</label>
-              <select
-                value={form.categoryId}
-                onChange={e => setForm(f => ({ ...f, categoryId: e.target.value }))}
-                className="bg-zinc-800 text-white text-sm rounded-lg px-3 py-2.5 outline-none border border-zinc-700"
-              >
-                {categories.map(c => (
-                  <option key={c.id} value={c.id}>{c.name}</option>
-                ))}
+              <select value={form.categoryId} onChange={e => setForm(f => ({ ...f, categoryId: e.target.value }))} className="bg-zinc-800 text-white text-sm rounded-lg px-3 py-2.5 outline-none border border-zinc-700">
+                {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
               </select>
             </div>
 
             <div className="flex flex-col gap-1">
               <label className="text-zinc-500 text-xs">Nome</label>
-              <input
-                type="text"
-                value={form.name}
-                onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                placeholder="Ex: X-Burguer"
-                className="bg-zinc-800 text-white text-sm rounded-lg px-3 py-2.5 outline-none border border-zinc-700"
-              />
+              <input type="text" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="Ex: X-Burguer" className="bg-zinc-800 text-white text-sm rounded-lg px-3 py-2.5 outline-none border border-zinc-700" />
             </div>
 
             <div className="flex flex-col gap-1">
               <label className="text-zinc-500 text-xs">Descrição (opcional)</label>
-              <input
-                type="text"
-                value={form.description}
-                onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
-                placeholder="Ex: Pão, hambúrguer, queijo"
-                className="bg-zinc-800 text-white text-sm rounded-lg px-3 py-2.5 outline-none border border-zinc-700"
-              />
+              <input type="text" value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="Ex: Pão, hambúrguer, queijo" className="bg-zinc-800 text-white text-sm rounded-lg px-3 py-2.5 outline-none border border-zinc-700" />
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div className="flex flex-col gap-1">
                 <label className="text-zinc-500 text-xs">Preço de venda</label>
-                <input
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  value={form.price}
-                  onChange={e => setForm(f => ({ ...f, price: e.target.value }))}
-                  placeholder="0,00"
-                  className="bg-zinc-800 text-white text-sm rounded-lg px-3 py-2.5 outline-none border border-zinc-700"
-                />
+                <input type="number" step="0.01" min="0" value={form.price} onChange={e => setForm(f => ({ ...f, price: e.target.value }))} placeholder="0,00" className="bg-zinc-800 text-white text-sm rounded-lg px-3 py-2.5 outline-none border border-zinc-700" />
               </div>
               <div className="flex flex-col gap-1">
                 <label className="text-zinc-500 text-xs">Custo (CMV)</label>
-                <input
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  value={form.cost}
-                  onChange={e => setForm(f => ({ ...f, cost: e.target.value }))}
-                  placeholder="0,00"
-                  className="bg-zinc-800 text-white text-sm rounded-lg px-3 py-2.5 outline-none border border-zinc-700"
-                />
+                <input type="number" step="0.01" min="0" value={form.cost} onChange={e => setForm(f => ({ ...f, cost: e.target.value }))} placeholder="0,00" className="bg-zinc-800 text-white text-sm rounded-lg px-3 py-2.5 outline-none border border-zinc-700" />
               </div>
             </div>
 
-            {/* Margem em tempo real */}
             {currentMargin !== null && (
               <div className="bg-zinc-800 rounded-lg px-3 py-2 flex items-center justify-between">
                 <span className="text-zinc-500 text-xs">Margem calculada</span>
-                <span className={`text-sm font-medium ${
-                  currentMargin < 30 ? 'text-red-400' :
-                  currentMargin < 60 ? 'text-amber-400' :
-                  'text-emerald-400'
-                }`}>
+                <span className={`text-sm font-medium ${currentMargin < 30 ? 'text-red-400' : currentMargin < 60 ? 'text-amber-400' : 'text-emerald-400'}`}>
                   {currentMargin.toFixed(1)}%
                 </span>
               </div>
             )}
 
             <div className="flex gap-3 mt-2">
-              <button
-                onClick={() => setShowForm(false)}
-                className="flex-1 py-3 rounded-xl bg-zinc-800 text-zinc-300 font-medium text-sm cursor-pointer hover:bg-zinc-700 transition-colors"
-              >
-                Cancelar
-              </button>
-              <button
-                onClick={handleSave}
-                disabled={saving}
-                className="flex-1 py-3 rounded-xl bg-violet-600 text-white font-medium text-sm cursor-pointer hover:bg-violet-500 transition-colors disabled:opacity-50"
-              >
+              <button onClick={() => setShowForm(false)} className="flex-1 py-3 rounded-xl bg-zinc-800 text-zinc-300 font-medium text-sm cursor-pointer hover:bg-zinc-700 transition-colors">Cancelar</button>
+              <button onClick={handleSave} disabled={saving} className="flex-1 py-3 rounded-xl bg-violet-600 text-white font-medium text-sm cursor-pointer hover:bg-violet-500 transition-colors disabled:opacity-50">
                 {saving ? 'Salvando...' : 'Salvar'}
               </button>
             </div>
@@ -389,18 +344,8 @@ export function MenuManagementPage() {
               O item será removido do cardápio. Pedidos antigos com esse item continuam existindo, mas ele não poderá mais ser adicionado a novos pedidos.
             </p>
             <div className="flex gap-3">
-              <button
-                onClick={() => setConfirmDeleteId(null)}
-                className="flex-1 py-2.5 rounded-xl bg-zinc-800 text-zinc-300 font-medium text-sm cursor-pointer hover:bg-zinc-700 transition-colors"
-              >
-                Cancelar
-              </button>
-              <button
-                onClick={() => handleDeactivate(confirmDeleteId)}
-                className="flex-1 py-2.5 rounded-xl bg-red-900 text-red-100 font-medium text-sm cursor-pointer hover:bg-red-800 transition-colors"
-              >
-                Remover
-              </button>
+              <button onClick={() => setConfirmDeleteId(null)} className="flex-1 py-2.5 rounded-xl bg-zinc-800 text-zinc-300 font-medium text-sm cursor-pointer hover:bg-zinc-700 transition-colors">Cancelar</button>
+              <button onClick={() => handleDeactivate(confirmDeleteId)} className="flex-1 py-2.5 rounded-xl bg-red-900 text-red-100 font-medium text-sm cursor-pointer hover:bg-red-800 transition-colors">Remover</button>
             </div>
           </div>
         </div>

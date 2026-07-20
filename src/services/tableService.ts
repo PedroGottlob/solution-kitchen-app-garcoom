@@ -21,21 +21,20 @@ export const tableService = {
     const { data } = await bffOperacional.get<TableStatus[]>(`/api/tables?includeInactive=${includeInactive}`)
     return data
   },
-
   async createTable(payload: CreateTablePayload): Promise<TableStatus> {
     const { data } = await bffOperacional.post<TableStatus>('/api/tables', payload)
     return data
   },
-
   async updateTable(tableId: string, payload: CreateTablePayload): Promise<TableStatus> {
     const { data } = await bffOperacional.put<TableStatus>(`/api/tables/${tableId}`, payload)
     return data
   },
-
   async deactivateTable(tableId: string): Promise<void> {
     await bffOperacional.patch(`/api/tables/${tableId}/deactivate`)
   },
-
+  async activateTable(tableId: string): Promise<void> {
+    await bffOperacional.patch(`/api/tables/${tableId}/activate`)
+  },
   async closeTable(tableId: string): Promise<void> {
     await bffOperacional.post(`/api/tables/${tableId}/close`)
   },
