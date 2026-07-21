@@ -5,6 +5,7 @@ import { useCartStore } from '../../store/cartStore'
 import { useTableStore } from '../../store/tableStore'
 import { orderService } from '../../services/orderService'
 import { menuService } from '../../services/menuService'
+import { tableService } from '../../services/tableService'
 import type { MenuItem, MenuItemOption } from '../../services/menuService'
 import type { Order } from '../../types'
 
@@ -12,7 +13,22 @@ export function NewOrderPage() {
   const { tableId } = useParams<{ tableId: string }>()
   const navigate = useNavigate()
   const { items, addItem, incrementItem, decrementItem, clearCart, total } = useCartStore()
-  const { orders: allOrders, setOrders } = useTableStore()
+  const { orders: allOrders, setOrders, tables } = useTableStore()
+  const [tableNumber, setTableNumber] = useState<number | undefined>(
+    tables.find(t => t.id === tableId)?.number
+  )
+
+  // Fallback: se o estado global de mesas não estiver carregado (ex: refresh
+  // direto nesta página), busca o número direto da API antes de enviar o pedido.
+  useEffect(() => {
+    if (tableNumber !== undefined || !tableId) return
+    tableService.getTables()
+      .then(list => {
+        const match = list.find(t => t.id === tableId)
+        if (match) setTableNumber(match.number)
+      })
+      .catch(console.error)
+  }, [tableId, tableNumber])
 
   const [activeCategory, setActiveCategory] = useState('Todos')
   const [loading, setLoading] = useState(false)
@@ -122,6 +138,7 @@ export function NewOrderPage() {
     try {
       await orderService.createOrder({
         tableId: tableId!,
+        tableNumber,
         source: 'waiter',
         items: items.map(i => ({
           itemId: i.itemId,

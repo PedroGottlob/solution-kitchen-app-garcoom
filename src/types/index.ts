@@ -47,6 +47,7 @@ export interface CreateOrderItemDto {
 
 export interface CreateOrderDto {
   tableId: string
+  tableNumber?: number
   source: 'waiter'
   items: CreateOrderItemDto[]
 }
