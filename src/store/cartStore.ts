@@ -11,16 +11,25 @@ interface CartStore {
   total: () => number
 }
 
+function itemTotalUnitPrice(item: CreateOrderItemDto): number {
+  const optionsCost = (item.selectedOptions ?? []).reduce((acc, o) => acc + o.additionalCost, 0)
+  return item.unitPrice + optionsCost
+}
+
 export const useCartStore = create<CartStore>((set, get) => ({
   items: [],
 
   addItem: (item) =>
     set((state) => {
-      const existing = state.items.find(i => i.itemId === item.itemId)
+      // Itens com opções diferentes são tratados como itens separados
+      const existing = state.items.find(i =>
+        i.itemId === item.itemId &&
+        JSON.stringify(i.selectedOptions ?? []) === JSON.stringify(item.selectedOptions ?? [])
+      )
       if (existing) {
         return {
           items: state.items.map(i =>
-            i.itemId === item.itemId ? { ...i, quantity: i.quantity + 1 } : i
+            i === existing ? { ...i, quantity: i.quantity + 1 } : i
           )
         }
       }
@@ -48,5 +57,5 @@ export const useCartStore = create<CartStore>((set, get) => ({
 
   clearCart: () => set({ items: [] }),
 
-  total: () => get().items.reduce((acc, i) => acc + i.unitPrice * i.quantity, 0),
+  total: () => get().items.reduce((acc, i) => acc + itemTotalUnitPrice(i) * i.quantity, 0),
 }))

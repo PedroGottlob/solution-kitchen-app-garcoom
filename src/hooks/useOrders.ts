@@ -17,6 +17,10 @@ function mapOrder(raw: any): Order {
       quantity: i.quantity ?? i.Quantity,
       unitPrice: i.unitPrice ?? i.UnitPrice,
       notes: i.notes ?? i.Notes,
+      selectedOptions: (i.selectedOptions ?? i.SelectedOptions ?? []).map((o: any) => ({
+        name: o.name ?? o.Name,
+        additionalCost: o.additionalCost ?? o.AdditionalCost ?? 0,
+      })),
     })),
   }
 }

@@ -7,12 +7,18 @@ export interface Table {
   orderCount?: number
 }
 
+export interface SelectedOption {
+  name: string
+  additionalCost: number
+}
+
 export interface OrderItem {
   itemId: string
   name: string
   quantity: number
   unitPrice: number
   notes?: string
+  selectedOptions?: SelectedOption[]
 }
 
 export interface Order {
@@ -25,12 +31,18 @@ export interface Order {
   items: OrderItem[]
 }
 
+export interface CreateSelectedOptionDto {
+  name: string
+  additionalCost: number
+}
+
 export interface CreateOrderItemDto {
   itemId: string
   name: string
   quantity: number
   unitPrice: number
   notes?: string
+  selectedOptions?: CreateSelectedOptionDto[]
 }
 
 export interface CreateOrderDto {
@@ -39,10 +51,18 @@ export interface CreateOrderDto {
   items: CreateOrderItemDto[]
 }
 
+export interface MenuItemOption {
+  id: string
+  name: string
+  additionalCost: number
+  isDefault: boolean
+}
+
 export interface MenuItem {
   id: string
   name: string
   price: number
   category: string
   description?: string
+  options?: MenuItemOption[]
 }

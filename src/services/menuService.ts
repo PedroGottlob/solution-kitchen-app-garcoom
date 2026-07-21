@@ -1,5 +1,12 @@
 import { bffOperacional } from './api'
 
+export interface MenuItemOption {
+  id: string
+  name: string
+  additionalCost: number
+  isDefault: boolean
+}
+
 export interface MenuItem {
   id: string
   categoryId: string
@@ -10,6 +17,7 @@ export interface MenuItem {
   cost: number
   margin: number
   status: string
+  options: MenuItemOption[]
 }
 
 export interface CreateMenuItemPayload {
@@ -18,6 +26,12 @@ export interface CreateMenuItemPayload {
   description?: string
   price: number
   cost: number
+}
+
+export interface CreateMenuItemOptionPayload {
+  name: string
+  additionalCost: number
+  isDefault: boolean
 }
 
 export const menuService = {
@@ -38,5 +52,12 @@ export const menuService = {
   },
   async activateMenuItem(itemId: string): Promise<void> {
     await bffOperacional.patch(`/api/menu/${itemId}/activate`)
+  },
+  async addOption(itemId: string, payload: CreateMenuItemOptionPayload): Promise<MenuItemOption> {
+    const { data } = await bffOperacional.post<MenuItemOption>(`/api/menu/${itemId}/options`, payload)
+    return data
+  },
+  async removeOption(itemId: string, optionId: string): Promise<void> {
+    await bffOperacional.delete(`/api/menu/${itemId}/options/${optionId}`)
   },
 }
