@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
-import { menuService, type MenuItem, type CreateMenuItemPayload } from '../../services/menuService'
+import { menuService, type MenuItem, type MenuItemOption, type CreateMenuItemPayload } from '../../services/menuService'
 
 const categories = [
   { id: '00000000-0000-0000-0000-000000000101', name: 'Lanches' },
@@ -47,6 +47,13 @@ export function MenuManagementPage() {
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null)
   const [search, setSearch] = useState('')
 
+  // Sheet de opções
+  const [optionsItem, setOptionsItem] = useState<MenuItem | null>(null)
+  const [optionName, setOptionName] = useState('')
+  const [optionCost, setOptionCost] = useState('')
+  const [savingOption, setSavingOption] = useState(false)
+  const [removingOptionId, setRemovingOptionId] = useState<string | null>(null)
+
   function load() {
     setLoading(true)
     menuService.getMenuItems(true)
@@ -79,6 +86,12 @@ export function MenuManagementPage() {
       cost: String(item.cost),
     })
     setShowForm(true)
+  }
+
+  function openOptions(item: MenuItem) {
+    setOptionsItem(item)
+    setOptionName('')
+    setOptionCost('')
   }
 
   async function handleSave() {
@@ -137,6 +150,51 @@ export function MenuManagementPage() {
     }
   }
 
+  async function handleAddOption() {
+    if (!optionsItem) return
+    if (!optionName.trim()) { toast.error('Informe o nome da opção'); return }
+    const cost = optionCost === '' ? 0 : Number(optionCost)
+    if (isNaN(cost) || cost < 0) { toast.error('Custo adicional inválido'); return }
+
+    setSavingOption(true)
+    try {
+      const created = await menuService.addOption(optionsItem.id, {
+        name: optionName.trim(),
+        additionalCost: cost,
+        isDefault: false,
+      })
+      // Atualiza o sheet e a lista local sem reload completo
+      const updated = { ...optionsItem, options: [...(optionsItem.options ?? []), created] }
+      setOptionsItem(updated)
+      setItems(prev => prev.map(i => i.id === updated.id ? updated : i))
+      setOptionName('')
+      setOptionCost('')
+      toast.success('Opção adicionada')
+    } catch (e) {
+      console.error(e)
+      toast.error('Falha ao adicionar opção')
+    } finally {
+      setSavingOption(false)
+    }
+  }
+
+  async function handleRemoveOption(option: MenuItemOption) {
+    if (!optionsItem) return
+    setRemovingOptionId(option.id)
+    try {
+      await menuService.removeOption(optionsItem.id, option.id)
+      const updated = { ...optionsItem, options: (optionsItem.options ?? []).filter(o => o.id !== option.id) }
+      setOptionsItem(updated)
+      setItems(prev => prev.map(i => i.id === updated.id ? updated : i))
+      toast.success('Opção removida')
+    } catch (e) {
+      console.error(e)
+      toast.error('Falha ao remover opção')
+    } finally {
+      setRemovingOptionId(null)
+    }
+  }
+
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase()
     if (!q) return activeItems
@@ -159,7 +217,6 @@ export function MenuManagementPage() {
 
   return (
     <div className="min-h-screen bg-zinc-950 flex flex-col pb-28">
-
       {/* Header */}
       <div className="bg-zinc-900 border-b border-zinc-800 px-5 py-4">
         <div className="flex items-center justify-between mb-3">
@@ -177,7 +234,6 @@ export function MenuManagementPage() {
             <i className="ti ti-plus text-white text-lg" />
           </button>
         </div>
-
         <div className="relative">
           <i className="ti ti-search text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2 text-sm" />
           <input
@@ -207,12 +263,10 @@ export function MenuManagementPage() {
         </div>
       ) : (
         <div className="px-5 py-4 flex flex-col gap-6">
-
           {/* Itens ativos por categoria */}
           {categories.map(cat => {
             const categoryItems = grouped[cat.name] ?? []
             if (search.trim() && categoryItems.length === 0) return null
-
             return (
               <div key={cat.id} className="flex flex-col gap-2">
                 <div className="flex items-center justify-between">
@@ -227,14 +281,20 @@ export function MenuManagementPage() {
                     Novo em {cat.name.toLowerCase()}
                   </button>
                 </div>
-
                 {categoryItems.length === 0 ? (
                   <p className="text-zinc-600 text-xs italic py-2">Nenhum item nesta categoria</p>
                 ) : (
                   categoryItems.map(item => (
                     <div key={item.id} className="bg-zinc-900 rounded-xl border border-zinc-800 px-4 py-3 flex items-center justify-between">
                       <div className="flex-1">
-                        <p className="text-white text-sm font-medium">{item.name}</p>
+                        <div className="flex items-center gap-2">
+                          <p className="text-white text-sm font-medium">{item.name}</p>
+                          {(item.options?.length ?? 0) > 0 && (
+                            <span className="text-xs px-1.5 py-0.5 rounded bg-violet-950 text-violet-400 border border-violet-900">
+                              {item.options.length} opç{item.options.length !== 1 ? 'ões' : 'ão'}
+                            </span>
+                          )}
+                        </div>
                         {item.description && <p className="text-zinc-500 text-xs">{item.description}</p>}
                         <div className="flex items-center gap-3 mt-1 flex-wrap">
                           <span className="text-violet-400 text-sm font-medium">{formatBRL(item.price)}</span>
@@ -242,6 +302,9 @@ export function MenuManagementPage() {
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
+                        <button onClick={() => openOptions(item)} className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center cursor-pointer hover:bg-violet-950 transition-colors" title="Opções do item">
+                          <i className="ti ti-list-details text-zinc-400 text-sm" />
+                        </button>
                         <button onClick={() => openEdit(item)} className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center cursor-pointer hover:bg-zinc-700 transition-colors" title="Editar">
                           <i className="ti ti-pencil text-zinc-400 text-sm" />
                         </button>
@@ -287,24 +350,20 @@ export function MenuManagementPage() {
         <div className="fixed inset-0 bg-black/60 flex items-end z-[60]" onClick={() => setShowForm(false)}>
           <div className="bg-zinc-900 rounded-t-2xl w-full p-5 pb-8 flex flex-col gap-4 max-h-[85vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
             <h2 className="text-white text-lg font-medium">{editingId ? 'Editar item' : 'Novo item'}</h2>
-
             <div className="flex flex-col gap-1">
               <label className="text-zinc-500 text-xs">Categoria</label>
               <select value={form.categoryId} onChange={e => setForm(f => ({ ...f, categoryId: e.target.value }))} className="bg-zinc-800 text-white text-sm rounded-lg px-3 py-2.5 outline-none border border-zinc-700">
                 {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
               </select>
             </div>
-
             <div className="flex flex-col gap-1">
               <label className="text-zinc-500 text-xs">Nome</label>
               <input type="text" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="Ex: X-Burguer" className="bg-zinc-800 text-white text-sm rounded-lg px-3 py-2.5 outline-none border border-zinc-700" />
             </div>
-
             <div className="flex flex-col gap-1">
               <label className="text-zinc-500 text-xs">Descrição (opcional)</label>
               <input type="text" value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="Ex: Pão, hambúrguer, queijo" className="bg-zinc-800 text-white text-sm rounded-lg px-3 py-2.5 outline-none border border-zinc-700" />
             </div>
-
             <div className="grid grid-cols-2 gap-3">
               <div className="flex flex-col gap-1">
                 <label className="text-zinc-500 text-xs">Preço de venda</label>
@@ -315,7 +374,6 @@ export function MenuManagementPage() {
                 <input type="number" step="0.01" min="0" value={form.cost} onChange={e => setForm(f => ({ ...f, cost: e.target.value }))} placeholder="0,00" className="bg-zinc-800 text-white text-sm rounded-lg px-3 py-2.5 outline-none border border-zinc-700" />
               </div>
             </div>
-
             {currentMargin !== null && (
               <div className="bg-zinc-800 rounded-lg px-3 py-2 flex items-center justify-between">
                 <span className="text-zinc-500 text-xs">Margem calculada</span>
@@ -324,13 +382,92 @@ export function MenuManagementPage() {
                 </span>
               </div>
             )}
-
             <div className="flex gap-3 mt-2">
               <button onClick={() => setShowForm(false)} className="flex-1 py-3 rounded-xl bg-zinc-800 text-zinc-300 font-medium text-sm cursor-pointer hover:bg-zinc-700 transition-colors">Cancelar</button>
               <button onClick={handleSave} disabled={saving} className="flex-1 py-3 rounded-xl bg-violet-600 text-white font-medium text-sm cursor-pointer hover:bg-violet-500 transition-colors disabled:opacity-50">
                 {saving ? 'Salvando...' : 'Salvar'}
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Sheet de opções do item */}
+      {optionsItem && (
+        <div className="fixed inset-0 bg-black/60 flex items-end z-[60]" onClick={() => setOptionsItem(null)}>
+          <div className="bg-zinc-900 rounded-t-2xl w-full p-5 pb-8 flex flex-col gap-4 max-h-[85vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+            <div>
+              <h2 className="text-white text-lg font-medium">Opções · {optionsItem.name}</h2>
+              <p className="text-zinc-500 text-sm">Adicionais e personalizações que o garçom pode selecionar</p>
+            </div>
+
+            {/* Lista de opções existentes */}
+            {(optionsItem.options?.length ?? 0) === 0 ? (
+              <p className="text-zinc-600 text-sm italic py-2">Nenhuma opção cadastrada ainda</p>
+            ) : (
+              <div className="flex flex-col gap-2">
+                {optionsItem.options.map(option => (
+                  <div key={option.id} className="bg-zinc-800 rounded-xl px-4 py-3 flex items-center justify-between">
+                    <div>
+                      <span className="text-zinc-100 text-sm">{option.name}</span>
+                      {option.additionalCost > 0 && (
+                        <span className="text-violet-400 text-sm ml-2">+{formatBRL(option.additionalCost)}</span>
+                      )}
+                    </div>
+                    <button
+                      onClick={() => handleRemoveOption(option)}
+                      disabled={removingOptionId === option.id}
+                      className="w-8 h-8 rounded-full bg-zinc-700 flex items-center justify-center cursor-pointer hover:bg-red-950 transition-colors disabled:opacity-50"
+                      title="Excluir opção"
+                    >
+                      <i className="ti ti-trash text-zinc-400 text-sm" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Form de adicionar */}
+            <div className="border-t border-zinc-800 pt-4 flex flex-col gap-3">
+              <p className="text-zinc-500 text-xs font-medium uppercase tracking-wider">Nova opção</p>
+              <div className="flex flex-col gap-1">
+                <label className="text-zinc-500 text-xs">Nome</label>
+                <input
+                  type="text"
+                  value={optionName}
+                  onChange={e => setOptionName(e.target.value)}
+                  placeholder="Ex: bacon extra, sem cebola"
+                  className="bg-zinc-800 text-white text-sm rounded-lg px-3 py-2.5 outline-none border border-zinc-700 focus:border-violet-600"
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <label className="text-zinc-500 text-xs">Custo adicional (deixe 0 se não altera o preço)</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  value={optionCost}
+                  onChange={e => setOptionCost(e.target.value)}
+                  placeholder="0,00"
+                  className="bg-zinc-800 text-white text-sm rounded-lg px-3 py-2.5 outline-none border border-zinc-700 focus:border-violet-600"
+                />
+              </div>
+              <button
+                onClick={handleAddOption}
+                disabled={savingOption}
+                className="py-3 rounded-xl bg-violet-600 text-white font-medium text-sm cursor-pointer hover:bg-violet-500 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+              >
+                <i className="ti ti-plus" />
+                {savingOption ? 'Adicionando...' : 'Adicionar opção'}
+              </button>
+            </div>
+
+            <button
+              onClick={() => setOptionsItem(null)}
+              className="py-3 rounded-xl bg-zinc-800 text-zinc-300 font-medium text-sm cursor-pointer hover:bg-zinc-700 transition-colors"
+            >
+              Fechar
+            </button>
           </div>
         </div>
       )}
