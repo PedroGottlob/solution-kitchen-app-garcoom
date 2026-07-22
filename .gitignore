@@ -293,6 +293,9 @@ FakesAssemblies/
 .ntvs_analysis.dat
 node_modules/
 
+# Build output (gerado pelo Dockerfile via npm run build)
+dist/
+
 # Visual Studio 6 build log
 *.plg
 
