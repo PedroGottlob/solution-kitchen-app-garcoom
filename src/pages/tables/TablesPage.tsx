@@ -21,7 +21,7 @@ export function TablesPage({ isGerente }: TablesPageProps) {
   const [showNotifications, setShowNotifications] = useState(false)
   const [loading, setLoading] = useState(true)
 
-  useOrders() // Mantém listener ativo para atualizar orderCount das mesas
+  const { orders: liveOrders } = useOrders() // Listener ativo: recalcula status das mesas em tempo real
 
   useEffect(() => {
     Promise.all([
@@ -53,6 +53,24 @@ export function TablesPage({ isGerente }: TablesPageProps) {
       .catch(console.error)
       .finally(() => setLoading(false))
   }, [])
+
+  // Recalcula status/contagem sempre que um novo pedido chega via SignalR
+  // (ex: pedido criado pelo autoatendimento, sem passar pelo garçom)
+  useEffect(() => {
+    if (liveOrders.length === 0 && !loading) return
+
+    const countByTable = liveOrders.reduce((acc: Record<string, number>, o: Order) => {
+      if (o.status !== 'Cancelled') {
+        acc[o.tableId] = (acc[o.tableId] ?? 0) + 1
+      }
+      return acc
+    }, {})
+
+    useTableStore.getState().tables.forEach(t => {
+      const count = countByTable[t.id] ?? 0
+      updateTableStatus(t.id, count > 0 ? 'occupied' : 'free', count)
+    })
+  }, [liveOrders])
 
   const free = tables.filter(t => t.status === 'free').length
   const occupied = tables.filter(t => t.status === 'occupied').length
