@@ -16,6 +16,7 @@ import { MenuManagementPage } from './pages/menu/MenuManagementPage'
 import { TableManagementPage } from './pages/tables/TableManagementPage'
 import { ReportsPage } from './pages/reports/ReportsPage'
 import { useOrderNotifications } from './hooks/useOrderNotifications'
+import { WaitlistPage } from './pages/tables/WaitlistPage'
 import { Toaster } from 'sonner'
 
 const NAMESPACE = 'https://solution-kitchen.com'
@@ -95,6 +96,7 @@ function App() {
         <Routes>
           <Route path="/" element={<TablesPage isGerente={isGerente} />} />
           <Route path="/orders" element={<OrdersPage />} />
+          <Route path="/waitlist" element={<WaitlistPage />} />
           <Route path="/account" element={<AccountPage />} />
           <Route
             path="/tables/manage"

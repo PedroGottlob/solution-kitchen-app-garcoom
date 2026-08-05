@@ -87,6 +87,12 @@ export function TablesPage({ isGerente }: TablesPageProps) {
         <div className="flex items-center justify-between mb-1">
           <h1 className="text-white text-xl font-medium">Salão principal</h1>
           <div className="flex items-center gap-2">
+            <button
+              onClick={() => navigate('/waitlist')}
+              className="w-9 h-9 rounded-full bg-zinc-800 flex items-center justify-center cursor-pointer hover:bg-zinc-700 transition-colors"
+            >
+              <i className="ti ti-users text-zinc-400 text-lg" />
+            </button>
             {isGerente && (
               <button
                 onClick={() => navigate('/tables/manage')}
