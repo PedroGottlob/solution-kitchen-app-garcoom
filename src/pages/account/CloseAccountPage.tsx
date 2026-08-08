@@ -187,8 +187,8 @@ export function CloseAccountPage() {
               onClick={() => setSplit(n)}
               className={`flex-1 py-2.5 rounded-xl border text-sm cursor-pointer transition-colors ${
                 split === n
-                  ? 'bg-accent-950 border-accent-900 text-accent-400'
-                  : 'bg-accent-50 border-accent-200 text-zinc-700 hover:border-accent-900 hover:text-accent-400 hover:bg-accent-950'
+                  ? 'bg-white border-accent-600 text-accent-600'
+                  : 'bg-accent-50 border-accent-200 text-zinc-700 hover:border-accent-600 hover:text-accent-600 hover:bg-white'
               }`}
             >
               {n === 1 ? 'Sem dividir' : `÷ ${n}`}
@@ -213,10 +213,10 @@ export function CloseAccountPage() {
               key={method.id}
               onClick={() => handleCloseAccount(method.id)}
               disabled={loading}
-              className="bg-accent-50 border border-accent-200 rounded-xl py-4 flex flex-col items-center gap-2 cursor-pointer hover:border-accent-900 hover:bg-accent-950 transition-colors group disabled:opacity-50"
+              className="bg-accent-50 border border-accent-200 rounded-xl py-4 flex flex-col items-center gap-2 cursor-pointer hover:border-accent-600 hover:bg-white transition-colors group disabled:opacity-50"
             >
-              <i className={`ti ${method.icon} text-2xl text-zinc-600 group-hover:text-accent-400`} />
-              <span className="text-zinc-700 text-sm group-hover:text-accent-400">
+              <i className={`ti ${method.icon} text-2xl text-zinc-600 group-hover:text-accent-600`} />
+              <span className="text-zinc-700 text-sm group-hover:text-accent-600">
                 {method.label}
               </span>
               <span className="text-zinc-500 text-xs">

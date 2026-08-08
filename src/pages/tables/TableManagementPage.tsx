@@ -216,7 +216,7 @@ export function TableManagementPage() {
                   </div>
                   <button
                     onClick={() => handleActivate(table.id)}
-                    className="text-xs px-3 py-1.5 rounded-lg bg-zinc-200 text-zinc-700 border border-zinc-300 hover:bg-accent-950 hover:text-accent-400 hover:border-accent-900 transition-colors cursor-pointer"
+                    className="text-xs px-3 py-1.5 rounded-lg bg-zinc-200 text-zinc-700 border border-zinc-300 hover:bg-white hover:text-accent-600 hover:border-accent-600 transition-colors cursor-pointer"
                   >
                     Reativar
                   </button>

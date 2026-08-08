@@ -302,7 +302,7 @@ export function MenuManagementPage() {
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <button onClick={() => openOptions(item)} className="w-8 h-8 rounded-full bg-zinc-200 flex items-center justify-center cursor-pointer hover:bg-accent-950 transition-colors" title="Opções do item">
+                        <button onClick={() => openOptions(item)} className="w-8 h-8 rounded-full bg-zinc-200 flex items-center justify-center cursor-pointer hover:bg-accent-100 transition-colors" title="Opções do item">
                           <i className="ti ti-list-details text-zinc-600 text-sm" />
                         </button>
                         <button onClick={() => openEdit(item)} className="w-8 h-8 rounded-full bg-zinc-200 flex items-center justify-center cursor-pointer hover:bg-zinc-300 transition-colors" title="Editar">
@@ -334,7 +334,7 @@ export function MenuManagementPage() {
                   </div>
                   <button
                     onClick={() => handleActivate(item.id)}
-                    className="text-xs px-3 py-1.5 rounded-lg bg-zinc-200 text-zinc-700 border border-zinc-300 hover:bg-accent-950 hover:text-accent-400 hover:border-accent-900 transition-colors cursor-pointer"
+                    className="text-xs px-3 py-1.5 rounded-lg bg-zinc-200 text-zinc-700 border border-zinc-300 hover:bg-white hover:text-accent-600 hover:border-accent-600 transition-colors cursor-pointer"
                   >
                     Reativar
                   </button>

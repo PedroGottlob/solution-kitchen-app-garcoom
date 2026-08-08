@@ -199,7 +199,7 @@ export function NewOrderPage() {
               onClick={() => setActiveCategory(cat)}
               className={`px-3 py-1.5 rounded-full text-xs whitespace-nowrap border cursor-pointer transition-colors ${
                 activeCategory === cat
-                  ? 'bg-accent-950 text-accent-400 border-accent-900'
+                  ? 'bg-white text-accent-600 border-accent-600'
                   : 'bg-zinc-200 text-zinc-600 border-zinc-300'
               }`}
             >
@@ -332,7 +332,7 @@ export function NewOrderPage() {
                     onClick={() => toggleOption(option)}
                     className={`flex items-center justify-between px-4 py-3 rounded-xl border transition-colors cursor-pointer ${
                       isSelected
-                        ? 'bg-accent-950 border-accent-900'
+                        ? 'bg-white border-accent-600'
                         : 'bg-zinc-200 border-zinc-300 hover:border-zinc-400'
                     }`}
                   >
@@ -342,7 +342,7 @@ export function NewOrderPage() {
                       }`}>
                         {isSelected && <i className="ti ti-check text-white text-xs" />}
                       </div>
-                      <span className={`text-sm ${isSelected ? 'text-white' : 'text-zinc-700'}`}>
+                      <span className={`text-sm ${isSelected ? 'text-accent-700' : 'text-zinc-700'}`}>
                         {option.name}
                       </span>
                     </div>

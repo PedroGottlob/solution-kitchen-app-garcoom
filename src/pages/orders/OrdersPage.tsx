@@ -61,7 +61,7 @@ export function OrdersPage() {
               onClick={() => setActiveFilter(f.value)}
               className={`px-3 py-1.5 rounded-full text-xs whitespace-nowrap border cursor-pointer transition-colors ${
                 activeFilter === f.value
-                  ? 'bg-accent-950 text-accent-400 border-accent-900'
+                  ? 'bg-white text-accent-600 border-accent-600'
                   : 'bg-zinc-200 text-zinc-600 border-zinc-300'
               }`}
             >
