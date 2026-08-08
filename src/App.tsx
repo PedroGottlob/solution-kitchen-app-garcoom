@@ -45,7 +45,7 @@ function App() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
+      <div className="min-h-screen bg-zinc-50 flex items-center justify-center">
         <div className="text-zinc-500 text-sm">Carregando...</div>
       </div>
     )
@@ -53,9 +53,9 @@ function App() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center gap-6 px-8">
+      <div className="min-h-screen bg-zinc-50 flex flex-col items-center justify-center gap-6 px-8">
         <div className="text-center">
-          <h1 className="text-white text-2xl font-medium mb-2">Solution Kitchen</h1>
+          <h1 className="text-zinc-900 text-2xl font-medium mb-2">Solution Kitchen</h1>
           <p className="text-zinc-500 text-sm">Faça login para continuar</p>
         </div>
         <button
@@ -70,9 +70,9 @@ function App() {
 
   if (!roles.includes('garcom') && !roles.includes('gerente')) {
     return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center px-8">
+      <div className="min-h-screen bg-zinc-50 flex items-center justify-center px-8">
         <div className="text-center">
-          <p className="text-white text-lg font-medium mb-2">Acesso negado</p>
+          <p className="text-zinc-900 text-lg font-medium mb-2">Acesso negado</p>
           <p className="text-zinc-500 text-sm">Você não tem permissão para acessar este app.</p>
         </div>
       </div>
@@ -81,9 +81,9 @@ function App() {
 
   if (!tenantId) {
     return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center px-8">
+      <div className="min-h-screen bg-zinc-50 flex items-center justify-center px-8">
         <div className="text-center">
-          <p className="text-white text-lg font-medium mb-2">Conta sem restaurante vinculado</p>
+          <p className="text-zinc-900 text-lg font-medium mb-2">Conta sem restaurante vinculado</p>
           <p className="text-zinc-500 text-sm">Sua conta não está associada a nenhum restaurante. Entre em contato com o suporte.</p>
         </div>
       </div>
@@ -92,7 +92,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-zinc-950">
+      <div className="min-h-screen bg-zinc-50">
         <Routes>
           <Route path="/" element={<TablesPage isGerente={isGerente} />} />
           <Route path="/orders" element={<OrdersPage />} />
@@ -131,4 +131,4 @@ function App() {
     </BrowserRouter>
   )
 }
-export default App
+export default App

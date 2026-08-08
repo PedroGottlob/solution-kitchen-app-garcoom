@@ -21,7 +21,7 @@ export function BottomNav({ isGerente }: { isGerente: boolean }) {
   const tabs = isGerente ? gerenteTabs : baseTabs
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-zinc-900 border-t border-zinc-800 flex z-50">
+    <div className="fixed bottom-0 left-0 right-0 bg-zinc-100 border-t border-zinc-200 flex z-50">
       {tabs.map((tab) => {
         const active = location.pathname === tab.path
         return (
@@ -30,8 +30,8 @@ export function BottomNav({ isGerente }: { isGerente: boolean }) {
             onClick={() => navigate(tab.path)}
             className="flex-1 flex flex-col items-center gap-1 py-3 cursor-pointer"
           >
-            <i className={`ti ${tab.icon} text-2xl ${active ? 'text-accent-400' : 'text-zinc-500'}`} />
-            <span className={`text-xs ${active ? 'text-accent-400' : 'text-zinc-500'}`}>
+            <i className={`ti ${tab.icon} text-2xl ${active ? 'text-accent-600' : 'text-zinc-500'}`} />
+            <span className={`text-xs ${active ? 'text-accent-600' : 'text-zinc-500'}`}>
               {tab.label}
             </span>
           </button>

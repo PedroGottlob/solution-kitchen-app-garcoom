@@ -24,20 +24,20 @@ export function NotificationsPage() {
   const unread = unreadCount()
 
   return (
-    <div className="min-h-screen bg-zinc-950 flex flex-col pb-20">
+    <div className="min-h-screen bg-zinc-50 flex flex-col pb-20">
 
       {/* Header */}
-      <div className="bg-zinc-900 border-b border-zinc-800 px-5 py-4">
+      <div className="bg-zinc-100 border-b border-zinc-200 px-5 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <button
               onClick={() => navigate(-1)}
-              className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center cursor-pointer"
+              className="w-8 h-8 rounded-full bg-zinc-200 flex items-center justify-center cursor-pointer"
             >
-              <i className="ti ti-arrow-left text-zinc-400" />
+              <i className="ti ti-arrow-left text-zinc-600" />
             </button>
             <div>
-              <h1 className="text-white text-xl font-medium">Notificações</h1>
+              <h1 className="text-zinc-900 text-xl font-medium">Notificações</h1>
               {unread > 0 && (
                 <p className="text-zinc-500 text-sm">{unread} não lida{unread !== 1 ? 's' : ''}</p>
               )}
@@ -46,7 +46,7 @@ export function NotificationsPage() {
           {unread > 0 && (
             <button
               onClick={markAllAsRead}
-              className="text-accent-400 text-sm cursor-pointer hover:text-accent-300"
+              className="text-accent-600 text-sm cursor-pointer hover:text-accent-700"
             >
               Marcar todas
             </button>
@@ -58,7 +58,7 @@ export function NotificationsPage() {
       <div className="flex flex-col">
         {notifications.length === 0 ? (
           <div className="flex-1 flex items-center justify-center flex-col gap-3 py-20">
-            <i className="ti ti-bell-off text-zinc-600 text-4xl" />
+            <i className="ti ti-bell-off text-zinc-500 text-4xl" />
             <p className="text-zinc-500">Nenhuma notificação</p>
           </div>
         ) : (
@@ -68,8 +68,8 @@ export function NotificationsPage() {
               <button
                 key={notification.id}
                 onClick={() => markAsRead(notification.id)}
-                className={`flex items-start gap-4 px-5 py-4 border-b border-zinc-800 cursor-pointer hover:bg-zinc-900 transition-colors text-left ${
-                  !notification.read ? 'bg-zinc-900' : ''
+                className={`flex items-start gap-4 px-5 py-4 border-b border-zinc-200 cursor-pointer hover:bg-zinc-100 transition-colors text-left ${
+                  !notification.read ? 'bg-zinc-100' : ''
                 }`}
               >
                 <div className={`w-10 h-10 rounded-full ${config.bg} flex items-center justify-center flex-shrink-0 mt-0.5`}>
@@ -78,7 +78,7 @@ export function NotificationsPage() {
 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-2 mb-1">
-                    <p className={`text-sm font-medium ${notification.read ? 'text-zinc-400' : 'text-white'}`}>
+                    <p className={`text-sm font-medium ${notification.read ? 'text-zinc-600' : 'text-zinc-900'}`}>
                       {notification.title}
                     </p>
                     <span className="text-zinc-500 text-xs whitespace-nowrap">

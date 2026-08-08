@@ -39,17 +39,17 @@ export function NotificationDropdown({ onClose }: NotificationDropdownProps) {
   return (
     <div
       ref={ref}
-      className="absolute right-0 top-12 w-80 bg-zinc-900 border border-zinc-800 rounded-xl shadow-2xl z-50 overflow-hidden"
+      className="absolute right-0 top-12 w-80 bg-zinc-100 border border-zinc-200 rounded-xl shadow-2xl z-50 overflow-hidden"
     >
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-800">
-        <span className="text-white text-sm font-medium">
-          Notificações {unread > 0 && <span className="text-accent-400">({unread})</span>}
+      <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-200">
+        <span className="text-zinc-900 text-sm font-medium">
+          Notificações {unread > 0 && <span className="text-accent-600">({unread})</span>}
         </span>
         {unread > 0 && (
           <button
             onClick={markAllAsRead}
-            className="text-accent-400 text-xs cursor-pointer hover:text-accent-300"
+            className="text-accent-600 text-xs cursor-pointer hover:text-accent-700"
           >
             Marcar todas
           </button>
@@ -60,7 +60,7 @@ export function NotificationDropdown({ onClose }: NotificationDropdownProps) {
       <div className="max-h-96 overflow-y-auto">
         {notifications.length === 0 ? (
           <div className="flex flex-col items-center gap-2 py-8">
-            <i className="ti ti-bell-off text-zinc-600 text-3xl" />
+            <i className="ti ti-bell-off text-zinc-500 text-3xl" />
             <p className="text-zinc-500 text-sm">Nenhuma notificação</p>
           </div>
         ) : (
@@ -70,8 +70,8 @@ export function NotificationDropdown({ onClose }: NotificationDropdownProps) {
               <button
                 key={notification.id}
                 onClick={() => markAsRead(notification.id)}
-                className={`w-full flex items-start gap-3 px-4 py-3 border-b border-zinc-800 cursor-pointer hover:bg-zinc-800 transition-colors text-left ${
-                  !notification.read ? 'bg-zinc-800/50' : ''
+                className={`w-full flex items-start gap-3 px-4 py-3 border-b border-zinc-200 cursor-pointer hover:bg-zinc-200 transition-colors text-left ${
+                  !notification.read ? 'bg-zinc-200/50' : ''
                 }`}
               >
                 <div className={`w-8 h-8 rounded-full ${config.bg} flex items-center justify-center flex-shrink-0 mt-0.5`}>
@@ -79,7 +79,7 @@ export function NotificationDropdown({ onClose }: NotificationDropdownProps) {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-2 mb-0.5">
-                    <p className={`text-xs font-medium ${notification.read ? 'text-zinc-400' : 'text-white'}`}>
+                    <p className={`text-xs font-medium ${notification.read ? 'text-zinc-600' : 'text-zinc-900'}`}>
                       {notification.title}
                     </p>
                     <span className="text-zinc-500 text-xs whitespace-nowrap">

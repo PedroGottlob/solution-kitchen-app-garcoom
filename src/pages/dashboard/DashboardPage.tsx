@@ -14,9 +14,9 @@ function MetricCard({
   subColor?: string
 }) {
   return (
-    <div className="bg-zinc-900 rounded-xl p-4 flex flex-col gap-1">
+    <div className="bg-zinc-100 rounded-xl p-4 flex flex-col gap-1">
       <span className="text-zinc-500 text-xs">{label}</span>
-      <span className="text-white text-xl font-medium">{value}</span>
+      <span className="text-zinc-900 text-xl font-medium">{value}</span>
       {sub && <span className={`text-xs ${subColor ?? 'text-zinc-500'}`}>{sub}</span>}
     </div>
   )
@@ -36,7 +36,7 @@ function formatPercent(value: number): { text: string; color: string } {
   }
   const sign = value > 0 ? '+' : ''
   const text = `${sign}${value.toFixed(0)}% vs anterior`
-  const color = value > 0 ? 'text-emerald-400' : 'text-red-400'
+  const color = value > 0 ? 'text-emerald-600' : 'text-red-600'
   return { text, color }
 }
 
@@ -93,7 +93,7 @@ export function DashboardPage() {
 
   if (loading && !data) {
     return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center pb-20">
+      <div className="min-h-screen bg-zinc-50 flex items-center justify-center pb-20">
         <span className="text-zinc-500 text-sm">Carregando dashboard...</span>
       </div>
     )
@@ -101,8 +101,8 @@ export function DashboardPage() {
 
   if (error || !data) {
     return (
-      <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center pb-20 gap-4 px-5">
-        <i className="ti ti-alert-circle text-zinc-600 text-4xl" />
+      <div className="min-h-screen bg-zinc-50 flex flex-col items-center justify-center pb-20 gap-4 px-5">
+        <i className="ti ti-alert-circle text-zinc-500 text-4xl" />
         <p className="text-zinc-500 text-sm text-center">
           Erro ao carregar dados do dashboard.
         </p>
@@ -121,18 +121,18 @@ export function DashboardPage() {
   const statusEntries = Object.entries(data.ordersByStatus).filter(([, count]) => count > 0)
 
   return (
-    <div className="min-h-screen bg-zinc-950 px-4 pt-6 pb-28">
+    <div className="min-h-screen bg-zinc-50 px-4 pt-6 pb-28">
 
       {/* Header com refresh */}
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-white text-lg font-medium">Dashboard</h1>
+        <h1 className="text-zinc-900 text-lg font-medium">Dashboard</h1>
         <button
           onClick={load}
           disabled={loading}
-          className="w-9 h-9 rounded-full bg-zinc-900 flex items-center justify-center cursor-pointer hover:bg-zinc-800 transition-colors disabled:opacity-50"
+          className="w-9 h-9 rounded-full bg-zinc-100 flex items-center justify-center cursor-pointer hover:bg-zinc-200 transition-colors disabled:opacity-50"
           title="Atualizar"
         >
-          <i className={`ti ti-refresh text-zinc-400 text-sm ${loading ? 'animate-spin' : ''}`} />
+          <i className={`ti ti-refresh text-zinc-600 text-sm ${loading ? 'animate-spin' : ''}`} />
         </button>
       </div>
 
@@ -172,11 +172,11 @@ export function DashboardPage() {
       {statusEntries.length > 0 && (
         <section className="mb-6">
           <h2 className="text-zinc-500 text-xs uppercase tracking-wider mb-3">Pedidos por status</h2>
-          <div className="bg-zinc-900 rounded-xl divide-y divide-zinc-800">
+          <div className="bg-zinc-100 rounded-xl divide-y divide-zinc-200">
             {statusEntries.map(([status, count]) => (
               <div key={status} className="flex items-center justify-between px-4 py-3">
-                <span className="text-zinc-400 text-sm">{translateStatus(status)}</span>
-                <span className="text-white text-sm font-medium">{count}</span>
+                <span className="text-zinc-600 text-sm">{translateStatus(status)}</span>
+                <span className="text-zinc-900 text-sm font-medium">{count}</span>
               </div>
             ))}
           </div>
@@ -187,26 +187,26 @@ export function DashboardPage() {
       {data.topItems.filter(i => i.quantitySold > 0).length > 0 && (
         <section className="mb-6">
           <h2 className="text-zinc-500 text-xs uppercase tracking-wider mb-3">Itens mais vendidos</h2>
-          <div className="bg-zinc-900 rounded-xl divide-y divide-zinc-800">
+          <div className="bg-zinc-100 rounded-xl divide-y divide-zinc-200">
             {data.topItems.filter(i => i.quantitySold > 0).map((item, idx) => (
               <div key={idx} className="flex items-center justify-between px-4 py-3 gap-3">
                 <div className="flex items-center gap-3 flex-1 min-w-0">
                   <span className={`text-xs font-medium w-6 text-center flex-shrink-0 ${
-                    idx === 0 ? 'text-amber-400' :
-                    idx === 1 ? 'text-zinc-300' :
-                    idx === 2 ? 'text-orange-400' :
+                    idx === 0 ? 'text-amber-600' :
+                    idx === 1 ? 'text-zinc-700' :
+                    idx === 2 ? 'text-orange-600' :
                     'text-zinc-500'
                   }`}>
                     #{idx + 1}
                   </span>
                   <div className="flex flex-col min-w-0">
-                    <span className="text-white text-sm truncate">{item.name}</span>
+                    <span className="text-zinc-900 text-sm truncate">{item.name}</span>
                     <span className="text-zinc-500 text-xs">
                       {item.quantitySold} {item.quantitySold === 1 ? 'unidade' : 'unidades'}
                     </span>
                   </div>
                 </div>
-                <span className="text-accent-400 text-sm font-medium flex-shrink-0">
+                <span className="text-accent-600 text-sm font-medium flex-shrink-0">
                   {formatBRL(item.totalRevenue)}
                 </span>
               </div>
@@ -236,12 +236,12 @@ export function DashboardPage() {
       {data.salesByDayOfWeek.length > 0 && (
         <section className="mb-6">
           <h2 className="text-zinc-500 text-xs uppercase tracking-wider mb-3">Vendas por dia</h2>
-          <div className="bg-zinc-900 rounded-xl divide-y divide-zinc-800">
+          <div className="bg-zinc-100 rounded-xl divide-y divide-zinc-200">
             {data.salesByDayOfWeek.map((day, idx) => (
               <div key={idx} className="flex items-center justify-between px-4 py-3">
-                <span className="text-zinc-400 text-sm">{day.dayOfWeek}</span>
+                <span className="text-zinc-600 text-sm">{day.dayOfWeek}</span>
                 <div className="flex flex-col items-end">
-                  <span className="text-white text-sm font-medium">{formatBRL(day.revenue)}</span>
+                  <span className="text-zinc-900 text-sm font-medium">{formatBRL(day.revenue)}</span>
                   <span className="text-zinc-500 text-xs">{day.orderCount} pedidos</span>
                 </div>
               </div>
@@ -252,7 +252,7 @@ export function DashboardPage() {
 
       {/* Timestamp */}
       {lastFetch && (
-        <p className="text-center text-zinc-600 text-xs mt-4">
+        <p className="text-center text-zinc-500 text-xs mt-4">
           Atualizado {formatUpdated(lastFetch, now)}
         </p>
       )}

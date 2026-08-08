@@ -82,31 +82,31 @@ export function TablesPage({ isGerente }: TablesPageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-950 flex flex-col pb-20">
-      <div className="bg-zinc-900 border-b border-zinc-800 px-5 py-4">
+    <div className="min-h-screen bg-zinc-50 flex flex-col pb-20">
+      <div className="bg-zinc-100 border-b border-zinc-200 px-5 py-4">
         <div className="flex items-center justify-between mb-1">
-          <h1 className="text-white text-xl font-medium">Salão principal</h1>
+          <h1 className="text-zinc-900 text-xl font-medium">Salão principal</h1>
           <div className="flex items-center gap-2">
             <button
               onClick={() => navigate('/waitlist')}
-              className="w-9 h-9 rounded-full bg-zinc-800 flex items-center justify-center cursor-pointer hover:bg-zinc-700 transition-colors"
+              className="w-9 h-9 rounded-full bg-zinc-200 flex items-center justify-center cursor-pointer hover:bg-zinc-300 transition-colors"
             >
-              <i className="ti ti-users text-zinc-400 text-lg" />
+              <i className="ti ti-users text-zinc-600 text-lg" />
             </button>
             {isGerente && (
               <button
                 onClick={() => navigate('/tables/manage')}
-                className="w-9 h-9 rounded-full bg-zinc-800 flex items-center justify-center cursor-pointer hover:bg-zinc-700 transition-colors"
+                className="w-9 h-9 rounded-full bg-zinc-200 flex items-center justify-center cursor-pointer hover:bg-zinc-300 transition-colors"
               >
-                <i className="ti ti-settings text-zinc-400 text-lg" />
+                <i className="ti ti-settings text-zinc-600 text-lg" />
               </button>
             )}
             <div className="relative">
               <button
                 onClick={() => setShowNotifications(prev => !prev)}
-                className="w-9 h-9 rounded-full bg-zinc-800 flex items-center justify-center relative cursor-pointer hover:bg-zinc-700 transition-colors"
+                className="w-9 h-9 rounded-full bg-zinc-200 flex items-center justify-center relative cursor-pointer hover:bg-zinc-300 transition-colors"
               >
-                <i className="ti ti-bell text-zinc-400 text-lg" />
+                <i className="ti ti-bell text-zinc-600 text-lg" />
                 {unread > 0 && (
                   <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-accent-500 text-white text-xs flex items-center justify-center">
                     {unread}
@@ -123,16 +123,16 @@ export function TablesPage({ isGerente }: TablesPageProps) {
       </div>
 
       <div className="px-5 py-4 flex gap-3">
-        <div className="flex-1 bg-zinc-900 rounded-xl p-3 text-center border border-zinc-800">
-          <div className="text-emerald-400 text-lg font-medium">{free}</div>
+        <div className="flex-1 bg-zinc-100 rounded-xl p-3 text-center border border-zinc-200">
+          <div className="text-emerald-600 text-lg font-medium">{free}</div>
           <div className="text-zinc-500 text-xs">Livres</div>
         </div>
-        <div className="flex-1 bg-zinc-900 rounded-xl p-3 text-center border border-zinc-800">
-          <div className="text-accent-400 text-lg font-medium">{occupied}</div>
+        <div className="flex-1 bg-zinc-100 rounded-xl p-3 text-center border border-zinc-200">
+          <div className="text-accent-600 text-lg font-medium">{occupied}</div>
           <div className="text-zinc-500 text-xs">Ocupadas</div>
         </div>
-        <div className="flex-1 bg-zinc-900 rounded-xl p-3 text-center border border-zinc-800">
-          <div className="text-amber-400 text-lg font-medium">{ready}</div>
+        <div className="flex-1 bg-zinc-100 rounded-xl p-3 text-center border border-zinc-200">
+          <div className="text-amber-600 text-lg font-medium">{ready}</div>
           <div className="text-zinc-500 text-xs">Prontas</div>
         </div>
       </div>
@@ -148,12 +148,12 @@ export function TablesPage({ isGerente }: TablesPageProps) {
           </div>
         ) : tables.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 gap-3 text-center">
-            <i className="ti ti-layout-grid text-zinc-600 text-4xl" />
+            <i className="ti ti-layout-grid text-zinc-500 text-4xl" />
             <p className="text-zinc-500">Nenhuma mesa cadastrada ainda</p>
             {isGerente && (
               <button
                 onClick={() => navigate('/tables/manage')}
-                className="text-accent-400 text-sm underline cursor-pointer"
+                className="text-accent-600 text-sm underline cursor-pointer"
               >
                 Cadastrar mesas
               </button>

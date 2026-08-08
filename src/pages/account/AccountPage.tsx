@@ -84,11 +84,11 @@ export function AccountPage() {
   const totalOrders = openTables.reduce((acc, t) => acc + t.orderCount, 0)
 
   return (
-    <div className="min-h-screen bg-zinc-950 flex flex-col pb-20">
+    <div className="min-h-screen bg-zinc-50 flex flex-col pb-20">
 
       {/* Header */}
-      <div className="bg-zinc-900 border-b border-zinc-800 px-5 py-4">
-        <h1 className="text-white text-xl font-medium">Conta</h1>
+      <div className="bg-zinc-100 border-b border-zinc-200 px-5 py-4">
+        <h1 className="text-zinc-900 text-xl font-medium">Conta</h1>
         <p className="text-zinc-500 text-sm">Mesas ocupadas · resumo do salão</p>
       </div>
 
@@ -98,9 +98,9 @@ export function AccountPage() {
         </div>
       ) : openTables.length === 0 ? (
         <div className="flex-1 flex items-center justify-center flex-col gap-3">
-          <i className="ti ti-receipt text-zinc-600 text-5xl" />
+          <i className="ti ti-receipt text-zinc-500 text-5xl" />
           <p className="text-zinc-500 text-lg">Nenhuma mesa aberta</p>
-          <p className="text-zinc-600 text-sm">Todas as mesas do salão estão fechadas.</p>
+          <p className="text-zinc-500 text-sm">Todas as mesas do salão estão fechadas.</p>
         </div>
       ) : (
         <div className="flex flex-col gap-4 px-5 py-4">
@@ -113,7 +113,7 @@ export function AccountPage() {
             <p className="text-white text-3xl font-medium mb-2">
               R$ {grandTotal.toFixed(2)}
             </p>
-            <p className="text-zinc-400 text-sm">
+            <p className="text-zinc-600 text-sm">
               {openTables.length} mesa{openTables.length !== 1 ? 's' : ''} · {totalOrders} pedido{totalOrders !== 1 ? 's' : ''}
             </p>
           </div>
@@ -129,10 +129,10 @@ export function AccountPage() {
                 <button
                   key={t.tableId}
                   onClick={() => navigate(`/tables/${t.tableId}`)}
-                  className="bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 flex items-center justify-between cursor-pointer hover:border-zinc-700 hover:bg-zinc-800 transition-colors text-left"
+                  className="bg-zinc-100 border border-zinc-200 rounded-xl px-4 py-3 flex items-center justify-between cursor-pointer hover:border-zinc-300 hover:bg-zinc-200 transition-colors text-left"
                 >
                   <div>
-                    <p className="text-white text-sm font-medium">
+                    <p className="text-zinc-900 text-sm font-medium">
                       Mesa {String(t.tableNumber).padStart(2, '0')}
                     </p>
                     <p className="text-zinc-500 text-xs mt-0.5">
@@ -141,10 +141,10 @@ export function AccountPage() {
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <p className="text-accent-400 text-sm font-medium">
+                    <p className="text-accent-600 text-sm font-medium">
                       R$ {t.total.toFixed(2)}
                     </p>
-                    <i className="ti ti-chevron-right text-zinc-600" />
+                    <i className="ti ti-chevron-right text-zinc-500" />
                   </div>
                 </button>
               ))}

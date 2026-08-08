@@ -216,12 +216,12 @@ export function MenuManagementPage() {
   const currentMargin = calcMargin(form.price, form.cost)
 
   return (
-    <div className="min-h-screen bg-zinc-950 flex flex-col pb-28">
+    <div className="min-h-screen bg-zinc-50 flex flex-col pb-28">
       {/* Header */}
-      <div className="bg-zinc-900 border-b border-zinc-800 px-5 py-4">
+      <div className="bg-zinc-100 border-b border-zinc-200 px-5 py-4">
         <div className="flex items-center justify-between mb-3">
           <div>
-            <h1 className="text-white text-xl font-medium">Cardápio</h1>
+            <h1 className="text-zinc-900 text-xl font-medium">Cardápio</h1>
             <p className="text-zinc-500 text-sm">
               {activeItems.length} ite{activeItems.length !== 1 ? 'ns' : 'm'}
               {inactiveItems.length > 0 && ` · ${inactiveItems.length} inativo${inactiveItems.length !== 1 ? 's' : ''}`}
@@ -241,7 +241,7 @@ export function MenuManagementPage() {
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Buscar item..."
-            className="w-full pl-9 pr-3 py-2 rounded-xl bg-zinc-800 border border-zinc-700 text-white text-sm placeholder-zinc-500 focus:outline-none focus:border-accent-600"
+            className="w-full pl-9 pr-3 py-2 rounded-xl bg-zinc-200 border border-zinc-300 text-zinc-900 text-sm placeholder-zinc-500 focus:outline-none focus:border-accent-600"
           />
         </div>
       </div>
@@ -252,13 +252,13 @@ export function MenuManagementPage() {
         </div>
       ) : activeItems.length === 0 && inactiveItems.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 gap-3">
-          <i className="ti ti-book text-zinc-600 text-4xl" />
+          <i className="ti ti-book text-zinc-500 text-4xl" />
           <p className="text-zinc-500">Nenhum item no cardápio</p>
-          <p className="text-zinc-600 text-xs">Toque no botão + para adicionar o primeiro</p>
+          <p className="text-zinc-500 text-xs">Toque no botão + para adicionar o primeiro</p>
         </div>
       ) : filtered.length === 0 && search.trim() ? (
         <div className="flex flex-col items-center justify-center py-16 gap-2">
-          <i className="ti ti-search text-zinc-600 text-3xl" />
+          <i className="ti ti-search text-zinc-500 text-3xl" />
           <p className="text-zinc-500 text-sm">Nenhum item encontrado</p>
         </div>
       ) : (
@@ -275,20 +275,20 @@ export function MenuManagementPage() {
                   </p>
                   <button
                     onClick={() => openCreate(cat.id)}
-                    className="text-zinc-500 hover:text-accent-400 text-xs cursor-pointer transition-colors flex items-center gap-1"
+                    className="text-zinc-500 hover:text-accent-600 text-xs cursor-pointer transition-colors flex items-center gap-1"
                   >
                     <i className="ti ti-plus text-xs" />
                     Novo em {cat.name.toLowerCase()}
                   </button>
                 </div>
                 {categoryItems.length === 0 ? (
-                  <p className="text-zinc-600 text-xs italic py-2">Nenhum item nesta categoria</p>
+                  <p className="text-zinc-500 text-xs italic py-2">Nenhum item nesta categoria</p>
                 ) : (
                   categoryItems.map(item => (
-                    <div key={item.id} className="bg-zinc-900 rounded-xl border border-zinc-800 px-4 py-3 flex items-center justify-between">
+                    <div key={item.id} className="bg-zinc-100 rounded-xl border border-zinc-200 px-4 py-3 flex items-center justify-between">
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
-                          <p className="text-white text-sm font-medium">{item.name}</p>
+                          <p className="text-zinc-900 text-sm font-medium">{item.name}</p>
                           {(item.options?.length ?? 0) > 0 && (
                             <span className="text-xs px-1.5 py-0.5 rounded bg-accent-950 text-accent-400 border border-accent-900">
                               {item.options.length} opç{item.options.length !== 1 ? 'ões' : 'ão'}
@@ -297,19 +297,19 @@ export function MenuManagementPage() {
                         </div>
                         {item.description && <p className="text-zinc-500 text-xs">{item.description}</p>}
                         <div className="flex items-center gap-3 mt-1 flex-wrap">
-                          <span className="text-accent-400 text-sm font-medium">{formatBRL(item.price)}</span>
-                          <span className="text-zinc-600 text-xs">Custo: {formatBRL(item.cost)} · Margem: {item.margin.toFixed(0)}%</span>
+                          <span className="text-accent-600 text-sm font-medium">{formatBRL(item.price)}</span>
+                          <span className="text-zinc-500 text-xs">Custo: {formatBRL(item.cost)} · Margem: {item.margin.toFixed(0)}%</span>
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <button onClick={() => openOptions(item)} className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center cursor-pointer hover:bg-accent-950 transition-colors" title="Opções do item">
-                          <i className="ti ti-list-details text-zinc-400 text-sm" />
+                        <button onClick={() => openOptions(item)} className="w-8 h-8 rounded-full bg-zinc-200 flex items-center justify-center cursor-pointer hover:bg-accent-950 transition-colors" title="Opções do item">
+                          <i className="ti ti-list-details text-zinc-600 text-sm" />
                         </button>
-                        <button onClick={() => openEdit(item)} className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center cursor-pointer hover:bg-zinc-700 transition-colors" title="Editar">
-                          <i className="ti ti-pencil text-zinc-400 text-sm" />
+                        <button onClick={() => openEdit(item)} className="w-8 h-8 rounded-full bg-zinc-200 flex items-center justify-center cursor-pointer hover:bg-zinc-300 transition-colors" title="Editar">
+                          <i className="ti ti-pencil text-zinc-600 text-sm" />
                         </button>
-                        <button onClick={() => setConfirmDeleteId(item.id)} className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center cursor-pointer hover:bg-red-950 transition-colors" title="Remover">
-                          <i className="ti ti-trash text-zinc-400 text-sm" />
+                        <button onClick={() => setConfirmDeleteId(item.id)} className="w-8 h-8 rounded-full bg-zinc-200 flex items-center justify-center cursor-pointer hover:bg-red-950 transition-colors" title="Remover">
+                          <i className="ti ti-trash text-zinc-600 text-sm" />
                         </button>
                       </div>
                     </div>
@@ -326,15 +326,15 @@ export function MenuManagementPage() {
                 Itens inativos
               </p>
               {inactiveItems.map(item => (
-                <div key={item.id} className="bg-zinc-900/50 rounded-xl border border-zinc-800 px-4 py-3 flex items-center justify-between opacity-70">
+                <div key={item.id} className="bg-zinc-100/50 rounded-xl border border-zinc-200 px-4 py-3 flex items-center justify-between opacity-70">
                   <div className="flex-1">
-                    <p className="text-zinc-400 text-sm">{item.name}</p>
-                    {item.description && <p className="text-zinc-600 text-xs">{item.description}</p>}
-                    <span className="text-zinc-600 text-xs">{formatBRL(item.price)}</span>
+                    <p className="text-zinc-600 text-sm">{item.name}</p>
+                    {item.description && <p className="text-zinc-500 text-xs">{item.description}</p>}
+                    <span className="text-zinc-500 text-xs">{formatBRL(item.price)}</span>
                   </div>
                   <button
                     onClick={() => handleActivate(item.id)}
-                    className="text-xs px-3 py-1.5 rounded-lg bg-zinc-800 text-zinc-300 border border-zinc-700 hover:bg-accent-950 hover:text-accent-400 hover:border-accent-900 transition-colors cursor-pointer"
+                    className="text-xs px-3 py-1.5 rounded-lg bg-zinc-200 text-zinc-700 border border-zinc-300 hover:bg-accent-950 hover:text-accent-400 hover:border-accent-900 transition-colors cursor-pointer"
                   >
                     Reativar
                   </button>
@@ -348,42 +348,42 @@ export function MenuManagementPage() {
       {/* Modal de formulário */}
       {showForm && (
         <div className="fixed inset-0 bg-black/60 flex items-end z-[60]" onClick={() => setShowForm(false)}>
-          <div className="bg-zinc-900 rounded-t-2xl w-full p-5 pb-8 flex flex-col gap-4 max-h-[85vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
-            <h2 className="text-white text-lg font-medium">{editingId ? 'Editar item' : 'Novo item'}</h2>
+          <div className="bg-zinc-100 rounded-t-2xl w-full p-5 pb-8 flex flex-col gap-4 max-h-[85vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+            <h2 className="text-zinc-900 text-lg font-medium">{editingId ? 'Editar item' : 'Novo item'}</h2>
             <div className="flex flex-col gap-1">
               <label className="text-zinc-500 text-xs">Categoria</label>
-              <select value={form.categoryId} onChange={e => setForm(f => ({ ...f, categoryId: e.target.value }))} className="bg-zinc-800 text-white text-sm rounded-lg px-3 py-2.5 outline-none border border-zinc-700">
+              <select value={form.categoryId} onChange={e => setForm(f => ({ ...f, categoryId: e.target.value }))} className="bg-zinc-200 text-zinc-900 text-sm rounded-lg px-3 py-2.5 outline-none border border-zinc-300">
                 {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
               </select>
             </div>
             <div className="flex flex-col gap-1">
               <label className="text-zinc-500 text-xs">Nome</label>
-              <input type="text" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="Ex: X-Burguer" className="bg-zinc-800 text-white text-sm rounded-lg px-3 py-2.5 outline-none border border-zinc-700" />
+              <input type="text" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="Ex: X-Burguer" className="bg-zinc-200 text-zinc-900 text-sm rounded-lg px-3 py-2.5 outline-none border border-zinc-300" />
             </div>
             <div className="flex flex-col gap-1">
               <label className="text-zinc-500 text-xs">Descrição (opcional)</label>
-              <input type="text" value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="Ex: Pão, hambúrguer, queijo" className="bg-zinc-800 text-white text-sm rounded-lg px-3 py-2.5 outline-none border border-zinc-700" />
+              <input type="text" value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="Ex: Pão, hambúrguer, queijo" className="bg-zinc-200 text-zinc-900 text-sm rounded-lg px-3 py-2.5 outline-none border border-zinc-300" />
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="flex flex-col gap-1">
                 <label className="text-zinc-500 text-xs">Preço de venda</label>
-                <input type="number" step="0.01" min="0" value={form.price} onChange={e => setForm(f => ({ ...f, price: e.target.value }))} placeholder="0,00" className="bg-zinc-800 text-white text-sm rounded-lg px-3 py-2.5 outline-none border border-zinc-700" />
+                <input type="number" step="0.01" min="0" value={form.price} onChange={e => setForm(f => ({ ...f, price: e.target.value }))} placeholder="0,00" className="bg-zinc-200 text-zinc-900 text-sm rounded-lg px-3 py-2.5 outline-none border border-zinc-300" />
               </div>
               <div className="flex flex-col gap-1">
                 <label className="text-zinc-500 text-xs">Custo (CMV)</label>
-                <input type="number" step="0.01" min="0" value={form.cost} onChange={e => setForm(f => ({ ...f, cost: e.target.value }))} placeholder="0,00" className="bg-zinc-800 text-white text-sm rounded-lg px-3 py-2.5 outline-none border border-zinc-700" />
+                <input type="number" step="0.01" min="0" value={form.cost} onChange={e => setForm(f => ({ ...f, cost: e.target.value }))} placeholder="0,00" className="bg-zinc-200 text-zinc-900 text-sm rounded-lg px-3 py-2.5 outline-none border border-zinc-300" />
               </div>
             </div>
             {currentMargin !== null && (
-              <div className="bg-zinc-800 rounded-lg px-3 py-2 flex items-center justify-between">
+              <div className="bg-zinc-200 rounded-lg px-3 py-2 flex items-center justify-between">
                 <span className="text-zinc-500 text-xs">Margem calculada</span>
-                <span className={`text-sm font-medium ${currentMargin < 30 ? 'text-red-400' : currentMargin < 60 ? 'text-amber-400' : 'text-emerald-400'}`}>
+                <span className={`text-sm font-medium ${currentMargin < 30 ? 'text-red-600' : currentMargin < 60 ? 'text-amber-600' : 'text-emerald-600'}`}>
                   {currentMargin.toFixed(1)}%
                 </span>
               </div>
             )}
             <div className="flex gap-3 mt-2">
-              <button onClick={() => setShowForm(false)} className="flex-1 py-3 rounded-xl bg-zinc-800 text-zinc-300 font-medium text-sm cursor-pointer hover:bg-zinc-700 transition-colors">Cancelar</button>
+              <button onClick={() => setShowForm(false)} className="flex-1 py-3 rounded-xl bg-zinc-200 text-zinc-700 font-medium text-sm cursor-pointer hover:bg-zinc-300 transition-colors">Cancelar</button>
               <button onClick={handleSave} disabled={saving} className="flex-1 py-3 rounded-xl bg-accent-600 text-white font-medium text-sm cursor-pointer hover:bg-accent-500 transition-colors disabled:opacity-50">
                 {saving ? 'Salvando...' : 'Salvar'}
               </button>
@@ -395,32 +395,32 @@ export function MenuManagementPage() {
       {/* Sheet de opções do item */}
       {optionsItem && (
         <div className="fixed inset-0 bg-black/60 flex items-end z-[60]" onClick={() => setOptionsItem(null)}>
-          <div className="bg-zinc-900 rounded-t-2xl w-full p-5 pb-8 flex flex-col gap-4 max-h-[85vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+          <div className="bg-zinc-100 rounded-t-2xl w-full p-5 pb-8 flex flex-col gap-4 max-h-[85vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
             <div>
-              <h2 className="text-white text-lg font-medium">Opções · {optionsItem.name}</h2>
+              <h2 className="text-zinc-900 text-lg font-medium">Opções · {optionsItem.name}</h2>
               <p className="text-zinc-500 text-sm">Adicionais e personalizações que o garçom pode selecionar</p>
             </div>
 
             {/* Lista de opções existentes */}
             {(optionsItem.options?.length ?? 0) === 0 ? (
-              <p className="text-zinc-600 text-sm italic py-2">Nenhuma opção cadastrada ainda</p>
+              <p className="text-zinc-500 text-sm italic py-2">Nenhuma opção cadastrada ainda</p>
             ) : (
               <div className="flex flex-col gap-2">
                 {optionsItem.options.map(option => (
-                  <div key={option.id} className="bg-zinc-800 rounded-xl px-4 py-3 flex items-center justify-between">
+                  <div key={option.id} className="bg-zinc-200 rounded-xl px-4 py-3 flex items-center justify-between">
                     <div>
-                      <span className="text-zinc-100 text-sm">{option.name}</span>
+                      <span className="text-zinc-900 text-sm">{option.name}</span>
                       {option.additionalCost > 0 && (
-                        <span className="text-accent-400 text-sm ml-2">+{formatBRL(option.additionalCost)}</span>
+                        <span className="text-accent-600 text-sm ml-2">+{formatBRL(option.additionalCost)}</span>
                       )}
                     </div>
                     <button
                       onClick={() => handleRemoveOption(option)}
                       disabled={removingOptionId === option.id}
-                      className="w-8 h-8 rounded-full bg-zinc-700 flex items-center justify-center cursor-pointer hover:bg-red-950 transition-colors disabled:opacity-50"
+                      className="w-8 h-8 rounded-full bg-zinc-300 flex items-center justify-center cursor-pointer hover:bg-red-950 transition-colors disabled:opacity-50"
                       title="Excluir opção"
                     >
-                      <i className="ti ti-trash text-zinc-400 text-sm" />
+                      <i className="ti ti-trash text-zinc-600 text-sm" />
                     </button>
                   </div>
                 ))}
@@ -428,7 +428,7 @@ export function MenuManagementPage() {
             )}
 
             {/* Form de adicionar */}
-            <div className="border-t border-zinc-800 pt-4 flex flex-col gap-3">
+            <div className="border-t border-zinc-200 pt-4 flex flex-col gap-3">
               <p className="text-zinc-500 text-xs font-medium uppercase tracking-wider">Nova opção</p>
               <div className="flex flex-col gap-1">
                 <label className="text-zinc-500 text-xs">Nome</label>
@@ -437,7 +437,7 @@ export function MenuManagementPage() {
                   value={optionName}
                   onChange={e => setOptionName(e.target.value)}
                   placeholder="Ex: bacon extra, sem cebola"
-                  className="bg-zinc-800 text-white text-sm rounded-lg px-3 py-2.5 outline-none border border-zinc-700 focus:border-accent-600"
+                  className="bg-zinc-200 text-zinc-900 text-sm rounded-lg px-3 py-2.5 outline-none border border-zinc-300 focus:border-accent-600"
                 />
               </div>
               <div className="flex flex-col gap-1">
@@ -449,7 +449,7 @@ export function MenuManagementPage() {
                   value={optionCost}
                   onChange={e => setOptionCost(e.target.value)}
                   placeholder="0,00"
-                  className="bg-zinc-800 text-white text-sm rounded-lg px-3 py-2.5 outline-none border border-zinc-700 focus:border-accent-600"
+                  className="bg-zinc-200 text-zinc-900 text-sm rounded-lg px-3 py-2.5 outline-none border border-zinc-300 focus:border-accent-600"
                 />
               </div>
               <button
@@ -464,7 +464,7 @@ export function MenuManagementPage() {
 
             <button
               onClick={() => setOptionsItem(null)}
-              className="py-3 rounded-xl bg-zinc-800 text-zinc-300 font-medium text-sm cursor-pointer hover:bg-zinc-700 transition-colors"
+              className="py-3 rounded-xl bg-zinc-200 text-zinc-700 font-medium text-sm cursor-pointer hover:bg-zinc-300 transition-colors"
             >
               Fechar
             </button>
@@ -475,13 +475,13 @@ export function MenuManagementPage() {
       {/* Modal de confirmação de deleção */}
       {confirmDeleteId && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-[70] px-5">
-          <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5 max-w-sm w-full">
-            <h2 className="text-white text-lg font-medium mb-2">Remover item?</h2>
-            <p className="text-zinc-400 text-sm mb-5">
+          <div className="bg-zinc-100 border border-zinc-200 rounded-xl p-5 max-w-sm w-full">
+            <h2 className="text-zinc-900 text-lg font-medium mb-2">Remover item?</h2>
+            <p className="text-zinc-600 text-sm mb-5">
               O item será removido do cardápio. Pedidos antigos com esse item continuam existindo, mas ele não poderá mais ser adicionado a novos pedidos.
             </p>
             <div className="flex gap-3">
-              <button onClick={() => setConfirmDeleteId(null)} className="flex-1 py-2.5 rounded-xl bg-zinc-800 text-zinc-300 font-medium text-sm cursor-pointer hover:bg-zinc-700 transition-colors">Cancelar</button>
+              <button onClick={() => setConfirmDeleteId(null)} className="flex-1 py-2.5 rounded-xl bg-zinc-200 text-zinc-700 font-medium text-sm cursor-pointer hover:bg-zinc-300 transition-colors">Cancelar</button>
               <button onClick={() => handleDeactivate(confirmDeleteId)} className="flex-1 py-2.5 rounded-xl bg-red-900 text-red-100 font-medium text-sm cursor-pointer hover:bg-red-800 transition-colors">Remover</button>
             </div>
           </div>

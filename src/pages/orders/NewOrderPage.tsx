@@ -162,19 +162,19 @@ export function NewOrderPage() {
   const optionsCostPreview = selectedOptions.reduce((acc, o) => acc + o.additionalCost, 0)
 
   return (
-    <div className="min-h-screen bg-zinc-950 flex flex-col pb-36">
+    <div className="min-h-screen bg-zinc-50 flex flex-col pb-36">
 
       {/* Header */}
-      <div className="bg-zinc-900 border-b border-zinc-800 px-5 py-4">
+      <div className="bg-zinc-100 border-b border-zinc-200 px-5 py-4">
         <div className="flex items-center gap-3 mb-3">
           <button
             onClick={() => { clearCart(); navigate(`/tables/${tableId}`) }}
-            className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center cursor-pointer"
+            className="w-8 h-8 rounded-full bg-zinc-200 flex items-center justify-center cursor-pointer"
           >
-            <i className="ti ti-arrow-left text-zinc-400" />
+            <i className="ti ti-arrow-left text-zinc-600" />
           </button>
           <div>
-            <h1 className="text-white text-xl font-medium">Novo pedido</h1>
+            <h1 className="text-zinc-900 text-xl font-medium">Novo pedido</h1>
             <p className="text-zinc-500 text-sm">
               {items.length} ite{items.length !== 1 ? 'ns' : 'm'} · R$ {total().toFixed(2)}
             </p>
@@ -188,7 +188,7 @@ export function NewOrderPage() {
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Buscar no cardápio..."
-            className="w-full pl-9 pr-3 py-2 rounded-xl bg-zinc-800 border border-zinc-700 text-white text-sm placeholder-zinc-500 focus:outline-none focus:border-accent-600"
+            className="w-full pl-9 pr-3 py-2 rounded-xl bg-zinc-200 border border-zinc-300 text-zinc-900 text-sm placeholder-zinc-500 focus:outline-none focus:border-accent-600"
           />
         </div>
 
@@ -200,7 +200,7 @@ export function NewOrderPage() {
               className={`px-3 py-1.5 rounded-full text-xs whitespace-nowrap border cursor-pointer transition-colors ${
                 activeCategory === cat
                   ? 'bg-accent-950 text-accent-400 border-accent-900'
-                  : 'bg-zinc-800 text-zinc-400 border-zinc-700'
+                  : 'bg-zinc-200 text-zinc-600 border-zinc-300'
               }`}
             >
               {cat}
@@ -217,7 +217,7 @@ export function NewOrderPage() {
           </div>
         ) : filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 gap-2">
-            <i className="ti ti-search text-zinc-600 text-3xl" />
+            <i className="ti ti-search text-zinc-500 text-3xl" />
             <p className="text-zinc-500 text-sm">Nenhum item encontrado</p>
           </div>
         ) : (
@@ -227,10 +227,10 @@ export function NewOrderPage() {
             const hasOptions = item.options && item.options.length > 0
 
             return (
-              <div key={item.id} className="bg-zinc-900 rounded-xl border border-zinc-800 px-4 py-3 flex items-center justify-between">
+              <div key={item.id} className="bg-zinc-100 rounded-xl border border-zinc-200 px-4 py-3 flex items-center justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
-                    <p className="text-white text-sm font-medium">{item.name}</p>
+                    <p className="text-zinc-900 text-sm font-medium">{item.name}</p>
                     {hasOptions && (
                       <span className="text-xs px-1.5 py-0.5 rounded bg-accent-950 text-accent-400 border border-accent-900">
                         opções
@@ -240,7 +240,7 @@ export function NewOrderPage() {
                   {item.description && (
                     <p className="text-zinc-500 text-xs">{item.description}</p>
                   )}
-                  <p className="text-accent-400 text-sm font-medium mt-1">R$ {item.price.toFixed(2)}</p>
+                  <p className="text-accent-600 text-sm font-medium mt-1">R$ {item.price.toFixed(2)}</p>
                 </div>
 
                 {qty === 0 ? (
@@ -254,9 +254,9 @@ export function NewOrderPage() {
                   <div className="flex items-center gap-3">
                     <button
                       onClick={() => decrementItem(item.id)}
-                      className="w-8 h-8 rounded-full bg-zinc-700 flex items-center justify-center cursor-pointer"
+                      className="w-8 h-8 rounded-full bg-zinc-300 flex items-center justify-center cursor-pointer"
                     >
-                      <i className="ti ti-minus text-white text-sm" />
+                      <i className="ti ti-minus text-zinc-900 text-sm" />
                     </button>
 
                     {isEditing ? (
@@ -272,12 +272,12 @@ export function NewOrderPage() {
                           if (e.key === 'Enter') (e.target as HTMLInputElement).blur()
                           if (e.key === 'Escape') setEditingQty(null)
                         }}
-                        className="w-12 text-center bg-zinc-800 border border-accent-600 rounded text-white font-medium text-sm py-0.5 focus:outline-none"
+                        className="w-12 text-center bg-zinc-200 border border-accent-600 rounded text-zinc-900 font-medium text-sm py-0.5 focus:outline-none"
                       />
                     ) : (
                       <button
                         onClick={() => setEditingQty(item.id)}
-                        className="text-white font-medium text-sm w-8 text-center cursor-pointer hover:text-accent-400"
+                        className="text-zinc-900 font-medium text-sm w-8 text-center cursor-pointer hover:text-accent-600"
                       >
                         {qty}
                       </button>
@@ -299,7 +299,7 @@ export function NewOrderPage() {
 
       {/* Botão confirmar */}
       {items.length > 0 && (
-        <div className="fixed bottom-16 left-0 right-0 px-5 py-4 bg-zinc-950 border-t border-zinc-800">
+        <div className="fixed bottom-16 left-0 right-0 px-5 py-4 bg-zinc-50 border-t border-zinc-200">
           <button
             onClick={handleConfirm}
             disabled={loading}
@@ -315,11 +315,11 @@ export function NewOrderPage() {
       {optionsItem && (
         <div className="fixed inset-0 bg-black/60 flex items-end z-[60]" onClick={() => setOptionsItem(null)}>
           <div
-            className="bg-zinc-900 rounded-t-2xl w-full p-5 pb-8 flex flex-col gap-4 max-h-[75vh] overflow-y-auto"
+            className="bg-zinc-100 rounded-t-2xl w-full p-5 pb-8 flex flex-col gap-4 max-h-[75vh] overflow-y-auto"
             onClick={e => e.stopPropagation()}
           >
             <div>
-              <h2 className="text-white text-lg font-medium">{optionsItem.name}</h2>
+              <h2 className="text-zinc-900 text-lg font-medium">{optionsItem.name}</h2>
               <p className="text-zinc-500 text-sm">Selecione as opções desejadas</p>
             </div>
 
@@ -333,7 +333,7 @@ export function NewOrderPage() {
                     className={`flex items-center justify-between px-4 py-3 rounded-xl border transition-colors cursor-pointer ${
                       isSelected
                         ? 'bg-accent-950 border-accent-900'
-                        : 'bg-zinc-800 border-zinc-700 hover:border-zinc-600'
+                        : 'bg-zinc-200 border-zinc-300 hover:border-zinc-400'
                     }`}
                   >
                     <div className="flex items-center gap-3">
@@ -342,12 +342,12 @@ export function NewOrderPage() {
                       }`}>
                         {isSelected && <i className="ti ti-check text-white text-xs" />}
                       </div>
-                      <span className={`text-sm ${isSelected ? 'text-white' : 'text-zinc-300'}`}>
+                      <span className={`text-sm ${isSelected ? 'text-white' : 'text-zinc-700'}`}>
                         {option.name}
                       </span>
                     </div>
                     {option.additionalCost > 0 && (
-                      <span className={`text-sm font-medium ${isSelected ? 'text-accent-400' : 'text-zinc-500'}`}>
+                      <span className={`text-sm font-medium ${isSelected ? 'text-accent-600' : 'text-zinc-500'}`}>
                         +R$ {option.additionalCost.toFixed(2)}
                       </span>
                     )}
@@ -357,16 +357,16 @@ export function NewOrderPage() {
             </div>
 
             {optionsCostPreview > 0 && (
-              <div className="bg-zinc-800 rounded-lg px-4 py-2 flex items-center justify-between">
-                <span className="text-zinc-400 text-sm">Adicionais</span>
-                <span className="text-accent-400 text-sm font-medium">+R$ {optionsCostPreview.toFixed(2)}</span>
+              <div className="bg-zinc-200 rounded-lg px-4 py-2 flex items-center justify-between">
+                <span className="text-zinc-600 text-sm">Adicionais</span>
+                <span className="text-accent-600 text-sm font-medium">+R$ {optionsCostPreview.toFixed(2)}</span>
               </div>
             )}
 
             <div className="flex gap-3">
               <button
                 onClick={() => setOptionsItem(null)}
-                className="flex-1 py-3 rounded-xl bg-zinc-800 text-zinc-300 font-medium text-sm cursor-pointer hover:bg-zinc-700 transition-colors"
+                className="flex-1 py-3 rounded-xl bg-zinc-200 text-zinc-700 font-medium text-sm cursor-pointer hover:bg-zinc-300 transition-colors"
               >
                 Cancelar
               </button>

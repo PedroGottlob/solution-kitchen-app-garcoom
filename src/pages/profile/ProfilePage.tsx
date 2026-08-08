@@ -44,11 +44,11 @@ export function ProfilePage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-zinc-950 flex flex-col pb-20">
+    <div className="min-h-screen bg-zinc-50 flex flex-col pb-20">
 
       {/* Header */}
-      <div className="bg-zinc-900 border-b border-zinc-800 px-5 py-4">
-        <h1 className="text-white text-xl font-medium">Perfil</h1>
+      <div className="bg-zinc-100 border-b border-zinc-200 px-5 py-4">
+        <h1 className="text-zinc-900 text-xl font-medium">Perfil</h1>
       </div>
 
       {/* Avatar e nome */}
@@ -65,7 +65,7 @@ export function ProfilePage() {
           </div>
         )}
         <div className="text-center">
-          <p className="text-white text-lg font-medium">{user?.name ?? 'Usuário'}</p>
+          <p className="text-zinc-900 text-lg font-medium">{user?.name ?? 'Usuário'}</p>
           <p className="text-zinc-500 text-sm">{user?.email}</p>
         </div>
       </div>
@@ -75,17 +75,17 @@ export function ProfilePage() {
         <p className="text-zinc-500 text-xs font-medium uppercase tracking-wider mb-3">
           Informações
         </p>
-        <div className="bg-zinc-900 rounded-xl border border-zinc-800 overflow-hidden">
+        <div className="bg-zinc-100 rounded-xl border border-zinc-200 overflow-hidden">
 
-          <div className="flex items-center gap-3 px-4 py-3 border-b border-zinc-800">
-            <i className="ti ti-building-store text-zinc-400 text-lg" />
+          <div className="flex items-center gap-3 px-4 py-3 border-b border-zinc-200">
+            <i className="ti ti-building-store text-zinc-600 text-lg" />
             <div className="flex-1">
-              <p className="text-zinc-400 text-xs">Estabelecimento</p>
+              <p className="text-zinc-600 text-xs">Estabelecimento</p>
               {tenantLoading ? (
                 <p className="text-zinc-500 text-sm italic">Carregando...</p>
               ) : tenant ? (
                 <div>
-                  <p className="text-white text-sm">{tenant.name}</p>
+                  <p className="text-zinc-900 text-sm">{tenant.name}</p>
                   <p className="text-zinc-500 text-xs">Plano {PLAN_LABELS[tenant.plan] ?? tenant.plan}</p>
                 </div>
               ) : (
@@ -95,10 +95,10 @@ export function ProfilePage() {
           </div>
 
           <div className="flex items-center gap-3 px-4 py-3">
-            <i className="ti ti-id-badge text-zinc-400 text-lg" />
+            <i className="ti ti-id-badge text-zinc-600 text-lg" />
             <div>
-              <p className="text-zinc-400 text-xs">Função</p>
-              <p className="text-white text-sm">{roleLabel}</p>
+              <p className="text-zinc-600 text-xs">Função</p>
+              <p className="text-zinc-900 text-sm">{roleLabel}</p>
             </div>
           </div>
         </div>
@@ -116,4 +116,4 @@ export function ProfilePage() {
       </div>
     </div>
   )
-}
+}

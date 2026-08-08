@@ -43,12 +43,12 @@ export function OrdersPage() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-950 flex flex-col pb-20">
+    <div className="min-h-screen bg-zinc-50 flex flex-col pb-20">
 
       {/* Header */}
-      <div className="bg-zinc-900 border-b border-zinc-800 px-5 py-4">
+      <div className="bg-zinc-100 border-b border-zinc-200 px-5 py-4">
         <div className="flex items-center justify-between mb-3">
-          <h1 className="text-white text-xl font-medium">Pedidos</h1>
+          <h1 className="text-zinc-900 text-xl font-medium">Pedidos</h1>
           <span className="text-zinc-500 text-sm">
             {!connected ? 'Conectando...' : `${orders.length} pedido${orders.length !== 1 ? 's' : ''} ativo${orders.length !== 1 ? 's' : ''}`}
           </span>
@@ -62,7 +62,7 @@ export function OrdersPage() {
               className={`px-3 py-1.5 rounded-full text-xs whitespace-nowrap border cursor-pointer transition-colors ${
                 activeFilter === f.value
                   ? 'bg-accent-950 text-accent-400 border-accent-900'
-                  : 'bg-zinc-800 text-zinc-400 border-zinc-700'
+                  : 'bg-zinc-200 text-zinc-600 border-zinc-300'
               }`}
             >
               {f.label}
@@ -75,29 +75,29 @@ export function OrdersPage() {
       <div className="px-5 py-4 flex gap-3">
         <button
           onClick={() => setActiveFilter('Pending')}
-          className={`flex-1 bg-zinc-900 rounded-xl p-3 text-center border cursor-pointer transition-colors ${
-            activeFilter === 'Pending' ? 'border-amber-900' : 'border-zinc-800 hover:border-zinc-700'
+          className={`flex-1 bg-zinc-100 rounded-xl p-3 text-center border cursor-pointer transition-colors ${
+            activeFilter === 'Pending' ? 'border-amber-900' : 'border-zinc-200 hover:border-zinc-300'
           }`}
         >
-          <div className="text-amber-400 text-lg font-medium">{pending}</div>
+          <div className="text-amber-600 text-lg font-medium">{pending}</div>
           <div className="text-zinc-500 text-xs">Pendentes</div>
         </button>
         <button
           onClick={() => setActiveFilter('Preparing')}
-          className={`flex-1 bg-zinc-900 rounded-xl p-3 text-center border cursor-pointer transition-colors ${
-            activeFilter === 'Preparing' ? 'border-accent-900' : 'border-zinc-800 hover:border-zinc-700'
+          className={`flex-1 bg-zinc-100 rounded-xl p-3 text-center border cursor-pointer transition-colors ${
+            activeFilter === 'Preparing' ? 'border-accent-900' : 'border-zinc-200 hover:border-zinc-300'
           }`}
         >
-          <div className="text-accent-400 text-lg font-medium">{preparing}</div>
+          <div className="text-accent-600 text-lg font-medium">{preparing}</div>
           <div className="text-zinc-500 text-xs">Em preparo</div>
         </button>
         <button
           onClick={() => setActiveFilter('Ready')}
-          className={`flex-1 bg-zinc-900 rounded-xl p-3 text-center border cursor-pointer transition-colors ${
-            activeFilter === 'Ready' ? 'border-emerald-900' : 'border-zinc-800 hover:border-zinc-700'
+          className={`flex-1 bg-zinc-100 rounded-xl p-3 text-center border cursor-pointer transition-colors ${
+            activeFilter === 'Ready' ? 'border-emerald-900' : 'border-zinc-200 hover:border-zinc-300'
           }`}
         >
-          <div className="text-emerald-400 text-lg font-medium">{ready}</div>
+          <div className="text-emerald-600 text-lg font-medium">{ready}</div>
           <div className="text-zinc-500 text-xs">Prontos</div>
         </button>
       </div>
@@ -109,7 +109,7 @@ export function OrdersPage() {
           </div>
         ) : filtered.length === 0 ? (
           <div className="flex items-center justify-center py-12 flex-col gap-3">
-            <i className="ti ti-clipboard-list text-zinc-600 text-4xl" />
+            <i className="ti ti-clipboard-list text-zinc-500 text-4xl" />
             <p className="text-zinc-500">Nenhum pedido encontrado</p>
           </div>
         ) : (

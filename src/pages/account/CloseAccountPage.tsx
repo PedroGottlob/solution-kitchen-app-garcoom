@@ -75,9 +75,9 @@ export function CloseAccountPage() {
   // Tela do QR Code PIX
   if (pixPayment) {
     return (
-      <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center px-5 gap-6">
+      <div className="min-h-screen bg-zinc-50 flex flex-col items-center justify-center px-5 gap-6">
         <div className="text-center">
-          <h1 className="text-white text-xl font-medium mb-1">Pague com PIX</h1>
+          <h1 className="text-zinc-900 text-xl font-medium mb-1">Pague com PIX</h1>
           <p className="text-zinc-500 text-sm">Escaneie o QR Code abaixo</p>
         </div>
 
@@ -91,12 +91,12 @@ export function CloseAccountPage() {
           </div>
         )}
 
-        <div className="w-full bg-zinc-900 rounded-xl p-4">
+        <div className="w-full bg-zinc-100 rounded-xl p-4">
           <p className="text-zinc-500 text-xs mb-2">Copia e cola</p>
-          <p className="text-white text-xs break-all">{pixPayment.pixQrCode}</p>
+          <p className="text-zinc-900 text-xs break-all">{pixPayment.pixQrCode}</p>
         </div>
 
-        <p className="text-accent-400 text-2xl font-medium">
+        <p className="text-accent-600 text-2xl font-medium">
           R$ {total.toFixed(2)}
         </p>
 
@@ -113,19 +113,19 @@ export function CloseAccountPage() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-950 flex flex-col pb-20">
+    <div className="min-h-screen bg-zinc-50 flex flex-col pb-20">
 
       {/* Header */}
-      <div className="bg-zinc-900 border-b border-zinc-800 px-5 py-4">
+      <div className="bg-zinc-100 border-b border-zinc-200 px-5 py-4">
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate(`/tables/${tableId}`)}
-            className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center cursor-pointer"
+            className="w-8 h-8 rounded-full bg-zinc-200 flex items-center justify-center cursor-pointer"
           >
-            <i className="ti ti-arrow-left text-zinc-400" />
+            <i className="ti ti-arrow-left text-zinc-600" />
           </button>
           <div>
-            <h1 className="text-white text-xl font-medium">Fechar conta</h1>
+            <h1 className="text-zinc-900 text-xl font-medium">Fechar conta</h1>
             <p className="text-zinc-500 text-sm">
               Mesa {String(table?.number ?? '').padStart(2, '0')}
             </p>
@@ -138,7 +138,7 @@ export function CloseAccountPage() {
         <p className="text-zinc-500 text-xs font-medium uppercase tracking-wider mb-3">
           Resumo do consumo
         </p>
-        <div className="bg-zinc-900 rounded-xl border border-zinc-800 overflow-hidden">
+        <div className="bg-zinc-100 rounded-xl border border-zinc-200 overflow-hidden">
           {allItems.length === 0 ? (
             <div className="px-4 py-6 text-center text-zinc-500 text-sm">
               Carregando pedidos...
@@ -148,27 +148,27 @@ export function CloseAccountPage() {
               <div
                 key={i}
                 className={`flex items-center justify-between px-4 py-3 ${
-                  i < allItems.length - 1 ? 'border-b border-zinc-800' : ''
+                  i < allItems.length - 1 ? 'border-b border-zinc-200' : ''
                 }`}
               >
                 <div>
-                  <p className="text-white text-sm">
-                    <span className="text-accent-400">{item.quantity}× </span>
+                  <p className="text-zinc-900 text-sm">
+                    <span className="text-accent-600">{item.quantity}× </span>
                     {item.name}
                   </p>
                   {item.notes && (
                     <p className="text-zinc-500 text-xs">{item.notes}</p>
                   )}
                 </div>
-                <span className="text-zinc-300 text-sm">
+                <span className="text-zinc-700 text-sm">
                   R$ {(item.unitPrice * item.quantity).toFixed(2)}
                 </span>
               </div>
             ))
           )}
-          <div className="flex items-center justify-between px-4 py-3 border-t border-zinc-700 bg-zinc-800">
-            <span className="text-white font-medium">Total</span>
-            <span className="text-white font-medium text-lg">
+          <div className="flex items-center justify-between px-4 py-3 border-t border-zinc-300 bg-zinc-200">
+            <span className="text-zinc-900 font-medium">Total</span>
+            <span className="text-zinc-900 font-medium text-lg">
               R$ {total.toFixed(2)}
             </span>
           </div>
@@ -188,7 +188,7 @@ export function CloseAccountPage() {
               className={`flex-1 py-2.5 rounded-xl border text-sm cursor-pointer transition-colors ${
                 split === n
                   ? 'bg-accent-950 border-accent-900 text-accent-400'
-                  : 'bg-zinc-900 border-zinc-800 text-zinc-300 hover:border-accent-900 hover:text-accent-400 hover:bg-accent-950'
+                  : 'bg-zinc-100 border-zinc-200 text-zinc-700 hover:border-accent-900 hover:text-accent-400 hover:bg-accent-950'
               }`}
             >
               {n === 1 ? 'Sem dividir' : `÷ ${n}`}
@@ -213,10 +213,10 @@ export function CloseAccountPage() {
               key={method.id}
               onClick={() => handleCloseAccount(method.id)}
               disabled={loading}
-              className="bg-zinc-900 border border-zinc-800 rounded-xl py-4 flex flex-col items-center gap-2 cursor-pointer hover:border-accent-900 hover:bg-accent-950 transition-colors group disabled:opacity-50"
+              className="bg-zinc-100 border border-zinc-200 rounded-xl py-4 flex flex-col items-center gap-2 cursor-pointer hover:border-accent-900 hover:bg-accent-950 transition-colors group disabled:opacity-50"
             >
-              <i className={`ti ${method.icon} text-2xl text-zinc-400 group-hover:text-accent-400`} />
-              <span className="text-zinc-300 text-sm group-hover:text-accent-400">
+              <i className={`ti ${method.icon} text-2xl text-zinc-600 group-hover:text-accent-400`} />
+              <span className="text-zinc-700 text-sm group-hover:text-accent-400">
                 {method.label}
               </span>
               <span className="text-zinc-500 text-xs">

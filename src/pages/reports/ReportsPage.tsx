@@ -27,19 +27,19 @@ export function ReportsPage() {
     : null
 
   return (
-    <div className="min-h-screen bg-zinc-950 flex flex-col pb-24">
+    <div className="min-h-screen bg-zinc-50 flex flex-col pb-24">
 
       {/* Header */}
-      <div className="bg-zinc-900 border-b border-zinc-800 px-5 py-4">
+      <div className="bg-zinc-100 border-b border-zinc-200 px-5 py-4">
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate('/')}
-            className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center cursor-pointer"
+            className="w-8 h-8 rounded-full bg-zinc-200 flex items-center justify-center cursor-pointer"
           >
-            <i className="ti ti-arrow-left text-zinc-400" />
+            <i className="ti ti-arrow-left text-zinc-600" />
           </button>
           <div>
-            <h1 className="text-white text-xl font-medium">Relatório Semanal</h1>
+            <h1 className="text-zinc-900 text-xl font-medium">Relatório Semanal</h1>
             <p className="text-zinc-500 text-sm">Análise gerada por IA</p>
           </div>
         </div>
@@ -50,7 +50,7 @@ export function ReportsPage() {
         {!report && !loading && (
           <div className="flex flex-col items-center justify-center py-16 gap-4">
             <i className="ti ti-sparkles text-accent-500 text-5xl" />
-            <p className="text-zinc-400 text-center text-sm max-w-xs">
+            <p className="text-zinc-600 text-center text-sm max-w-xs">
               Gere um relatório com análise de vendas, comparativo semanal e sugestões para o seu restaurante.
             </p>
             <button
@@ -67,7 +67,7 @@ export function ReportsPage() {
           <div className="flex flex-col items-center justify-center py-16 gap-3">
             <div className="w-8 h-8 border-2 border-accent-600 border-t-transparent rounded-full animate-spin" />
             <p className="text-zinc-500 text-sm">Analisando os dados do restaurante...</p>
-            <p className="text-zinc-600 text-xs">Isso pode levar alguns segundos</p>
+            <p className="text-zinc-500 text-xs">Isso pode levar alguns segundos</p>
           </div>
         )}
 
@@ -81,20 +81,20 @@ export function ReportsPage() {
           <>
             {/* Métricas da semana */}
             <div className="grid grid-cols-2 gap-3">
-              <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
+              <div className="bg-zinc-100 border border-zinc-200 rounded-xl p-4">
                 <p className="text-zinc-500 text-xs mb-1">Faturamento</p>
-                <p className="text-white text-lg font-medium">
+                <p className="text-zinc-900 text-lg font-medium">
                   R$ {report.currentWeek.revenue.toFixed(2)}
                 </p>
                 {variation !== null && (
-                  <p className={`text-xs mt-1 ${variation >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                  <p className={`text-xs mt-1 ${variation >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
                     {variation >= 0 ? '↑' : '↓'} {Math.abs(variation).toFixed(1)}% vs semana anterior
                   </p>
                 )}
               </div>
-              <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
+              <div className="bg-zinc-100 border border-zinc-200 rounded-xl p-4">
                 <p className="text-zinc-500 text-xs mb-1">Pedidos</p>
-                <p className="text-white text-lg font-medium">{report.currentWeek.orderCount}</p>
+                <p className="text-zinc-900 text-lg font-medium">{report.currentWeek.orderCount}</p>
                 <p className="text-zinc-500 text-xs mt-1">
                   Ticket médio: R$ {report.currentWeek.averageTicket.toFixed(2)}
                 </p>
@@ -103,15 +103,15 @@ export function ReportsPage() {
 
             {/* Top itens */}
             {report.currentWeek.topItems.length > 0 && (
-              <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
+              <div className="bg-zinc-100 border border-zinc-200 rounded-xl p-4">
                 <p className="text-zinc-500 text-xs font-medium uppercase tracking-wider mb-3">
                   Mais vendidos da semana
                 </p>
                 <div className="flex flex-col gap-2">
                   {report.currentWeek.topItems.slice(0, 5).map((item, i) => (
                     <div key={item.name} className="flex items-center justify-between">
-                      <span className="text-zinc-300 text-sm">
-                        <span className="text-zinc-600 mr-2">{i + 1}.</span>
+                      <span className="text-zinc-700 text-sm">
+                        <span className="text-zinc-500 mr-2">{i + 1}.</span>
                         {item.name}
                       </span>
                       <span className="text-zinc-500 text-sm">{item.quantity}x</span>
@@ -122,21 +122,21 @@ export function ReportsPage() {
             )}
 
             {/* Análise da IA */}
-            <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
+            <div className="bg-zinc-100 border border-zinc-200 rounded-xl p-4">
               <div className="flex items-center gap-2 mb-3">
                 <i className="ti ti-sparkles text-accent-500" />
                 <p className="text-zinc-500 text-xs font-medium uppercase tracking-wider">
                   Análise
                 </p>
               </div>
-              <div className="text-zinc-300 text-sm leading-relaxed whitespace-pre-wrap">
+              <div className="text-zinc-700 text-sm leading-relaxed whitespace-pre-wrap">
                 {report.analysis}
               </div>
             </div>
 
             <button
               onClick={handleGenerate}
-              className="py-3 rounded-xl bg-zinc-800 text-zinc-300 font-medium text-sm cursor-pointer hover:bg-zinc-700 transition-colors flex items-center justify-center gap-2"
+              className="py-3 rounded-xl bg-zinc-200 text-zinc-700 font-medium text-sm cursor-pointer hover:bg-zinc-300 transition-colors flex items-center justify-center gap-2"
             >
               <i className="ti ti-refresh" />
               Gerar novamente
