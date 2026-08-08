@@ -60,8 +60,8 @@ export function ProfilePage() {
             className="w-20 h-20 rounded-full border-2 border-accent-700"
           />
         ) : (
-          <div className="w-20 h-20 rounded-full bg-accent-950 border-2 border-accent-700 flex items-center justify-center">
-            <span className="text-accent-300 text-2xl font-medium">{initials}</span>
+          <div className="w-20 h-20 rounded-full bg-accent-100 border-2 border-accent-700 flex items-center justify-center">
+            <span className="text-accent-700 text-2xl font-medium">{initials}</span>
           </div>
         )}
         <div className="text-center">
@@ -108,7 +108,7 @@ export function ProfilePage() {
       <div className="px-5">
         <button
           onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}
-          className="w-full py-3.5 rounded-xl bg-red-950 border border-red-900 text-red-400 font-medium text-sm flex items-center justify-center gap-2 cursor-pointer hover:bg-red-900 transition-colors"
+          className="w-full py-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 font-medium text-sm flex items-center justify-center gap-2 cursor-pointer hover:bg-red-100 transition-colors"
         >
           <i className="ti ti-logout text-lg" />
           Sair da conta

@@ -76,7 +76,7 @@ export function OrdersPage() {
         <button
           onClick={() => setActiveFilter('Pending')}
           className={`flex-1 bg-accent-50 rounded-xl p-3 text-center border cursor-pointer transition-colors ${
-            activeFilter === 'Pending' ? 'border-amber-900' : 'border-accent-200 hover:border-zinc-300'
+            activeFilter === 'Pending' ? 'border-amber-500' : 'border-accent-200 hover:border-zinc-300'
           }`}
         >
           <div className="text-amber-600 text-lg font-medium">{pending}</div>
@@ -85,7 +85,7 @@ export function OrdersPage() {
         <button
           onClick={() => setActiveFilter('Preparing')}
           className={`flex-1 bg-accent-50 rounded-xl p-3 text-center border cursor-pointer transition-colors ${
-            activeFilter === 'Preparing' ? 'border-accent-900' : 'border-accent-200 hover:border-zinc-300'
+            activeFilter === 'Preparing' ? 'border-accent-500' : 'border-accent-200 hover:border-zinc-300'
           }`}
         >
           <div className="text-accent-600 text-lg font-medium">{preparing}</div>
@@ -94,7 +94,7 @@ export function OrdersPage() {
         <button
           onClick={() => setActiveFilter('Ready')}
           className={`flex-1 bg-accent-50 rounded-xl p-3 text-center border cursor-pointer transition-colors ${
-            activeFilter === 'Ready' ? 'border-emerald-900' : 'border-accent-200 hover:border-zinc-300'
+            activeFilter === 'Ready' ? 'border-emerald-500' : 'border-accent-200 hover:border-zinc-300'
           }`}
         >
           <div className="text-emerald-600 text-lg font-medium">{ready}</div>

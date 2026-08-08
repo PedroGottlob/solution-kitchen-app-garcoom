@@ -232,7 +232,7 @@ export function NewOrderPage() {
                   <div className="flex items-center gap-2">
                     <p className="text-zinc-900 text-sm font-medium">{item.name}</p>
                     {hasOptions && (
-                      <span className="text-xs px-1.5 py-0.5 rounded bg-accent-950 text-accent-400 border border-accent-900">
+                      <span className="text-xs px-1.5 py-0.5 rounded bg-white text-accent-700 border border-accent-300">
                         opções
                       </span>
                     )}

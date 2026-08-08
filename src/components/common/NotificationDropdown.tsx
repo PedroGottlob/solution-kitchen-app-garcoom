@@ -16,9 +16,9 @@ function getElapsedMinutes(createdAt: string): string {
 }
 
 const typeConfig: Record<Notification['type'], { icon: string; color: string; bg: string }> = {
-  order_ready: { icon: 'ti-bell-ringing', color: 'text-amber-400', bg: 'bg-amber-950' },
-  new_order: { icon: 'ti-clipboard-plus', color: 'text-accent-400', bg: 'bg-accent-950' },
-  order_cancelled: { icon: 'ti-clipboard-x', color: 'text-red-400', bg: 'bg-red-950' },
+  order_ready: { icon: 'ti-bell-ringing', color: 'text-amber-700', bg: 'bg-amber-50' },
+  new_order: { icon: 'ti-clipboard-plus', color: 'text-accent-700', bg: 'bg-accent-50' },
+  order_cancelled: { icon: 'ti-clipboard-x', color: 'text-red-700', bg: 'bg-red-50' },
 }
 
 export function NotificationDropdown({ onClose }: NotificationDropdownProps) {

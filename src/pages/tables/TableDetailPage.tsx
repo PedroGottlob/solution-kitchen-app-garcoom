@@ -73,9 +73,9 @@ export function TableDetailPage() {
         </div>
 
         {hasReady && (
-          <div className="mt-3 bg-amber-950 border border-amber-900 rounded-xl px-4 py-2 flex items-center gap-2">
-            <i className="ti ti-bell text-amber-400 text-sm" />
-            <span className="text-amber-400 text-sm">Pedido pronto para servir!</span>
+          <div className="mt-3 bg-amber-50 border border-amber-200 rounded-xl px-4 py-2 flex items-center gap-2">
+            <i className="ti ti-bell text-amber-700 text-sm" />
+            <span className="text-amber-700 text-sm">Pedido pronto para servir!</span>
           </div>
         )}
       </div>

@@ -290,7 +290,7 @@ export function MenuManagementPage() {
                         <div className="flex items-center gap-2">
                           <p className="text-zinc-900 text-sm font-medium">{item.name}</p>
                           {(item.options?.length ?? 0) > 0 && (
-                            <span className="text-xs px-1.5 py-0.5 rounded bg-accent-950 text-accent-400 border border-accent-900">
+                            <span className="text-xs px-1.5 py-0.5 rounded bg-white text-accent-700 border border-accent-300">
                               {item.options.length} opç{item.options.length !== 1 ? 'ões' : 'ão'}
                             </span>
                           )}
@@ -308,7 +308,7 @@ export function MenuManagementPage() {
                         <button onClick={() => openEdit(item)} className="w-8 h-8 rounded-full bg-zinc-200 flex items-center justify-center cursor-pointer hover:bg-zinc-300 transition-colors" title="Editar">
                           <i className="ti ti-pencil text-zinc-600 text-sm" />
                         </button>
-                        <button onClick={() => setConfirmDeleteId(item.id)} className="w-8 h-8 rounded-full bg-zinc-200 flex items-center justify-center cursor-pointer hover:bg-red-950 transition-colors" title="Remover">
+                        <button onClick={() => setConfirmDeleteId(item.id)} className="w-8 h-8 rounded-full bg-zinc-200 flex items-center justify-center cursor-pointer hover:bg-red-100 transition-colors" title="Remover">
                           <i className="ti ti-trash text-zinc-600 text-sm" />
                         </button>
                       </div>
@@ -417,7 +417,7 @@ export function MenuManagementPage() {
                     <button
                       onClick={() => handleRemoveOption(option)}
                       disabled={removingOptionId === option.id}
-                      className="w-8 h-8 rounded-full bg-zinc-300 flex items-center justify-center cursor-pointer hover:bg-red-950 transition-colors disabled:opacity-50"
+                      className="w-8 h-8 rounded-full bg-zinc-300 flex items-center justify-center cursor-pointer hover:bg-red-100 transition-colors disabled:opacity-50"
                       title="Excluir opção"
                     >
                       <i className="ti ti-trash text-zinc-600 text-sm" />

@@ -7,23 +7,23 @@ interface TableCardProps {
 
 const statusConfig = {
   free: {
-    bg: 'bg-emerald-950',
-    border: 'border-emerald-900',
-    text: 'text-emerald-400',
+    bg: 'bg-emerald-50',
+    border: 'border-emerald-200',
+    text: 'text-emerald-700',
     label: 'Livre',
     labelColor: 'text-emerald-600',
   },
   occupied: {
-    bg: 'bg-accent-950',
-    border: 'border-accent-900',
-    text: 'text-accent-400',
+    bg: 'bg-accent-50',
+    border: 'border-accent-200',
+    text: 'text-accent-700',
     label: 'Ocupada',
     labelColor: 'text-accent-600',
   },
   ready: {
-    bg: 'bg-amber-950',
-    border: 'border-amber-900',
-    text: 'text-amber-400',
+    bg: 'bg-amber-50',
+    border: 'border-amber-200',
+    text: 'text-amber-700',
     label: 'Pronto!',
     labelColor: 'text-amber-600',
   },

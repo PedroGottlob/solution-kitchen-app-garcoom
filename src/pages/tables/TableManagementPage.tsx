@@ -183,7 +183,7 @@ export function TableManagementPage() {
                       Mesa {String(table.number).padStart(2, '0')}
                       {table.name && <span className="text-zinc-500 font-normal"> · {table.name}</span>}
                       {table.status === 'Occupied' && (
-                        <span className="ml-2 text-xs px-2 py-0.5 rounded-full bg-amber-950 text-amber-400">Ocupada</span>
+                        <span className="ml-2 text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">Ocupada</span>
                       )}
                     </p>
                     <p className="text-zinc-500 text-xs">Capacidade: {table.capacity} pessoa{table.capacity !== 1 ? 's' : ''}</p>
@@ -192,7 +192,7 @@ export function TableManagementPage() {
                     <button onClick={() => openEdit(table)} className="w-8 h-8 rounded-full bg-zinc-200 flex items-center justify-center cursor-pointer hover:bg-zinc-300 transition-colors" title="Editar">
                       <i className="ti ti-pencil text-zinc-600 text-sm" />
                     </button>
-                    <button onClick={() => setConfirmDeleteId(table.id)} className="w-8 h-8 rounded-full bg-zinc-200 flex items-center justify-center cursor-pointer hover:bg-red-950 transition-colors" title="Desativar">
+                    <button onClick={() => setConfirmDeleteId(table.id)} className="w-8 h-8 rounded-full bg-zinc-200 flex items-center justify-center cursor-pointer hover:bg-red-100 transition-colors" title="Desativar">
                       <i className="ti ti-trash text-zinc-600 text-sm" />
                     </button>
                   </div>
@@ -273,9 +273,9 @@ export function TableManagementPage() {
           <div className="bg-accent-50 border border-accent-200 rounded-xl p-5 max-w-sm w-full">
             <h2 className="text-zinc-900 text-lg font-medium mb-2">Desativar mesa?</h2>
             {confirmDeleteTable.status === 'Occupied' && (
-              <div className="mb-4 bg-amber-950/50 border border-amber-900 rounded-lg px-3 py-2 flex items-start gap-2">
-                <i className="ti ti-alert-triangle text-amber-400 text-sm mt-0.5" />
-                <p className="text-amber-400 text-xs">Essa mesa está <b>ocupada</b>. Desativar pode deixar pedidos abertos sem acesso pelo garçom.</p>
+              <div className="mb-4 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 flex items-start gap-2">
+                <i className="ti ti-alert-triangle text-amber-700 text-sm mt-0.5" />
+                <p className="text-amber-700 text-xs">Essa mesa está <b>ocupada</b>. Desativar pode deixar pedidos abertos sem acesso pelo garçom.</p>
               </div>
             )}
             <p className="text-zinc-600 text-sm mb-5">

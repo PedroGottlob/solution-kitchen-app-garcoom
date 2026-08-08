@@ -8,11 +8,11 @@ interface OrderCardProps {
 }
 
 const statusConfig: Record<string, { label: string; bg: string; text: string }> = {
-  Pending: { label: 'Pendente', bg: 'bg-amber-950', text: 'text-amber-400' },
-  Preparing: { label: 'Em preparo', bg: 'bg-accent-950', text: 'text-accent-400' },
-  Ready: { label: 'Pronto para servir', bg: 'bg-emerald-950', text: 'text-emerald-400' },
+  Pending: { label: 'Pendente', bg: 'bg-amber-50', text: 'text-amber-700' },
+  Preparing: { label: 'Em preparo', bg: 'bg-accent-50', text: 'text-accent-700' },
+  Ready: { label: 'Pronto para servir', bg: 'bg-emerald-50', text: 'text-emerald-700' },
   Delivered: { label: 'Entregue', bg: 'bg-zinc-200', text: 'text-zinc-600' },
-  Cancelled: { label: 'Cancelado', bg: 'bg-red-950', text: 'text-red-400' },
+  Cancelled: { label: 'Cancelado', bg: 'bg-red-50', text: 'text-red-700' },
   Closed: { label: 'Fechado', bg: 'bg-zinc-200', text: 'text-zinc-500' },
 }
 
@@ -46,7 +46,7 @@ export function OrderCard({ order, onCancel, onDeliver }: OrderCardProps) {
 
   return (
     <div className={`bg-accent-50 rounded-xl border overflow-hidden ${
-      order.status === 'Ready' ? 'border-emerald-900' : 'border-accent-200'
+      order.status === 'Ready' ? 'border-emerald-500' : 'border-accent-200'
     }`}>
       <div className="flex items-center justify-between px-4 py-3 border-b border-accent-200">
         <div className="flex items-center gap-2">
@@ -106,7 +106,7 @@ export function OrderCard({ order, onCancel, onDeliver }: OrderCardProps) {
           {order.status === 'Pending' && onCancel && (
             <button
               onClick={() => onCancel(order.id)}
-              className="text-xs px-3 py-1.5 rounded-lg bg-red-950 text-red-400 border border-red-900 hover:bg-red-900 transition-colors cursor-pointer"
+              className="text-xs px-3 py-1.5 rounded-lg bg-red-50 text-red-700 border border-red-200 hover:bg-red-100 transition-colors cursor-pointer"
             >
               Cancelar
             </button>
@@ -114,7 +114,7 @@ export function OrderCard({ order, onCancel, onDeliver }: OrderCardProps) {
           {order.status === 'Ready' && onDeliver && (
             <button
               onClick={() => onDeliver(order.id)}
-              className="text-xs px-3 py-1.5 rounded-lg bg-emerald-950 text-emerald-400 border border-emerald-900 hover:bg-emerald-900 transition-colors cursor-pointer"
+              className="text-xs px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition-colors cursor-pointer"
             >
               Confirmar entrega
             </button>

@@ -72,7 +72,7 @@ export function ReportsPage() {
         )}
 
         {error && (
-          <div className="bg-red-950 border border-red-900 rounded-xl px-4 py-3 text-red-400 text-sm">
+          <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-red-700 text-sm">
             {error}
           </div>
         )}

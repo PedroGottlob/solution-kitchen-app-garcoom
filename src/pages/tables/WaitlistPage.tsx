@@ -136,23 +136,23 @@ export function WaitlistPage() {
                 <p className="text-zinc-900 text-sm font-medium">
                   Senha {entry.ticketNumber} · {entry.customerName}
                   {entry.status === 'Called' && (
-                    <span className="ml-2 text-xs px-2 py-0.5 rounded-full bg-amber-950 text-amber-400">Chamada</span>
+                    <span className="ml-2 text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">Chamada</span>
                   )}
                 </p>
                 <p className="text-zinc-500 text-xs">{entry.partySize} pessoa{entry.partySize !== 1 ? 's' : ''}</p>
               </div>
               <div className="flex items-center gap-2">
                 {entry.status === 'Waiting' && (
-                  <button onClick={() => handleCall(entry.id)} className="text-xs px-3 py-1.5 rounded-lg bg-accent-950 text-accent-400 border border-accent-900 hover:bg-accent-900 transition-colors cursor-pointer">
+                  <button onClick={() => handleCall(entry.id)} className="text-xs px-3 py-1.5 rounded-lg bg-accent-50 text-accent-700 border border-accent-200 hover:bg-accent-100 transition-colors cursor-pointer">
                     Chamar
                   </button>
                 )}
                 {entry.status === 'Called' && (
-                  <button onClick={() => handleSeat(entry.id)} className="text-xs px-3 py-1.5 rounded-lg bg-emerald-950 text-emerald-400 border border-emerald-900 hover:bg-emerald-900 transition-colors cursor-pointer">
+                  <button onClick={() => handleSeat(entry.id)} className="text-xs px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition-colors cursor-pointer">
                     Sentou
                   </button>
                 )}
-                <button onClick={() => handleCancel(entry.id)} className="w-8 h-8 rounded-full bg-zinc-200 flex items-center justify-center cursor-pointer hover:bg-red-950 transition-colors" title="Cancelar">
+                <button onClick={() => handleCancel(entry.id)} className="w-8 h-8 rounded-full bg-zinc-200 flex items-center justify-center cursor-pointer hover:bg-red-100 transition-colors" title="Cancelar">
                   <i className="ti ti-x text-zinc-600 text-sm" />
                 </button>
               </div>
