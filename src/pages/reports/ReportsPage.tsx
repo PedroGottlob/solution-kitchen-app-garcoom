@@ -49,13 +49,13 @@ export function ReportsPage() {
 
         {!report && !loading && (
           <div className="flex flex-col items-center justify-center py-16 gap-4">
-            <i className="ti ti-sparkles text-violet-500 text-5xl" />
+            <i className="ti ti-sparkles text-accent-500 text-5xl" />
             <p className="text-zinc-400 text-center text-sm max-w-xs">
               Gere um relatório com análise de vendas, comparativo semanal e sugestões para o seu restaurante.
             </p>
             <button
               onClick={handleGenerate}
-              className="py-3 px-6 rounded-xl bg-violet-600 text-white font-medium text-sm cursor-pointer hover:bg-violet-500 transition-colors flex items-center gap-2"
+              className="py-3 px-6 rounded-xl bg-accent-600 text-white font-medium text-sm cursor-pointer hover:bg-accent-500 transition-colors flex items-center gap-2"
             >
               <i className="ti ti-sparkles" />
               Gerar relatório
@@ -65,7 +65,7 @@ export function ReportsPage() {
 
         {loading && (
           <div className="flex flex-col items-center justify-center py-16 gap-3">
-            <div className="w-8 h-8 border-2 border-violet-600 border-t-transparent rounded-full animate-spin" />
+            <div className="w-8 h-8 border-2 border-accent-600 border-t-transparent rounded-full animate-spin" />
             <p className="text-zinc-500 text-sm">Analisando os dados do restaurante...</p>
             <p className="text-zinc-600 text-xs">Isso pode levar alguns segundos</p>
           </div>
@@ -124,7 +124,7 @@ export function ReportsPage() {
             {/* Análise da IA */}
             <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
               <div className="flex items-center gap-2 mb-3">
-                <i className="ti ti-sparkles text-violet-500" />
+                <i className="ti ti-sparkles text-accent-500" />
                 <p className="text-zinc-500 text-xs font-medium uppercase tracking-wider">
                   Análise
                 </p>

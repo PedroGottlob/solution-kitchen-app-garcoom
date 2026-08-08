@@ -108,7 +108,7 @@ export function TablesPage({ isGerente }: TablesPageProps) {
               >
                 <i className="ti ti-bell text-zinc-400 text-lg" />
                 {unread > 0 && (
-                  <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-violet-500 text-white text-xs flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-accent-500 text-white text-xs flex items-center justify-center">
                     {unread}
                   </span>
                 )}
@@ -128,7 +128,7 @@ export function TablesPage({ isGerente }: TablesPageProps) {
           <div className="text-zinc-500 text-xs">Livres</div>
         </div>
         <div className="flex-1 bg-zinc-900 rounded-xl p-3 text-center border border-zinc-800">
-          <div className="text-violet-400 text-lg font-medium">{occupied}</div>
+          <div className="text-accent-400 text-lg font-medium">{occupied}</div>
           <div className="text-zinc-500 text-xs">Ocupadas</div>
         </div>
         <div className="flex-1 bg-zinc-900 rounded-xl p-3 text-center border border-zinc-800">
@@ -153,7 +153,7 @@ export function TablesPage({ isGerente }: TablesPageProps) {
             {isGerente && (
               <button
                 onClick={() => navigate('/tables/manage')}
-                className="text-violet-400 text-sm underline cursor-pointer"
+                className="text-accent-400 text-sm underline cursor-pointer"
               >
                 Cadastrar mesas
               </button>

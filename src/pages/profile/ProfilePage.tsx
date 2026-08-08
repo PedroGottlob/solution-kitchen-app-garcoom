@@ -57,11 +57,11 @@ export function ProfilePage() {
           <img
             src={user.picture}
             alt={user.name}
-            className="w-20 h-20 rounded-full border-2 border-violet-700"
+            className="w-20 h-20 rounded-full border-2 border-accent-700"
           />
         ) : (
-          <div className="w-20 h-20 rounded-full bg-violet-950 border-2 border-violet-700 flex items-center justify-center">
-            <span className="text-violet-300 text-2xl font-medium">{initials}</span>
+          <div className="w-20 h-20 rounded-full bg-accent-950 border-2 border-accent-700 flex items-center justify-center">
+            <span className="text-accent-300 text-2xl font-medium">{initials}</span>
           </div>
         )}
         <div className="text-center">

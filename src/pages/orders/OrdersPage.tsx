@@ -61,7 +61,7 @@ export function OrdersPage() {
               onClick={() => setActiveFilter(f.value)}
               className={`px-3 py-1.5 rounded-full text-xs whitespace-nowrap border cursor-pointer transition-colors ${
                 activeFilter === f.value
-                  ? 'bg-violet-950 text-violet-400 border-violet-900'
+                  ? 'bg-accent-950 text-accent-400 border-accent-900'
                   : 'bg-zinc-800 text-zinc-400 border-zinc-700'
               }`}
             >
@@ -85,10 +85,10 @@ export function OrdersPage() {
         <button
           onClick={() => setActiveFilter('Preparing')}
           className={`flex-1 bg-zinc-900 rounded-xl p-3 text-center border cursor-pointer transition-colors ${
-            activeFilter === 'Preparing' ? 'border-violet-900' : 'border-zinc-800 hover:border-zinc-700'
+            activeFilter === 'Preparing' ? 'border-accent-900' : 'border-zinc-800 hover:border-zinc-700'
           }`}
         >
-          <div className="text-violet-400 text-lg font-medium">{preparing}</div>
+          <div className="text-accent-400 text-lg font-medium">{preparing}</div>
           <div className="text-zinc-500 text-xs">Em preparo</div>
         </button>
         <button

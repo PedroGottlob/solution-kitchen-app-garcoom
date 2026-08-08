@@ -60,7 +60,7 @@ function App() {
         </div>
         <button
           onClick={() => loginWithRedirect()}
-          className="w-full max-w-xs py-3.5 rounded-xl bg-violet-600 text-white font-medium text-sm cursor-pointer hover:bg-violet-500 transition-colors"
+          className="w-full max-w-xs py-3.5 rounded-xl bg-accent-600 text-white font-medium text-sm cursor-pointer hover:bg-accent-500 transition-colors"
         >
           Entrar
         </button>

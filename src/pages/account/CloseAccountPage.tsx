@@ -96,7 +96,7 @@ export function CloseAccountPage() {
           <p className="text-white text-xs break-all">{pixPayment.pixQrCode}</p>
         </div>
 
-        <p className="text-violet-400 text-2xl font-medium">
+        <p className="text-accent-400 text-2xl font-medium">
           R$ {total.toFixed(2)}
         </p>
 
@@ -153,7 +153,7 @@ export function CloseAccountPage() {
               >
                 <div>
                   <p className="text-white text-sm">
-                    <span className="text-violet-400">{item.quantity}× </span>
+                    <span className="text-accent-400">{item.quantity}× </span>
                     {item.name}
                   </p>
                   {item.notes && (
@@ -187,8 +187,8 @@ export function CloseAccountPage() {
               onClick={() => setSplit(n)}
               className={`flex-1 py-2.5 rounded-xl border text-sm cursor-pointer transition-colors ${
                 split === n
-                  ? 'bg-violet-950 border-violet-900 text-violet-400'
-                  : 'bg-zinc-900 border-zinc-800 text-zinc-300 hover:border-violet-900 hover:text-violet-400 hover:bg-violet-950'
+                  ? 'bg-accent-950 border-accent-900 text-accent-400'
+                  : 'bg-zinc-900 border-zinc-800 text-zinc-300 hover:border-accent-900 hover:text-accent-400 hover:bg-accent-950'
               }`}
             >
               {n === 1 ? 'Sem dividir' : `÷ ${n}`}
@@ -213,10 +213,10 @@ export function CloseAccountPage() {
               key={method.id}
               onClick={() => handleCloseAccount(method.id)}
               disabled={loading}
-              className="bg-zinc-900 border border-zinc-800 rounded-xl py-4 flex flex-col items-center gap-2 cursor-pointer hover:border-violet-900 hover:bg-violet-950 transition-colors group disabled:opacity-50"
+              className="bg-zinc-900 border border-zinc-800 rounded-xl py-4 flex flex-col items-center gap-2 cursor-pointer hover:border-accent-900 hover:bg-accent-950 transition-colors group disabled:opacity-50"
             >
-              <i className={`ti ${method.icon} text-2xl text-zinc-400 group-hover:text-violet-400`} />
-              <span className="text-zinc-300 text-sm group-hover:text-violet-400">
+              <i className={`ti ${method.icon} text-2xl text-zinc-400 group-hover:text-accent-400`} />
+              <span className="text-zinc-300 text-sm group-hover:text-accent-400">
                 {method.label}
               </span>
               <span className="text-zinc-500 text-xs">

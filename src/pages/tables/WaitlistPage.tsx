@@ -113,7 +113,7 @@ export function WaitlistPage() {
             {waiting.length} esperando{called.length > 0 && ` · ${called.length} chamada${called.length !== 1 ? 's' : ''}`}
           </p>
         </div>
-        <button onClick={() => setShowForm(true)} className="w-10 h-10 rounded-full bg-violet-600 flex items-center justify-center cursor-pointer hover:bg-violet-500 transition-colors">
+        <button onClick={() => setShowForm(true)} className="w-10 h-10 rounded-full bg-accent-600 flex items-center justify-center cursor-pointer hover:bg-accent-500 transition-colors">
           <i className="ti ti-plus text-white text-lg" />
         </button>
       </div>
@@ -143,7 +143,7 @@ export function WaitlistPage() {
               </div>
               <div className="flex items-center gap-2">
                 {entry.status === 'Waiting' && (
-                  <button onClick={() => handleCall(entry.id)} className="text-xs px-3 py-1.5 rounded-lg bg-violet-950 text-violet-400 border border-violet-900 hover:bg-violet-900 transition-colors cursor-pointer">
+                  <button onClick={() => handleCall(entry.id)} className="text-xs px-3 py-1.5 rounded-lg bg-accent-950 text-accent-400 border border-accent-900 hover:bg-accent-900 transition-colors cursor-pointer">
                     Chamar
                   </button>
                 )}
@@ -187,7 +187,7 @@ export function WaitlistPage() {
 
             <div className="flex gap-3 mt-2">
               <button onClick={() => setShowForm(false)} className="flex-1 py-3 rounded-xl bg-zinc-800 text-zinc-300 font-medium text-sm cursor-pointer hover:bg-zinc-700 transition-colors">Cancelar</button>
-              <button onClick={handleSave} disabled={saving} className="flex-1 py-3 rounded-xl bg-violet-600 text-white font-medium text-sm cursor-pointer hover:bg-violet-500 transition-colors disabled:opacity-50">
+              <button onClick={handleSave} disabled={saving} className="flex-1 py-3 rounded-xl bg-accent-600 text-white font-medium text-sm cursor-pointer hover:bg-accent-500 transition-colors disabled:opacity-50">
                 {saving ? 'Salvando...' : 'Cadastrar'}
               </button>
             </div>
@@ -200,7 +200,7 @@ export function WaitlistPage() {
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-[70] px-5" onClick={() => setConfirmedEntry(null)}>
           <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 max-w-sm w-full text-center" onClick={e => e.stopPropagation()}>
             <p className="text-zinc-500 text-sm mb-1">Senha</p>
-            <p className="text-5xl font-bold text-violet-400 mb-3">{confirmedEntry.ticketNumber}</p>
+            <p className="text-5xl font-bold text-accent-400 mb-3">{confirmedEntry.ticketNumber}</p>
             <p className="text-white text-sm mb-4">{confirmedEntry.customerName} · {confirmedEntry.partySize} pessoa{confirmedEntry.partySize !== 1 ? 's' : ''}</p>
 
             <img
@@ -212,7 +212,7 @@ export function WaitlistPage() {
             />
 
             <p className="text-zinc-500 text-xs mb-4">Peça pro cliente escanear pra acompanhar a fila pelo celular</p>
-            <button onClick={() => setConfirmedEntry(null)} className="w-full py-2.5 rounded-xl bg-violet-600 text-white font-medium text-sm cursor-pointer hover:bg-violet-500 transition-colors">
+            <button onClick={() => setConfirmedEntry(null)} className="w-full py-2.5 rounded-xl bg-accent-600 text-white font-medium text-sm cursor-pointer hover:bg-accent-500 transition-colors">
               Fechar
             </button>
           </div>

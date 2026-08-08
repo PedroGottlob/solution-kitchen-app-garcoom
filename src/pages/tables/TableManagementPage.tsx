@@ -152,7 +152,7 @@ export function TableManagementPage() {
             {inactiveTables.length > 0 && ` · ${inactiveTables.length} inativa${inactiveTables.length !== 1 ? 's' : ''}`}
           </p>
         </div>
-        <button onClick={openCreate} className="w-10 h-10 rounded-full bg-violet-600 flex items-center justify-center cursor-pointer hover:bg-violet-500 transition-colors">
+        <button onClick={openCreate} className="w-10 h-10 rounded-full bg-accent-600 flex items-center justify-center cursor-pointer hover:bg-accent-500 transition-colors">
           <i className="ti ti-plus text-white text-lg" />
         </button>
       </div>
@@ -216,7 +216,7 @@ export function TableManagementPage() {
                   </div>
                   <button
                     onClick={() => handleActivate(table.id)}
-                    className="text-xs px-3 py-1.5 rounded-lg bg-zinc-800 text-zinc-300 border border-zinc-700 hover:bg-violet-950 hover:text-violet-400 hover:border-violet-900 transition-colors cursor-pointer"
+                    className="text-xs px-3 py-1.5 rounded-lg bg-zinc-800 text-zinc-300 border border-zinc-700 hover:bg-accent-950 hover:text-accent-400 hover:border-accent-900 transition-colors cursor-pointer"
                   >
                     Reativar
                   </button>
@@ -259,7 +259,7 @@ export function TableManagementPage() {
 
             <div className="flex gap-3 mt-2">
               <button onClick={() => setShowForm(false)} className="flex-1 py-3 rounded-xl bg-zinc-800 text-zinc-300 font-medium text-sm cursor-pointer hover:bg-zinc-700 transition-colors">Cancelar</button>
-              <button onClick={handleSave} disabled={saving} className="flex-1 py-3 rounded-xl bg-violet-600 text-white font-medium text-sm cursor-pointer hover:bg-violet-500 transition-colors disabled:opacity-50">
+              <button onClick={handleSave} disabled={saving} className="flex-1 py-3 rounded-xl bg-accent-600 text-white font-medium text-sm cursor-pointer hover:bg-accent-500 transition-colors disabled:opacity-50">
                 {saving ? 'Salvando...' : 'Salvar'}
               </button>
             </div>

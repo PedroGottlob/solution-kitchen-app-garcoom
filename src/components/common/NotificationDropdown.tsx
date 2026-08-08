@@ -17,7 +17,7 @@ function getElapsedMinutes(createdAt: string): string {
 
 const typeConfig: Record<Notification['type'], { icon: string; color: string; bg: string }> = {
   order_ready: { icon: 'ti-bell-ringing', color: 'text-amber-400', bg: 'bg-amber-950' },
-  new_order: { icon: 'ti-clipboard-plus', color: 'text-violet-400', bg: 'bg-violet-950' },
+  new_order: { icon: 'ti-clipboard-plus', color: 'text-accent-400', bg: 'bg-accent-950' },
   order_cancelled: { icon: 'ti-clipboard-x', color: 'text-red-400', bg: 'bg-red-950' },
 }
 
@@ -44,12 +44,12 @@ export function NotificationDropdown({ onClose }: NotificationDropdownProps) {
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-800">
         <span className="text-white text-sm font-medium">
-          Notificações {unread > 0 && <span className="text-violet-400">({unread})</span>}
+          Notificações {unread > 0 && <span className="text-accent-400">({unread})</span>}
         </span>
         {unread > 0 && (
           <button
             onClick={markAllAsRead}
-            className="text-violet-400 text-xs cursor-pointer hover:text-violet-300"
+            className="text-accent-400 text-xs cursor-pointer hover:text-accent-300"
           >
             Marcar todas
           </button>
@@ -89,7 +89,7 @@ export function NotificationDropdown({ onClose }: NotificationDropdownProps) {
                   <p className="text-zinc-500 text-xs">{notification.message}</p>
                 </div>
                 {!notification.read && (
-                  <div className="w-1.5 h-1.5 rounded-full bg-violet-400 flex-shrink-0 mt-2" />
+                  <div className="w-1.5 h-1.5 rounded-full bg-accent-400 flex-shrink-0 mt-2" />
                 )}
               </button>
             )

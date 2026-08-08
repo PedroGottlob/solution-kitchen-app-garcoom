@@ -14,11 +14,11 @@ const statusConfig = {
     labelColor: 'text-emerald-600',
   },
   occupied: {
-    bg: 'bg-violet-950',
-    border: 'border-violet-900',
-    text: 'text-violet-400',
+    bg: 'bg-accent-950',
+    border: 'border-accent-900',
+    text: 'text-accent-400',
     label: 'Ocupada',
-    labelColor: 'text-violet-600',
+    labelColor: 'text-accent-600',
   },
   ready: {
     bg: 'bg-amber-950',

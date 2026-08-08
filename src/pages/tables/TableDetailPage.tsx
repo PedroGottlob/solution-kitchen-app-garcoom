@@ -119,7 +119,7 @@ export function TableDetailPage() {
       <div className="fixed bottom-20 left-0 right-0 px-5 flex flex-col gap-3">
         <button
           onClick={() => navigate(`/tables/${tableId}/new-order`)}
-          className="w-full py-3.5 rounded-xl bg-violet-600 text-white font-medium text-sm flex items-center justify-center gap-2 cursor-pointer hover:bg-violet-500 transition-colors"
+          className="w-full py-3.5 rounded-xl bg-accent-600 text-white font-medium text-sm flex items-center justify-center gap-2 cursor-pointer hover:bg-accent-500 transition-colors"
         >
           <i className="ti ti-plus text-lg" />
           Novo pedido

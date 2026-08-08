@@ -106,8 +106,8 @@ export function AccountPage() {
         <div className="flex flex-col gap-4 px-5 py-4">
 
           {/* Resumo geral */}
-          <div className="bg-gradient-to-br from-violet-950 to-zinc-900 border border-violet-900 rounded-xl px-5 py-4">
-            <p className="text-violet-400 text-xs uppercase tracking-wider mb-1">
+          <div className="bg-gradient-to-br from-accent-950 to-zinc-900 border border-accent-900 rounded-xl px-5 py-4">
+            <p className="text-accent-400 text-xs uppercase tracking-wider mb-1">
               Total em aberto
             </p>
             <p className="text-white text-3xl font-medium mb-2">
@@ -141,7 +141,7 @@ export function AccountPage() {
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <p className="text-violet-400 text-sm font-medium">
+                    <p className="text-accent-400 text-sm font-medium">
                       R$ {t.total.toFixed(2)}
                     </p>
                     <i className="ti ti-chevron-right text-zinc-600" />

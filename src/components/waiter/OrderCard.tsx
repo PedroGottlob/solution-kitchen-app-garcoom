@@ -9,7 +9,7 @@ interface OrderCardProps {
 
 const statusConfig: Record<string, { label: string; bg: string; text: string }> = {
   Pending: { label: 'Pendente', bg: 'bg-amber-950', text: 'text-amber-400' },
-  Preparing: { label: 'Em preparo', bg: 'bg-violet-950', text: 'text-violet-400' },
+  Preparing: { label: 'Em preparo', bg: 'bg-accent-950', text: 'text-accent-400' },
   Ready: { label: 'Pronto para servir', bg: 'bg-emerald-950', text: 'text-emerald-400' },
   Delivered: { label: 'Entregue', bg: 'bg-zinc-800', text: 'text-zinc-400' },
   Cancelled: { label: 'Cancelado', bg: 'bg-red-950', text: 'text-red-400' },
@@ -68,7 +68,7 @@ export function OrderCard({ order, onCancel, onDeliver }: OrderCardProps) {
           const options = getOptions(item)
           return (
             <div key={i} className="flex items-start gap-2">
-              <span className="text-violet-400 text-sm font-medium">{item.quantity}×</span>
+              <span className="text-accent-400 text-sm font-medium">{item.quantity}×</span>
               <div className="flex-1">
                 <div className="text-zinc-100 text-sm">{item.name}</div>
                 {item.notes && (
@@ -83,7 +83,7 @@ export function OrderCard({ order, onCancel, onDeliver }: OrderCardProps) {
                       >
                         {opt.name}
                         {opt.additionalCost > 0 && (
-                          <span className="text-violet-400 ml-1">+R${opt.additionalCost.toFixed(0)}</span>
+                          <span className="text-accent-400 ml-1">+R${opt.additionalCost.toFixed(0)}</span>
                         )}
                       </span>
                     ))}

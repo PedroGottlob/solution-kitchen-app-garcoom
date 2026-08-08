@@ -30,8 +30,8 @@ export function BottomNav({ isGerente }: { isGerente: boolean }) {
             onClick={() => navigate(tab.path)}
             className="flex-1 flex flex-col items-center gap-1 py-3 cursor-pointer"
           >
-            <i className={`ti ${tab.icon} text-2xl ${active ? 'text-violet-400' : 'text-zinc-500'}`} />
-            <span className={`text-xs ${active ? 'text-violet-400' : 'text-zinc-500'}`}>
+            <i className={`ti ${tab.icon} text-2xl ${active ? 'text-accent-400' : 'text-zinc-500'}`} />
+            <span className={`text-xs ${active ? 'text-accent-400' : 'text-zinc-500'}`}>
               {tab.label}
             </span>
           </button>

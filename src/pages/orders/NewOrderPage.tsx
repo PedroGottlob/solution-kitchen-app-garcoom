@@ -188,7 +188,7 @@ export function NewOrderPage() {
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Buscar no cardápio..."
-            className="w-full pl-9 pr-3 py-2 rounded-xl bg-zinc-800 border border-zinc-700 text-white text-sm placeholder-zinc-500 focus:outline-none focus:border-violet-600"
+            className="w-full pl-9 pr-3 py-2 rounded-xl bg-zinc-800 border border-zinc-700 text-white text-sm placeholder-zinc-500 focus:outline-none focus:border-accent-600"
           />
         </div>
 
@@ -199,7 +199,7 @@ export function NewOrderPage() {
               onClick={() => setActiveCategory(cat)}
               className={`px-3 py-1.5 rounded-full text-xs whitespace-nowrap border cursor-pointer transition-colors ${
                 activeCategory === cat
-                  ? 'bg-violet-950 text-violet-400 border-violet-900'
+                  ? 'bg-accent-950 text-accent-400 border-accent-900'
                   : 'bg-zinc-800 text-zinc-400 border-zinc-700'
               }`}
             >
@@ -232,7 +232,7 @@ export function NewOrderPage() {
                   <div className="flex items-center gap-2">
                     <p className="text-white text-sm font-medium">{item.name}</p>
                     {hasOptions && (
-                      <span className="text-xs px-1.5 py-0.5 rounded bg-violet-950 text-violet-400 border border-violet-900">
+                      <span className="text-xs px-1.5 py-0.5 rounded bg-accent-950 text-accent-400 border border-accent-900">
                         opções
                       </span>
                     )}
@@ -240,13 +240,13 @@ export function NewOrderPage() {
                   {item.description && (
                     <p className="text-zinc-500 text-xs">{item.description}</p>
                   )}
-                  <p className="text-violet-400 text-sm font-medium mt-1">R$ {item.price.toFixed(2)}</p>
+                  <p className="text-accent-400 text-sm font-medium mt-1">R$ {item.price.toFixed(2)}</p>
                 </div>
 
                 {qty === 0 ? (
                   <button
                     onClick={() => handleAddItem(item)}
-                    className="w-8 h-8 rounded-full bg-violet-600 flex items-center justify-center cursor-pointer hover:bg-violet-500 transition-colors"
+                    className="w-8 h-8 rounded-full bg-accent-600 flex items-center justify-center cursor-pointer hover:bg-accent-500 transition-colors"
                   >
                     <i className="ti ti-plus text-white text-sm" />
                   </button>
@@ -272,12 +272,12 @@ export function NewOrderPage() {
                           if (e.key === 'Enter') (e.target as HTMLInputElement).blur()
                           if (e.key === 'Escape') setEditingQty(null)
                         }}
-                        className="w-12 text-center bg-zinc-800 border border-violet-600 rounded text-white font-medium text-sm py-0.5 focus:outline-none"
+                        className="w-12 text-center bg-zinc-800 border border-accent-600 rounded text-white font-medium text-sm py-0.5 focus:outline-none"
                       />
                     ) : (
                       <button
                         onClick={() => setEditingQty(item.id)}
-                        className="text-white font-medium text-sm w-8 text-center cursor-pointer hover:text-violet-400"
+                        className="text-white font-medium text-sm w-8 text-center cursor-pointer hover:text-accent-400"
                       >
                         {qty}
                       </button>
@@ -285,7 +285,7 @@ export function NewOrderPage() {
 
                     <button
                       onClick={() => hasOptions ? handleAddItem(item) : incrementItem(item.id)}
-                      className="w-8 h-8 rounded-full bg-violet-600 flex items-center justify-center cursor-pointer hover:bg-violet-500 transition-colors"
+                      className="w-8 h-8 rounded-full bg-accent-600 flex items-center justify-center cursor-pointer hover:bg-accent-500 transition-colors"
                     >
                       <i className="ti ti-plus text-white text-sm" />
                     </button>
@@ -303,7 +303,7 @@ export function NewOrderPage() {
           <button
             onClick={handleConfirm}
             disabled={loading}
-            className="w-full py-3.5 rounded-xl bg-violet-600 text-white font-medium text-sm flex items-center justify-center gap-2 cursor-pointer hover:bg-violet-500 transition-colors disabled:opacity-50"
+            className="w-full py-3.5 rounded-xl bg-accent-600 text-white font-medium text-sm flex items-center justify-center gap-2 cursor-pointer hover:bg-accent-500 transition-colors disabled:opacity-50"
           >
             <i className="ti ti-check text-lg" />
             {loading ? 'Enviando...' : `Confirmar pedido · R$ ${total().toFixed(2)}`}
@@ -332,13 +332,13 @@ export function NewOrderPage() {
                     onClick={() => toggleOption(option)}
                     className={`flex items-center justify-between px-4 py-3 rounded-xl border transition-colors cursor-pointer ${
                       isSelected
-                        ? 'bg-violet-950 border-violet-900'
+                        ? 'bg-accent-950 border-accent-900'
                         : 'bg-zinc-800 border-zinc-700 hover:border-zinc-600'
                     }`}
                   >
                     <div className="flex items-center gap-3">
                       <div className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 ${
-                        isSelected ? 'bg-violet-600 border-violet-600' : 'border-zinc-500'
+                        isSelected ? 'bg-accent-600 border-accent-600' : 'border-zinc-500'
                       }`}>
                         {isSelected && <i className="ti ti-check text-white text-xs" />}
                       </div>
@@ -347,7 +347,7 @@ export function NewOrderPage() {
                       </span>
                     </div>
                     {option.additionalCost > 0 && (
-                      <span className={`text-sm font-medium ${isSelected ? 'text-violet-400' : 'text-zinc-500'}`}>
+                      <span className={`text-sm font-medium ${isSelected ? 'text-accent-400' : 'text-zinc-500'}`}>
                         +R$ {option.additionalCost.toFixed(2)}
                       </span>
                     )}
@@ -359,7 +359,7 @@ export function NewOrderPage() {
             {optionsCostPreview > 0 && (
               <div className="bg-zinc-800 rounded-lg px-4 py-2 flex items-center justify-between">
                 <span className="text-zinc-400 text-sm">Adicionais</span>
-                <span className="text-violet-400 text-sm font-medium">+R$ {optionsCostPreview.toFixed(2)}</span>
+                <span className="text-accent-400 text-sm font-medium">+R$ {optionsCostPreview.toFixed(2)}</span>
               </div>
             )}
 
@@ -372,7 +372,7 @@ export function NewOrderPage() {
               </button>
               <button
                 onClick={handleConfirmOptions}
-                className="flex-1 py-3 rounded-xl bg-violet-600 text-white font-medium text-sm cursor-pointer hover:bg-violet-500 transition-colors"
+                className="flex-1 py-3 rounded-xl bg-accent-600 text-white font-medium text-sm cursor-pointer hover:bg-accent-500 transition-colors"
               >
                 Adicionar · R$ {(optionsItem.price + optionsCostPreview).toFixed(2)}
               </button>

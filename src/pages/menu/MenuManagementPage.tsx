@@ -229,7 +229,7 @@ export function MenuManagementPage() {
           </div>
           <button
             onClick={() => openCreate()}
-            className="w-10 h-10 rounded-full bg-violet-600 flex items-center justify-center cursor-pointer hover:bg-violet-500 transition-colors"
+            className="w-10 h-10 rounded-full bg-accent-600 flex items-center justify-center cursor-pointer hover:bg-accent-500 transition-colors"
           >
             <i className="ti ti-plus text-white text-lg" />
           </button>
@@ -241,7 +241,7 @@ export function MenuManagementPage() {
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Buscar item..."
-            className="w-full pl-9 pr-3 py-2 rounded-xl bg-zinc-800 border border-zinc-700 text-white text-sm placeholder-zinc-500 focus:outline-none focus:border-violet-600"
+            className="w-full pl-9 pr-3 py-2 rounded-xl bg-zinc-800 border border-zinc-700 text-white text-sm placeholder-zinc-500 focus:outline-none focus:border-accent-600"
           />
         </div>
       </div>
@@ -275,7 +275,7 @@ export function MenuManagementPage() {
                   </p>
                   <button
                     onClick={() => openCreate(cat.id)}
-                    className="text-zinc-500 hover:text-violet-400 text-xs cursor-pointer transition-colors flex items-center gap-1"
+                    className="text-zinc-500 hover:text-accent-400 text-xs cursor-pointer transition-colors flex items-center gap-1"
                   >
                     <i className="ti ti-plus text-xs" />
                     Novo em {cat.name.toLowerCase()}
@@ -290,19 +290,19 @@ export function MenuManagementPage() {
                         <div className="flex items-center gap-2">
                           <p className="text-white text-sm font-medium">{item.name}</p>
                           {(item.options?.length ?? 0) > 0 && (
-                            <span className="text-xs px-1.5 py-0.5 rounded bg-violet-950 text-violet-400 border border-violet-900">
+                            <span className="text-xs px-1.5 py-0.5 rounded bg-accent-950 text-accent-400 border border-accent-900">
                               {item.options.length} opç{item.options.length !== 1 ? 'ões' : 'ão'}
                             </span>
                           )}
                         </div>
                         {item.description && <p className="text-zinc-500 text-xs">{item.description}</p>}
                         <div className="flex items-center gap-3 mt-1 flex-wrap">
-                          <span className="text-violet-400 text-sm font-medium">{formatBRL(item.price)}</span>
+                          <span className="text-accent-400 text-sm font-medium">{formatBRL(item.price)}</span>
                           <span className="text-zinc-600 text-xs">Custo: {formatBRL(item.cost)} · Margem: {item.margin.toFixed(0)}%</span>
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <button onClick={() => openOptions(item)} className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center cursor-pointer hover:bg-violet-950 transition-colors" title="Opções do item">
+                        <button onClick={() => openOptions(item)} className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center cursor-pointer hover:bg-accent-950 transition-colors" title="Opções do item">
                           <i className="ti ti-list-details text-zinc-400 text-sm" />
                         </button>
                         <button onClick={() => openEdit(item)} className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center cursor-pointer hover:bg-zinc-700 transition-colors" title="Editar">
@@ -334,7 +334,7 @@ export function MenuManagementPage() {
                   </div>
                   <button
                     onClick={() => handleActivate(item.id)}
-                    className="text-xs px-3 py-1.5 rounded-lg bg-zinc-800 text-zinc-300 border border-zinc-700 hover:bg-violet-950 hover:text-violet-400 hover:border-violet-900 transition-colors cursor-pointer"
+                    className="text-xs px-3 py-1.5 rounded-lg bg-zinc-800 text-zinc-300 border border-zinc-700 hover:bg-accent-950 hover:text-accent-400 hover:border-accent-900 transition-colors cursor-pointer"
                   >
                     Reativar
                   </button>
@@ -384,7 +384,7 @@ export function MenuManagementPage() {
             )}
             <div className="flex gap-3 mt-2">
               <button onClick={() => setShowForm(false)} className="flex-1 py-3 rounded-xl bg-zinc-800 text-zinc-300 font-medium text-sm cursor-pointer hover:bg-zinc-700 transition-colors">Cancelar</button>
-              <button onClick={handleSave} disabled={saving} className="flex-1 py-3 rounded-xl bg-violet-600 text-white font-medium text-sm cursor-pointer hover:bg-violet-500 transition-colors disabled:opacity-50">
+              <button onClick={handleSave} disabled={saving} className="flex-1 py-3 rounded-xl bg-accent-600 text-white font-medium text-sm cursor-pointer hover:bg-accent-500 transition-colors disabled:opacity-50">
                 {saving ? 'Salvando...' : 'Salvar'}
               </button>
             </div>
@@ -411,7 +411,7 @@ export function MenuManagementPage() {
                     <div>
                       <span className="text-zinc-100 text-sm">{option.name}</span>
                       {option.additionalCost > 0 && (
-                        <span className="text-violet-400 text-sm ml-2">+{formatBRL(option.additionalCost)}</span>
+                        <span className="text-accent-400 text-sm ml-2">+{formatBRL(option.additionalCost)}</span>
                       )}
                     </div>
                     <button
@@ -437,7 +437,7 @@ export function MenuManagementPage() {
                   value={optionName}
                   onChange={e => setOptionName(e.target.value)}
                   placeholder="Ex: bacon extra, sem cebola"
-                  className="bg-zinc-800 text-white text-sm rounded-lg px-3 py-2.5 outline-none border border-zinc-700 focus:border-violet-600"
+                  className="bg-zinc-800 text-white text-sm rounded-lg px-3 py-2.5 outline-none border border-zinc-700 focus:border-accent-600"
                 />
               </div>
               <div className="flex flex-col gap-1">
@@ -449,13 +449,13 @@ export function MenuManagementPage() {
                   value={optionCost}
                   onChange={e => setOptionCost(e.target.value)}
                   placeholder="0,00"
-                  className="bg-zinc-800 text-white text-sm rounded-lg px-3 py-2.5 outline-none border border-zinc-700 focus:border-violet-600"
+                  className="bg-zinc-800 text-white text-sm rounded-lg px-3 py-2.5 outline-none border border-zinc-700 focus:border-accent-600"
                 />
               </div>
               <button
                 onClick={handleAddOption}
                 disabled={savingOption}
-                className="py-3 rounded-xl bg-violet-600 text-white font-medium text-sm cursor-pointer hover:bg-violet-500 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                className="py-3 rounded-xl bg-accent-600 text-white font-medium text-sm cursor-pointer hover:bg-accent-500 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
               >
                 <i className="ti ti-plus" />
                 {savingOption ? 'Adicionando...' : 'Adicionar opção'}

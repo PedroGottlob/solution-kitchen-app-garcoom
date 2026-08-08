@@ -13,7 +13,7 @@ function getElapsedMinutes(createdAt: string): string {
 
 const typeConfig: Record<Notification['type'], { icon: string; color: string; bg: string }> = {
   order_ready: { icon: 'ti-bell-ringing', color: 'text-amber-400', bg: 'bg-amber-950' },
-  new_order: { icon: 'ti-clipboard-plus', color: 'text-violet-400', bg: 'bg-violet-950' },
+  new_order: { icon: 'ti-clipboard-plus', color: 'text-accent-400', bg: 'bg-accent-950' },
   order_cancelled: { icon: 'ti-clipboard-x', color: 'text-red-400', bg: 'bg-red-950' },
 }
 
@@ -46,7 +46,7 @@ export function NotificationsPage() {
           {unread > 0 && (
             <button
               onClick={markAllAsRead}
-              className="text-violet-400 text-sm cursor-pointer hover:text-violet-300"
+              className="text-accent-400 text-sm cursor-pointer hover:text-accent-300"
             >
               Marcar todas
             </button>
@@ -89,7 +89,7 @@ export function NotificationsPage() {
                 </div>
 
                 {!notification.read && (
-                  <div className="w-2 h-2 rounded-full bg-violet-400 flex-shrink-0 mt-2" />
+                  <div className="w-2 h-2 rounded-full bg-accent-400 flex-shrink-0 mt-2" />
                 )}
               </button>
             )
