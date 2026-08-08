@@ -87,7 +87,7 @@ export function AccountPage() {
     <div className="min-h-screen bg-zinc-50 flex flex-col pb-20">
 
       {/* Header */}
-      <div className="bg-zinc-100 border-b border-zinc-200 px-5 py-4">
+      <div className="bg-accent-50 border-b border-accent-200 px-5 py-4">
         <h1 className="text-zinc-900 text-xl font-medium">Conta</h1>
         <p className="text-zinc-500 text-sm">Mesas ocupadas · resumo do salão</p>
       </div>
@@ -129,7 +129,7 @@ export function AccountPage() {
                 <button
                   key={t.tableId}
                   onClick={() => navigate(`/tables/${t.tableId}`)}
-                  className="bg-zinc-100 border border-zinc-200 rounded-xl px-4 py-3 flex items-center justify-between cursor-pointer hover:border-zinc-300 hover:bg-zinc-200 transition-colors text-left"
+                  className="bg-accent-50 border border-accent-200 rounded-xl px-4 py-3 flex items-center justify-between cursor-pointer hover:border-zinc-300 hover:bg-zinc-200 transition-colors text-left"
                 >
                   <div>
                     <p className="text-zinc-900 text-sm font-medium">

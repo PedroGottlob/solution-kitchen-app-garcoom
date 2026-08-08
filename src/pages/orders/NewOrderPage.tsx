@@ -165,7 +165,7 @@ export function NewOrderPage() {
     <div className="min-h-screen bg-zinc-50 flex flex-col pb-36">
 
       {/* Header */}
-      <div className="bg-zinc-100 border-b border-zinc-200 px-5 py-4">
+      <div className="bg-accent-50 border-b border-accent-200 px-5 py-4">
         <div className="flex items-center gap-3 mb-3">
           <button
             onClick={() => { clearCart(); navigate(`/tables/${tableId}`) }}
@@ -227,7 +227,7 @@ export function NewOrderPage() {
             const hasOptions = item.options && item.options.length > 0
 
             return (
-              <div key={item.id} className="bg-zinc-100 rounded-xl border border-zinc-200 px-4 py-3 flex items-center justify-between">
+              <div key={item.id} className="bg-accent-50 rounded-xl border border-accent-200 px-4 py-3 flex items-center justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
                     <p className="text-zinc-900 text-sm font-medium">{item.name}</p>
@@ -299,7 +299,7 @@ export function NewOrderPage() {
 
       {/* Botão confirmar */}
       {items.length > 0 && (
-        <div className="fixed bottom-16 left-0 right-0 px-5 py-4 bg-zinc-50 border-t border-zinc-200">
+        <div className="fixed bottom-16 left-0 right-0 px-5 py-4 bg-zinc-50 border-t border-accent-200">
           <button
             onClick={handleConfirm}
             disabled={loading}
@@ -315,7 +315,7 @@ export function NewOrderPage() {
       {optionsItem && (
         <div className="fixed inset-0 bg-black/60 flex items-end z-[60]" onClick={() => setOptionsItem(null)}>
           <div
-            className="bg-zinc-100 rounded-t-2xl w-full p-5 pb-8 flex flex-col gap-4 max-h-[75vh] overflow-y-auto"
+            className="bg-accent-50 rounded-t-2xl w-full p-5 pb-8 flex flex-col gap-4 max-h-[75vh] overflow-y-auto"
             onClick={e => e.stopPropagation()}
           >
             <div>

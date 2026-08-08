@@ -141,7 +141,7 @@ export function TableManagementPage() {
     <div className="min-h-screen bg-zinc-50 flex flex-col pb-28">
 
       {/* Header */}
-      <div className="bg-zinc-100 border-b border-zinc-200 px-5 py-4 flex items-center gap-3">
+      <div className="bg-accent-50 border-b border-accent-200 px-5 py-4 flex items-center gap-3">
         <button onClick={() => navigate('/')} className="w-8 h-8 rounded-full bg-zinc-200 flex items-center justify-center cursor-pointer">
           <i className="ti ti-arrow-left text-zinc-600" />
         </button>
@@ -177,7 +177,7 @@ export function TableManagementPage() {
               <p className="text-zinc-500 text-xs italic py-2">Nenhuma mesa ativa</p>
             ) : (
               activeTables.map(table => (
-                <div key={table.id} className="bg-zinc-100 rounded-xl border border-zinc-200 px-4 py-3 flex items-center justify-between">
+                <div key={table.id} className="bg-accent-50 rounded-xl border border-accent-200 px-4 py-3 flex items-center justify-between">
                   <div className="flex-1">
                     <p className="text-zinc-900 text-sm font-medium">
                       Mesa {String(table.number).padStart(2, '0')}
@@ -206,7 +206,7 @@ export function TableManagementPage() {
             <div className="flex flex-col gap-2">
               <p className="text-zinc-500 text-xs font-medium uppercase tracking-wider">Mesas inativas</p>
               {inactiveTables.map(table => (
-                <div key={table.id} className="bg-zinc-100/50 rounded-xl border border-zinc-200 px-4 py-3 flex items-center justify-between opacity-70">
+                <div key={table.id} className="bg-accent-50/50 rounded-xl border border-accent-200 px-4 py-3 flex items-center justify-between opacity-70">
                   <div className="flex-1">
                     <p className="text-zinc-600 text-sm">
                       Mesa {String(table.number).padStart(2, '0')}
@@ -230,7 +230,7 @@ export function TableManagementPage() {
       {/* Modal de formulário */}
       {showForm && (
         <div className="fixed inset-0 bg-black/60 flex items-end z-[60]" onClick={() => setShowForm(false)}>
-          <div className="bg-zinc-100 rounded-t-2xl w-full p-5 pb-8 flex flex-col gap-4 max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+          <div className="bg-accent-50 rounded-t-2xl w-full p-5 pb-8 flex flex-col gap-4 max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
             <h2 className="text-zinc-900 text-lg font-medium">{editingId ? 'Editar mesa' : 'Nova mesa'}</h2>
 
             <div className="flex flex-col gap-1">
@@ -270,7 +270,7 @@ export function TableManagementPage() {
       {/* Modal de confirmação de desativação */}
       {confirmDeleteId && confirmDeleteTable && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-[70] px-5">
-          <div className="bg-zinc-100 border border-zinc-200 rounded-xl p-5 max-w-sm w-full">
+          <div className="bg-accent-50 border border-accent-200 rounded-xl p-5 max-w-sm w-full">
             <h2 className="text-zinc-900 text-lg font-medium mb-2">Desativar mesa?</h2>
             {confirmDeleteTable.status === 'Occupied' && (
               <div className="mb-4 bg-amber-950/50 border border-amber-900 rounded-lg px-3 py-2 flex items-start gap-2">

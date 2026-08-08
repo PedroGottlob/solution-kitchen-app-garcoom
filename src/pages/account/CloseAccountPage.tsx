@@ -91,7 +91,7 @@ export function CloseAccountPage() {
           </div>
         )}
 
-        <div className="w-full bg-zinc-100 rounded-xl p-4">
+        <div className="w-full bg-accent-50 rounded-xl p-4">
           <p className="text-zinc-500 text-xs mb-2">Copia e cola</p>
           <p className="text-zinc-900 text-xs break-all">{pixPayment.pixQrCode}</p>
         </div>
@@ -116,7 +116,7 @@ export function CloseAccountPage() {
     <div className="min-h-screen bg-zinc-50 flex flex-col pb-20">
 
       {/* Header */}
-      <div className="bg-zinc-100 border-b border-zinc-200 px-5 py-4">
+      <div className="bg-accent-50 border-b border-accent-200 px-5 py-4">
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate(`/tables/${tableId}`)}
@@ -138,7 +138,7 @@ export function CloseAccountPage() {
         <p className="text-zinc-500 text-xs font-medium uppercase tracking-wider mb-3">
           Resumo do consumo
         </p>
-        <div className="bg-zinc-100 rounded-xl border border-zinc-200 overflow-hidden">
+        <div className="bg-accent-50 rounded-xl border border-accent-200 overflow-hidden">
           {allItems.length === 0 ? (
             <div className="px-4 py-6 text-center text-zinc-500 text-sm">
               Carregando pedidos...
@@ -148,7 +148,7 @@ export function CloseAccountPage() {
               <div
                 key={i}
                 className={`flex items-center justify-between px-4 py-3 ${
-                  i < allItems.length - 1 ? 'border-b border-zinc-200' : ''
+                  i < allItems.length - 1 ? 'border-b border-accent-200' : ''
                 }`}
               >
                 <div>
@@ -188,7 +188,7 @@ export function CloseAccountPage() {
               className={`flex-1 py-2.5 rounded-xl border text-sm cursor-pointer transition-colors ${
                 split === n
                   ? 'bg-accent-950 border-accent-900 text-accent-400'
-                  : 'bg-zinc-100 border-zinc-200 text-zinc-700 hover:border-accent-900 hover:text-accent-400 hover:bg-accent-950'
+                  : 'bg-accent-50 border-accent-200 text-zinc-700 hover:border-accent-900 hover:text-accent-400 hover:bg-accent-950'
               }`}
             >
               {n === 1 ? 'Sem dividir' : `÷ ${n}`}
@@ -213,7 +213,7 @@ export function CloseAccountPage() {
               key={method.id}
               onClick={() => handleCloseAccount(method.id)}
               disabled={loading}
-              className="bg-zinc-100 border border-zinc-200 rounded-xl py-4 flex flex-col items-center gap-2 cursor-pointer hover:border-accent-900 hover:bg-accent-950 transition-colors group disabled:opacity-50"
+              className="bg-accent-50 border border-accent-200 rounded-xl py-4 flex flex-col items-center gap-2 cursor-pointer hover:border-accent-900 hover:bg-accent-950 transition-colors group disabled:opacity-50"
             >
               <i className={`ti ${method.icon} text-2xl text-zinc-600 group-hover:text-accent-400`} />
               <span className="text-zinc-700 text-sm group-hover:text-accent-400">

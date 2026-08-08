@@ -54,7 +54,7 @@ export function TableDetailPage() {
     <div className="min-h-screen bg-zinc-50 flex flex-col pb-20">
 
       {/* Header */}
-      <div className="bg-zinc-100 border-b border-zinc-200 px-5 py-4">
+      <div className="bg-accent-50 border-b border-accent-200 px-5 py-4">
         <div className="flex items-center gap-3 mb-1">
           <button
             onClick={() => navigate('/')}
@@ -108,7 +108,7 @@ export function TableDetailPage() {
         {/* Botão de fechar mesa manualmente — escape hatch */}
         <button
           onClick={() => setConfirmClose(true)}
-          className="mt-4 py-2.5 rounded-xl border border-zinc-200 text-zinc-500 text-sm cursor-pointer hover:bg-zinc-100 hover:text-zinc-700 transition-colors flex items-center justify-center gap-2"
+          className="mt-4 py-2.5 rounded-xl border border-accent-200 text-zinc-500 text-sm cursor-pointer hover:bg-accent-50 hover:text-zinc-700 transition-colors flex items-center justify-center gap-2"
         >
           <i className="ti ti-lock" />
           Fechar mesa manualmente
@@ -139,7 +139,7 @@ export function TableDetailPage() {
       {/* Modal de confirmação */}
       {confirmClose && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 px-5">
-          <div className="bg-zinc-100 border border-zinc-200 rounded-xl p-5 max-w-sm w-full">
+          <div className="bg-accent-50 border border-accent-200 rounded-xl p-5 max-w-sm w-full">
             <h2 className="text-zinc-900 text-lg font-medium mb-2">Fechar mesa?</h2>
             <p className="text-zinc-600 text-sm mb-5">
               Todos os pedidos abertos serão marcados como fechados e a mesa será liberada. Use apenas se o pagamento foi feito fora do app ou o cliente foi embora.

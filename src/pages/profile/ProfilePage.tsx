@@ -47,7 +47,7 @@ export function ProfilePage() {
     <div className="min-h-screen bg-zinc-50 flex flex-col pb-20">
 
       {/* Header */}
-      <div className="bg-zinc-100 border-b border-zinc-200 px-5 py-4">
+      <div className="bg-accent-50 border-b border-accent-200 px-5 py-4">
         <h1 className="text-zinc-900 text-xl font-medium">Perfil</h1>
       </div>
 
@@ -75,9 +75,9 @@ export function ProfilePage() {
         <p className="text-zinc-500 text-xs font-medium uppercase tracking-wider mb-3">
           Informações
         </p>
-        <div className="bg-zinc-100 rounded-xl border border-zinc-200 overflow-hidden">
+        <div className="bg-accent-50 rounded-xl border border-accent-200 overflow-hidden">
 
-          <div className="flex items-center gap-3 px-4 py-3 border-b border-zinc-200">
+          <div className="flex items-center gap-3 px-4 py-3 border-b border-accent-200">
             <i className="ti ti-building-store text-zinc-600 text-lg" />
             <div className="flex-1">
               <p className="text-zinc-600 text-xs">Estabelecimento</p>

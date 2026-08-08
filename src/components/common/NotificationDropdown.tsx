@@ -39,10 +39,10 @@ export function NotificationDropdown({ onClose }: NotificationDropdownProps) {
   return (
     <div
       ref={ref}
-      className="absolute right-0 top-12 w-80 bg-zinc-100 border border-zinc-200 rounded-xl shadow-2xl z-50 overflow-hidden"
+      className="absolute right-0 top-12 w-80 bg-accent-50 border border-accent-200 rounded-xl shadow-2xl z-50 overflow-hidden"
     >
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-200">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-accent-200">
         <span className="text-zinc-900 text-sm font-medium">
           Notificações {unread > 0 && <span className="text-accent-600">({unread})</span>}
         </span>
@@ -70,7 +70,7 @@ export function NotificationDropdown({ onClose }: NotificationDropdownProps) {
               <button
                 key={notification.id}
                 onClick={() => markAsRead(notification.id)}
-                className={`w-full flex items-start gap-3 px-4 py-3 border-b border-zinc-200 cursor-pointer hover:bg-zinc-200 transition-colors text-left ${
+                className={`w-full flex items-start gap-3 px-4 py-3 border-b border-accent-200 cursor-pointer hover:bg-zinc-200 transition-colors text-left ${
                   !notification.read ? 'bg-zinc-200/50' : ''
                 }`}
               >

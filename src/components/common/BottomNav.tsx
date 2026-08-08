@@ -21,7 +21,7 @@ export function BottomNav({ isGerente }: { isGerente: boolean }) {
   const tabs = isGerente ? gerenteTabs : baseTabs
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-zinc-100 border-t border-zinc-200 flex z-50">
+    <div className="fixed bottom-0 left-0 right-0 bg-accent-50 border-t border-accent-200 flex z-50">
       {tabs.map((tab) => {
         const active = location.pathname === tab.path
         return (

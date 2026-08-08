@@ -27,7 +27,7 @@ export function NotificationsPage() {
     <div className="min-h-screen bg-zinc-50 flex flex-col pb-20">
 
       {/* Header */}
-      <div className="bg-zinc-100 border-b border-zinc-200 px-5 py-4">
+      <div className="bg-accent-50 border-b border-accent-200 px-5 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <button
@@ -68,8 +68,8 @@ export function NotificationsPage() {
               <button
                 key={notification.id}
                 onClick={() => markAsRead(notification.id)}
-                className={`flex items-start gap-4 px-5 py-4 border-b border-zinc-200 cursor-pointer hover:bg-zinc-100 transition-colors text-left ${
-                  !notification.read ? 'bg-zinc-100' : ''
+                className={`flex items-start gap-4 px-5 py-4 border-b border-accent-200 cursor-pointer hover:bg-accent-50 transition-colors text-left ${
+                  !notification.read ? 'bg-accent-50' : ''
                 }`}
               >
                 <div className={`w-10 h-10 rounded-full ${config.bg} flex items-center justify-center flex-shrink-0 mt-0.5`}>

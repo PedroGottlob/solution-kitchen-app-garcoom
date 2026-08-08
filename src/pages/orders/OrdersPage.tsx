@@ -46,7 +46,7 @@ export function OrdersPage() {
     <div className="min-h-screen bg-zinc-50 flex flex-col pb-20">
 
       {/* Header */}
-      <div className="bg-zinc-100 border-b border-zinc-200 px-5 py-4">
+      <div className="bg-accent-50 border-b border-accent-200 px-5 py-4">
         <div className="flex items-center justify-between mb-3">
           <h1 className="text-zinc-900 text-xl font-medium">Pedidos</h1>
           <span className="text-zinc-500 text-sm">
@@ -75,8 +75,8 @@ export function OrdersPage() {
       <div className="px-5 py-4 flex gap-3">
         <button
           onClick={() => setActiveFilter('Pending')}
-          className={`flex-1 bg-zinc-100 rounded-xl p-3 text-center border cursor-pointer transition-colors ${
-            activeFilter === 'Pending' ? 'border-amber-900' : 'border-zinc-200 hover:border-zinc-300'
+          className={`flex-1 bg-accent-50 rounded-xl p-3 text-center border cursor-pointer transition-colors ${
+            activeFilter === 'Pending' ? 'border-amber-900' : 'border-accent-200 hover:border-zinc-300'
           }`}
         >
           <div className="text-amber-600 text-lg font-medium">{pending}</div>
@@ -84,8 +84,8 @@ export function OrdersPage() {
         </button>
         <button
           onClick={() => setActiveFilter('Preparing')}
-          className={`flex-1 bg-zinc-100 rounded-xl p-3 text-center border cursor-pointer transition-colors ${
-            activeFilter === 'Preparing' ? 'border-accent-900' : 'border-zinc-200 hover:border-zinc-300'
+          className={`flex-1 bg-accent-50 rounded-xl p-3 text-center border cursor-pointer transition-colors ${
+            activeFilter === 'Preparing' ? 'border-accent-900' : 'border-accent-200 hover:border-zinc-300'
           }`}
         >
           <div className="text-accent-600 text-lg font-medium">{preparing}</div>
@@ -93,8 +93,8 @@ export function OrdersPage() {
         </button>
         <button
           onClick={() => setActiveFilter('Ready')}
-          className={`flex-1 bg-zinc-100 rounded-xl p-3 text-center border cursor-pointer transition-colors ${
-            activeFilter === 'Ready' ? 'border-emerald-900' : 'border-zinc-200 hover:border-zinc-300'
+          className={`flex-1 bg-accent-50 rounded-xl p-3 text-center border cursor-pointer transition-colors ${
+            activeFilter === 'Ready' ? 'border-emerald-900' : 'border-accent-200 hover:border-zinc-300'
           }`}
         >
           <div className="text-emerald-600 text-lg font-medium">{ready}</div>

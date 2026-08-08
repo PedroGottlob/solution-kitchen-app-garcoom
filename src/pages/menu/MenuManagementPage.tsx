@@ -218,7 +218,7 @@ export function MenuManagementPage() {
   return (
     <div className="min-h-screen bg-zinc-50 flex flex-col pb-28">
       {/* Header */}
-      <div className="bg-zinc-100 border-b border-zinc-200 px-5 py-4">
+      <div className="bg-accent-50 border-b border-accent-200 px-5 py-4">
         <div className="flex items-center justify-between mb-3">
           <div>
             <h1 className="text-zinc-900 text-xl font-medium">Cardápio</h1>
@@ -285,7 +285,7 @@ export function MenuManagementPage() {
                   <p className="text-zinc-500 text-xs italic py-2">Nenhum item nesta categoria</p>
                 ) : (
                   categoryItems.map(item => (
-                    <div key={item.id} className="bg-zinc-100 rounded-xl border border-zinc-200 px-4 py-3 flex items-center justify-between">
+                    <div key={item.id} className="bg-accent-50 rounded-xl border border-accent-200 px-4 py-3 flex items-center justify-between">
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
                           <p className="text-zinc-900 text-sm font-medium">{item.name}</p>
@@ -326,7 +326,7 @@ export function MenuManagementPage() {
                 Itens inativos
               </p>
               {inactiveItems.map(item => (
-                <div key={item.id} className="bg-zinc-100/50 rounded-xl border border-zinc-200 px-4 py-3 flex items-center justify-between opacity-70">
+                <div key={item.id} className="bg-accent-50/50 rounded-xl border border-accent-200 px-4 py-3 flex items-center justify-between opacity-70">
                   <div className="flex-1">
                     <p className="text-zinc-600 text-sm">{item.name}</p>
                     {item.description && <p className="text-zinc-500 text-xs">{item.description}</p>}
@@ -348,7 +348,7 @@ export function MenuManagementPage() {
       {/* Modal de formulário */}
       {showForm && (
         <div className="fixed inset-0 bg-black/60 flex items-end z-[60]" onClick={() => setShowForm(false)}>
-          <div className="bg-zinc-100 rounded-t-2xl w-full p-5 pb-8 flex flex-col gap-4 max-h-[85vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+          <div className="bg-accent-50 rounded-t-2xl w-full p-5 pb-8 flex flex-col gap-4 max-h-[85vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
             <h2 className="text-zinc-900 text-lg font-medium">{editingId ? 'Editar item' : 'Novo item'}</h2>
             <div className="flex flex-col gap-1">
               <label className="text-zinc-500 text-xs">Categoria</label>
@@ -395,7 +395,7 @@ export function MenuManagementPage() {
       {/* Sheet de opções do item */}
       {optionsItem && (
         <div className="fixed inset-0 bg-black/60 flex items-end z-[60]" onClick={() => setOptionsItem(null)}>
-          <div className="bg-zinc-100 rounded-t-2xl w-full p-5 pb-8 flex flex-col gap-4 max-h-[85vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+          <div className="bg-accent-50 rounded-t-2xl w-full p-5 pb-8 flex flex-col gap-4 max-h-[85vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
             <div>
               <h2 className="text-zinc-900 text-lg font-medium">Opções · {optionsItem.name}</h2>
               <p className="text-zinc-500 text-sm">Adicionais e personalizações que o garçom pode selecionar</p>
@@ -428,7 +428,7 @@ export function MenuManagementPage() {
             )}
 
             {/* Form de adicionar */}
-            <div className="border-t border-zinc-200 pt-4 flex flex-col gap-3">
+            <div className="border-t border-accent-200 pt-4 flex flex-col gap-3">
               <p className="text-zinc-500 text-xs font-medium uppercase tracking-wider">Nova opção</p>
               <div className="flex flex-col gap-1">
                 <label className="text-zinc-500 text-xs">Nome</label>
@@ -475,7 +475,7 @@ export function MenuManagementPage() {
       {/* Modal de confirmação de deleção */}
       {confirmDeleteId && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-[70] px-5">
-          <div className="bg-zinc-100 border border-zinc-200 rounded-xl p-5 max-w-sm w-full">
+          <div className="bg-accent-50 border border-accent-200 rounded-xl p-5 max-w-sm w-full">
             <h2 className="text-zinc-900 text-lg font-medium mb-2">Remover item?</h2>
             <p className="text-zinc-600 text-sm mb-5">
               O item será removido do cardápio. Pedidos antigos com esse item continuam existindo, mas ele não poderá mais ser adicionado a novos pedidos.

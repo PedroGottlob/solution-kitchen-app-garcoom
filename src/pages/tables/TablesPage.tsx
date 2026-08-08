@@ -83,7 +83,7 @@ export function TablesPage({ isGerente }: TablesPageProps) {
 
   return (
     <div className="min-h-screen bg-zinc-50 flex flex-col pb-20">
-      <div className="bg-zinc-100 border-b border-zinc-200 px-5 py-4">
+      <div className="bg-accent-50 border-b border-accent-200 px-5 py-4">
         <div className="flex items-center justify-between mb-1">
           <h1 className="text-zinc-900 text-xl font-medium">Salão principal</h1>
           <div className="flex items-center gap-2">
@@ -123,15 +123,15 @@ export function TablesPage({ isGerente }: TablesPageProps) {
       </div>
 
       <div className="px-5 py-4 flex gap-3">
-        <div className="flex-1 bg-zinc-100 rounded-xl p-3 text-center border border-zinc-200">
+        <div className="flex-1 bg-accent-50 rounded-xl p-3 text-center border border-accent-200">
           <div className="text-emerald-600 text-lg font-medium">{free}</div>
           <div className="text-zinc-500 text-xs">Livres</div>
         </div>
-        <div className="flex-1 bg-zinc-100 rounded-xl p-3 text-center border border-zinc-200">
+        <div className="flex-1 bg-accent-50 rounded-xl p-3 text-center border border-accent-200">
           <div className="text-accent-600 text-lg font-medium">{occupied}</div>
           <div className="text-zinc-500 text-xs">Ocupadas</div>
         </div>
-        <div className="flex-1 bg-zinc-100 rounded-xl p-3 text-center border border-zinc-200">
+        <div className="flex-1 bg-accent-50 rounded-xl p-3 text-center border border-accent-200">
           <div className="text-amber-600 text-lg font-medium">{ready}</div>
           <div className="text-zinc-500 text-xs">Prontas</div>
         </div>

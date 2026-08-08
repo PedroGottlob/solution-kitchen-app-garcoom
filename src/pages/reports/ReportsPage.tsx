@@ -30,7 +30,7 @@ export function ReportsPage() {
     <div className="min-h-screen bg-zinc-50 flex flex-col pb-24">
 
       {/* Header */}
-      <div className="bg-zinc-100 border-b border-zinc-200 px-5 py-4">
+      <div className="bg-accent-50 border-b border-accent-200 px-5 py-4">
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate('/')}
@@ -81,7 +81,7 @@ export function ReportsPage() {
           <>
             {/* Métricas da semana */}
             <div className="grid grid-cols-2 gap-3">
-              <div className="bg-zinc-100 border border-zinc-200 rounded-xl p-4">
+              <div className="bg-accent-50 border border-accent-200 rounded-xl p-4">
                 <p className="text-zinc-500 text-xs mb-1">Faturamento</p>
                 <p className="text-zinc-900 text-lg font-medium">
                   R$ {report.currentWeek.revenue.toFixed(2)}
@@ -92,7 +92,7 @@ export function ReportsPage() {
                   </p>
                 )}
               </div>
-              <div className="bg-zinc-100 border border-zinc-200 rounded-xl p-4">
+              <div className="bg-accent-50 border border-accent-200 rounded-xl p-4">
                 <p className="text-zinc-500 text-xs mb-1">Pedidos</p>
                 <p className="text-zinc-900 text-lg font-medium">{report.currentWeek.orderCount}</p>
                 <p className="text-zinc-500 text-xs mt-1">
@@ -103,7 +103,7 @@ export function ReportsPage() {
 
             {/* Top itens */}
             {report.currentWeek.topItems.length > 0 && (
-              <div className="bg-zinc-100 border border-zinc-200 rounded-xl p-4">
+              <div className="bg-accent-50 border border-accent-200 rounded-xl p-4">
                 <p className="text-zinc-500 text-xs font-medium uppercase tracking-wider mb-3">
                   Mais vendidos da semana
                 </p>
@@ -122,7 +122,7 @@ export function ReportsPage() {
             )}
 
             {/* Análise da IA */}
-            <div className="bg-zinc-100 border border-zinc-200 rounded-xl p-4">
+            <div className="bg-accent-50 border border-accent-200 rounded-xl p-4">
               <div className="flex items-center gap-2 mb-3">
                 <i className="ti ti-sparkles text-accent-500" />
                 <p className="text-zinc-500 text-xs font-medium uppercase tracking-wider">

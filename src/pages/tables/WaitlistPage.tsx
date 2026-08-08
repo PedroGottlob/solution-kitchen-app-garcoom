@@ -103,7 +103,7 @@ export function WaitlistPage() {
     <div className="min-h-screen bg-zinc-50 flex flex-col pb-28">
 
       {/* Header */}
-      <div className="bg-zinc-100 border-b border-zinc-200 px-5 py-4 flex items-center gap-3">
+      <div className="bg-accent-50 border-b border-accent-200 px-5 py-4 flex items-center gap-3">
         <button onClick={() => navigate('/')} className="w-8 h-8 rounded-full bg-zinc-200 flex items-center justify-center cursor-pointer">
           <i className="ti ti-arrow-left text-zinc-600" />
         </button>
@@ -131,7 +131,7 @@ export function WaitlistPage() {
       ) : (
         <div className="px-5 py-4 flex flex-col gap-2">
           {[...called, ...waiting].map(entry => (
-            <div key={entry.id} className="bg-zinc-100 rounded-xl border border-zinc-200 px-4 py-3 flex items-center justify-between">
+            <div key={entry.id} className="bg-accent-50 rounded-xl border border-accent-200 px-4 py-3 flex items-center justify-between">
               <div className="flex-1">
                 <p className="text-zinc-900 text-sm font-medium">
                   Senha {entry.ticketNumber} · {entry.customerName}
@@ -164,7 +164,7 @@ export function WaitlistPage() {
       {/* Modal de cadastro */}
       {showForm && (
         <div className="fixed inset-0 bg-black/60 flex items-end z-[60]" onClick={() => setShowForm(false)}>
-          <div className="bg-zinc-100 rounded-t-2xl w-full p-5 pb-8 flex flex-col gap-4 max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+          <div className="bg-accent-50 rounded-t-2xl w-full p-5 pb-8 flex flex-col gap-4 max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
             <h2 className="text-zinc-900 text-lg font-medium">Cadastrar na fila</h2>
 
             <div className="flex flex-col gap-1">
@@ -198,7 +198,7 @@ export function WaitlistPage() {
       {/* Modal de confirmação com QR code */}
       {confirmedEntry && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-[70] px-5" onClick={() => setConfirmedEntry(null)}>
-          <div className="bg-zinc-100 border border-zinc-200 rounded-xl p-6 max-w-sm w-full text-center" onClick={e => e.stopPropagation()}>
+          <div className="bg-accent-50 border border-accent-200 rounded-xl p-6 max-w-sm w-full text-center" onClick={e => e.stopPropagation()}>
             <p className="text-zinc-500 text-sm mb-1">Senha</p>
             <p className="text-5xl font-bold text-accent-600 mb-3">{confirmedEntry.ticketNumber}</p>
             <p className="text-zinc-900 text-sm mb-4">{confirmedEntry.customerName} · {confirmedEntry.partySize} pessoa{confirmedEntry.partySize !== 1 ? 's' : ''}</p>

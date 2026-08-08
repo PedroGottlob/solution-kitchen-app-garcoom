@@ -14,7 +14,7 @@ function MetricCard({
   subColor?: string
 }) {
   return (
-    <div className="bg-zinc-100 rounded-xl p-4 flex flex-col gap-1">
+    <div className="bg-accent-50 rounded-xl p-4 flex flex-col gap-1">
       <span className="text-zinc-500 text-xs">{label}</span>
       <span className="text-zinc-900 text-xl font-medium">{value}</span>
       {sub && <span className={`text-xs ${subColor ?? 'text-zinc-500'}`}>{sub}</span>}
@@ -129,7 +129,7 @@ export function DashboardPage() {
         <button
           onClick={load}
           disabled={loading}
-          className="w-9 h-9 rounded-full bg-zinc-100 flex items-center justify-center cursor-pointer hover:bg-zinc-200 transition-colors disabled:opacity-50"
+          className="w-9 h-9 rounded-full bg-accent-50 flex items-center justify-center cursor-pointer hover:bg-zinc-200 transition-colors disabled:opacity-50"
           title="Atualizar"
         >
           <i className={`ti ti-refresh text-zinc-600 text-sm ${loading ? 'animate-spin' : ''}`} />
@@ -172,7 +172,7 @@ export function DashboardPage() {
       {statusEntries.length > 0 && (
         <section className="mb-6">
           <h2 className="text-zinc-500 text-xs uppercase tracking-wider mb-3">Pedidos por status</h2>
-          <div className="bg-zinc-100 rounded-xl divide-y divide-zinc-200">
+          <div className="bg-accent-50 rounded-xl divide-y divide-zinc-200">
             {statusEntries.map(([status, count]) => (
               <div key={status} className="flex items-center justify-between px-4 py-3">
                 <span className="text-zinc-600 text-sm">{translateStatus(status)}</span>
@@ -187,7 +187,7 @@ export function DashboardPage() {
       {data.topItems.filter(i => i.quantitySold > 0).length > 0 && (
         <section className="mb-6">
           <h2 className="text-zinc-500 text-xs uppercase tracking-wider mb-3">Itens mais vendidos</h2>
-          <div className="bg-zinc-100 rounded-xl divide-y divide-zinc-200">
+          <div className="bg-accent-50 rounded-xl divide-y divide-zinc-200">
             {data.topItems.filter(i => i.quantitySold > 0).map((item, idx) => (
               <div key={idx} className="flex items-center justify-between px-4 py-3 gap-3">
                 <div className="flex items-center gap-3 flex-1 min-w-0">
@@ -236,7 +236,7 @@ export function DashboardPage() {
       {data.salesByDayOfWeek.length > 0 && (
         <section className="mb-6">
           <h2 className="text-zinc-500 text-xs uppercase tracking-wider mb-3">Vendas por dia</h2>
-          <div className="bg-zinc-100 rounded-xl divide-y divide-zinc-200">
+          <div className="bg-accent-50 rounded-xl divide-y divide-zinc-200">
             {data.salesByDayOfWeek.map((day, idx) => (
               <div key={idx} className="flex items-center justify-between px-4 py-3">
                 <span className="text-zinc-600 text-sm">{day.dayOfWeek}</span>

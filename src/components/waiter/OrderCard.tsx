@@ -45,10 +45,10 @@ export function OrderCard({ order, onCancel, onDeliver }: OrderCardProps) {
   const tableLabel = table ? `Mesa ${String(table.number).padStart(2, '0')}` : 'Mesa'
 
   return (
-    <div className={`bg-zinc-100 rounded-xl border overflow-hidden ${
-      order.status === 'Ready' ? 'border-emerald-900' : 'border-zinc-200'
+    <div className={`bg-accent-50 rounded-xl border overflow-hidden ${
+      order.status === 'Ready' ? 'border-emerald-900' : 'border-accent-200'
     }`}>
-      <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-200">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-accent-200">
         <div className="flex items-center gap-2">
           <span className="text-zinc-900 font-medium text-sm">{tableLabel}</span>
           <span className="text-zinc-500">·</span>
@@ -98,7 +98,7 @@ export function OrderCard({ order, onCancel, onDeliver }: OrderCardProps) {
         })}
       </div>
 
-      <div className="flex items-center justify-between px-4 py-3 border-t border-zinc-200">
+      <div className="flex items-center justify-between px-4 py-3 border-t border-accent-200">
         <span className="text-zinc-900 font-medium text-sm">
           Total: R$ {order.totalAmount.toFixed(2)}
         </span>
