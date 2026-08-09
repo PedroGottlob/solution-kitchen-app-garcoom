@@ -16,6 +16,7 @@ import { MenuManagementPage } from './pages/menu/MenuManagementPage'
 import { TableManagementPage } from './pages/tables/TableManagementPage'
 import { ReportsPage } from './pages/reports/ReportsPage'
 import { useOrderNotifications } from './hooks/useOrderNotifications'
+import { usePaymentRequestNotifications } from './hooks/usePaymentRequestNotifications'
 import { WaitlistPage } from './pages/tables/WaitlistPage'
 import { Toaster } from 'sonner'
 
@@ -42,6 +43,7 @@ function App() {
   }, [isAuthenticated, user, tenantId])
 
   useOrderNotifications()
+  usePaymentRequestNotifications()
 
   if (isLoading) {
     return (

@@ -43,6 +43,10 @@ class SignalRService {
       this.listeners.get('PaymentConfirmed')?.forEach(cb => cb(data))
     })
 
+    this.connection.on('CardPaymentRequested', (data: string) => {
+      this.listeners.get('CardPaymentRequested')?.forEach(cb => cb(data))
+    })
+
     this.connection.onreconnected(async () => {
       console.log('[SignalR] Reconectado!')
       await this.connection!.invoke('JoinTenant', this.tenantId)
@@ -116,6 +120,14 @@ class SignalRService {
     }
     this.listeners.get('PaymentConfirmed')!.add(callback)
     return () => this.listeners.get('PaymentConfirmed')?.delete(callback)
+  }
+
+  onCardPaymentRequested(callback: (data: string) => void) {
+    if (!this.listeners.has('CardPaymentRequested')) {
+      this.listeners.set('CardPaymentRequested', new Set())
+    }
+    this.listeners.get('CardPaymentRequested')!.add(callback)
+    return () => this.listeners.get('CardPaymentRequested')?.delete(callback)
   }
 
   get state() {

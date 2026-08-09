@@ -2,7 +2,7 @@ import { create } from 'zustand'
 
 export interface Notification {
   id: string
-  type: 'order_ready' | 'order_cancelled' | 'new_order'
+  type: 'order_ready' | 'order_cancelled' | 'new_order' | 'payment_requested'
   title: string
   message: string
   tableNumber: number

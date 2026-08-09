@@ -15,6 +15,7 @@ const typeConfig: Record<Notification['type'], { icon: string; color: string; bg
   order_ready: { icon: 'ti-bell-ringing', color: 'text-amber-700', bg: 'bg-amber-50' },
   new_order: { icon: 'ti-clipboard-plus', color: 'text-accent-700', bg: 'bg-accent-50' },
   order_cancelled: { icon: 'ti-clipboard-x', color: 'text-red-700', bg: 'bg-red-50' },
+  payment_requested: { icon: 'ti-credit-card', color: 'text-emerald-700', bg: 'bg-emerald-50' },
 }
 
 export function NotificationsPage() {
