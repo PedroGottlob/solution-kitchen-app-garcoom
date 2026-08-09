@@ -54,8 +54,8 @@ function App() {
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-zinc-50 flex flex-col items-center justify-center gap-6 px-8">
-        <div className="text-center">
-          <h1 className="text-zinc-900 text-2xl font-medium mb-2">Solution Kitchen</h1>
+        <div className="text-center flex flex-col items-center">
+          <img src="/logo-lockup.svg" alt="Solution Kitchen" className="h-10 mb-3" />
           <p className="text-zinc-500 text-sm">Faça login para continuar</p>
         </div>
         <button
