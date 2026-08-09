@@ -55,7 +55,7 @@ function App() {
     return (
       <div className="min-h-screen bg-zinc-50 flex flex-col items-center justify-center gap-6 px-8">
         <div className="text-center flex flex-col items-center">
-          <img src="/logo-lockup.svg" alt="Solution Kitchen" className="h-10 mb-3" />
+          <img src="/logo-lockup.svg" alt="Solution Kitchen" className="h-20 mb-4" />
           <p className="text-zinc-500 text-sm">Faça login para continuar</p>
         </div>
         <button
