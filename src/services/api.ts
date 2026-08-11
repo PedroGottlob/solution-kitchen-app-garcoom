@@ -16,3 +16,7 @@ export function setTenantId(tenantId: string) {
   bffOperacional.defaults.headers['X-Tenant-Id'] = tenantId
   bffCozinha.defaults.headers['X-Tenant-Id'] = tenantId
 }
+
+export function getTenantId(): string {
+  return (bffOperacional.defaults.headers['X-Tenant-Id'] as string) || DEV_FALLBACK_TENANT_ID
+}

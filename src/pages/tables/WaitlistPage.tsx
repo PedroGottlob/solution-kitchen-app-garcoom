@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { waitlistService, type WaitlistEntry } from '../../services/waitlistService'
+import { getTenantId } from '../../services/api'
 
 interface FormState {
   customerName: string
@@ -205,7 +206,7 @@ export function WaitlistPage() {
 
             <img
               src={`https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(
-                `${import.meta.env.VITE_APP_CLIENT_URL}/fila/00000000-0000-0000-0000-000000000001/${confirmedEntry.id}`
+                `${import.meta.env.VITE_APP_CLIENT_URL}/fila/${getTenantId()}/${confirmedEntry.id}`
               )}`}
               alt="QR code da senha"
               className="mx-auto mb-4 rounded-lg bg-white p-2"
