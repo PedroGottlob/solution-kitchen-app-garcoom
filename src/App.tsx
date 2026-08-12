@@ -10,7 +10,7 @@ import { NewOrderPage } from './pages/orders/NewOrderPage'
 import { CloseAccountPage } from './pages/account/CloseAccountPage'
 import { ProfilePage } from './pages/profile/ProfilePage'
 import { DashboardPage } from './pages/dashboard/DashboardPage'
-import { setTenantId } from './services/api'
+import { setTenantId, setAuthTokenGetter } from './services/api'
 import { signalRService } from './services/signalRService'
 import { MenuManagementPage } from './pages/menu/MenuManagementPage'
 import { TableManagementPage } from './pages/tables/TableManagementPage'
@@ -24,7 +24,7 @@ const NAMESPACE = 'https://solution-kitchen.com'
 const DEV_FALLBACK_TENANT_ID = '00000000-0000-0000-0000-000000000001'
 
 function App() {
-  const { isLoading, isAuthenticated, loginWithRedirect, user } = useAuth0()
+  const { isLoading, isAuthenticated, loginWithRedirect, user, getAccessTokenSilently } = useAuth0()
 
   const roles: string[] = user?.[`${NAMESPACE}/roles`] ?? []
   const rawTenantId: string | undefined = user?.[`${NAMESPACE}/tenant_id`]
@@ -38,9 +38,10 @@ function App() {
     if (!tenantId) return
 
     setTenantId(tenantId)
+    setAuthTokenGetter(() => getAccessTokenSilently())
     signalRService.setTenantId(tenantId)
     signalRService.connect().catch(console.error)
-  }, [isAuthenticated, user, tenantId])
+  }, [isAuthenticated, user, tenantId, getAccessTokenSilently])
 
   useOrderNotifications()
   usePaymentRequestNotifications()

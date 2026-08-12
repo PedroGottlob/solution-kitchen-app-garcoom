@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
-import { menuService, type MenuItem, type MenuItemOption, type CreateMenuItemPayload } from '../../services/menuService'
+import { menuService, getMenuItemImageUrl, type MenuItem, type MenuItemOption, type CreateMenuItemPayload } from '../../services/menuService'
 
 const categories = [
   { id: '00000000-0000-0000-0000-000000000101', name: 'Lanches' },
@@ -47,6 +47,12 @@ export function MenuManagementPage() {
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null)
   const [search, setSearch] = useState('')
 
+  // Foto do item sendo criado/editado
+  const [imageFile, setImageFile] = useState<File | null>(null)
+  const [imagePreview, setImagePreview] = useState<string | null>(null)
+  const [editingHasImage, setEditingHasImage] = useState(false)
+  const [removingImage, setRemovingImage] = useState(false)
+
   // Sheet de opções
   const [optionsItem, setOptionsItem] = useState<MenuItem | null>(null)
   const [optionName, setOptionName] = useState('')
@@ -73,6 +79,9 @@ export function MenuManagementPage() {
   function openCreate(categoryId?: string) {
     setEditingId(null)
     setForm({ ...emptyForm, categoryId: categoryId ?? categories[0].id })
+    setImageFile(null)
+    setImagePreview(null)
+    setEditingHasImage(false)
     setShowForm(true)
   }
 
@@ -85,7 +94,33 @@ export function MenuManagementPage() {
       price: String(item.price),
       cost: String(item.cost),
     })
+    setImageFile(null)
+    setImagePreview(item.hasImage ? getMenuItemImageUrl(item.id) : null)
+    setEditingHasImage(item.hasImage)
     setShowForm(true)
+  }
+
+  function handleSelectImage(file: File | null) {
+    setImageFile(file)
+    setImagePreview(file ? URL.createObjectURL(file) : (editingHasImage && editingId ? getMenuItemImageUrl(editingId) : null))
+  }
+
+  async function handleRemoveImage() {
+    if (!editingId) return
+    setRemovingImage(true)
+    try {
+      await menuService.removeImage(editingId)
+      setEditingHasImage(false)
+      setImageFile(null)
+      setImagePreview(null)
+      setItems(prev => prev.map(i => i.id === editingId ? { ...i, hasImage: false } : i))
+      toast.success('Foto removida')
+    } catch (e) {
+      console.error(e)
+      toast.error('Falha ao remover foto')
+    } finally {
+      setRemovingImage(false)
+    }
   }
 
   function openOptions(item: MenuItem) {
@@ -109,14 +144,23 @@ export function MenuManagementPage() {
     }
 
     try {
-      if (editingId) {
-        await menuService.updateMenuItem(editingId, payload)
-        toast.success('Item atualizado')
-      } else {
-        await menuService.createMenuItem(payload)
-        toast.success('Item criado')
+      const saved = editingId
+        ? await menuService.updateMenuItem(editingId, payload)
+        : await menuService.createMenuItem(payload)
+
+      if (imageFile) {
+        try {
+          await menuService.uploadImage(saved.id, imageFile)
+        } catch (e) {
+          console.error(e)
+          toast.error('Item salvo, mas a foto falhou ao subir')
+        }
       }
+
+      toast.success(editingId ? 'Item atualizado' : 'Item criado')
       setShowForm(false)
+      setImageFile(null)
+      setImagePreview(null)
       load()
     } catch (e) {
       console.error(e)
@@ -286,7 +330,19 @@ export function MenuManagementPage() {
                 ) : (
                   categoryItems.map(item => (
                     <div key={item.id} className="bg-accent-50 rounded-xl border border-accent-200 px-4 py-3 flex items-center justify-between">
-                      <div className="flex-1">
+                      <div className="flex items-center gap-3 flex-1 min-w-0">
+                        {item.hasImage ? (
+                          <img
+                            src={getMenuItemImageUrl(item.id)}
+                            alt={item.name}
+                            className="w-12 h-12 rounded-lg object-cover flex-shrink-0 border border-accent-200"
+                          />
+                        ) : (
+                          <div className="w-12 h-12 rounded-lg bg-zinc-200 flex items-center justify-center flex-shrink-0 border border-zinc-300">
+                            <i className="ti ti-photo text-zinc-500 text-lg" />
+                          </div>
+                        )}
+                        <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
                           <p className="text-zinc-900 text-sm font-medium">{item.name}</p>
                           {(item.options?.length ?? 0) > 0 && (
@@ -299,6 +355,7 @@ export function MenuManagementPage() {
                         <div className="flex items-center gap-3 mt-1 flex-wrap">
                           <span className="text-accent-600 text-sm font-medium">{formatBRL(item.price)}</span>
                           <span className="text-zinc-500 text-xs">Custo: {formatBRL(item.cost)} · Margem: {item.margin.toFixed(0)}%</span>
+                        </div>
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
@@ -363,6 +420,39 @@ export function MenuManagementPage() {
             <div className="flex flex-col gap-1">
               <label className="text-zinc-500 text-xs">Descrição (opcional)</label>
               <input type="text" value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="Ex: Pão, hambúrguer, queijo" className="bg-zinc-200 text-zinc-900 text-sm rounded-lg px-3 py-2.5 outline-none border border-zinc-300" />
+            </div>
+            <div className="flex flex-col gap-1">
+              <label className="text-zinc-500 text-xs">Foto do prato (opcional)</label>
+              <div className="flex items-center gap-3">
+                {imagePreview ? (
+                  <img src={imagePreview} alt="Prévia" className="w-16 h-16 rounded-lg object-cover border border-accent-200" />
+                ) : (
+                  <div className="w-16 h-16 rounded-lg bg-zinc-200 flex items-center justify-center border border-zinc-300">
+                    <i className="ti ti-photo text-zinc-500 text-xl" />
+                  </div>
+                )}
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs px-3 py-2 rounded-lg bg-zinc-200 text-zinc-700 border border-zinc-300 hover:bg-zinc-300 transition-colors cursor-pointer text-center">
+                    {imagePreview ? 'Trocar foto' : 'Escolher foto'}
+                    <input
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp"
+                      className="hidden"
+                      onChange={e => handleSelectImage(e.target.files?.[0] ?? null)}
+                    />
+                  </label>
+                  {editingHasImage && (
+                    <button
+                      onClick={handleRemoveImage}
+                      disabled={removingImage}
+                      className="text-xs text-red-700 hover:text-red-800 transition-colors cursor-pointer disabled:opacity-50"
+                    >
+                      {removingImage ? 'Removendo...' : 'Remover foto'}
+                    </button>
+                  )}
+                </div>
+              </div>
+              <p className="text-zinc-500 text-xs">JPEG, PNG ou WEBP, até 5MB</p>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="flex flex-col gap-1">

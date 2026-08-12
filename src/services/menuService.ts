@@ -1,4 +1,4 @@
-import { bffOperacional } from './api'
+import { bffOperacional, getTenantId } from './api'
 
 export interface MenuItemOption {
   id: string
@@ -17,7 +17,16 @@ export interface MenuItem {
   cost: number
   margin: number
   status: string
+  hasImage: boolean
   options: MenuItemOption[]
+}
+
+const BFF_OPERACIONAL_URL = import.meta.env.VITE_BFF_OPERACIONAL_URL || 'http://localhost:5159'
+
+// <img src> não consegue mandar header customizado, então o tenant vai por
+// query string (o backend aceita os dois -- ver MenuController do bff).
+export function getMenuItemImageUrl(itemId: string): string {
+  return `${BFF_OPERACIONAL_URL}/api/menu/${itemId}/image?tenantId=${getTenantId()}`
 }
 
 export interface CreateMenuItemPayload {
@@ -59,5 +68,16 @@ export const menuService = {
   },
   async removeOption(itemId: string, optionId: string): Promise<void> {
     await bffOperacional.delete(`/api/menu/${itemId}/options/${optionId}`)
+  },
+  async uploadImage(itemId: string, file: File): Promise<MenuItem> {
+    const formData = new FormData()
+    formData.append('file', file)
+    const { data } = await bffOperacional.post<MenuItem>(`/api/menu/${itemId}/image`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    })
+    return data
+  },
+  async removeImage(itemId: string): Promise<void> {
+    await bffOperacional.delete(`/api/menu/${itemId}/image`)
   },
 }
