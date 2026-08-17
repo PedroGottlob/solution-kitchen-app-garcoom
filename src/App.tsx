@@ -31,17 +31,26 @@ function App() {
   const tenantId: string | undefined = rawTenantId ?? (import.meta.env.DEV ? DEV_FALLBACK_TENANT_ID : undefined)
   const isGerente = roles.includes('gerente')
 
-  useEffect(() => {
-    if (!isAuthenticated) return
-    if (!user) return
-    if (!roles.includes('garcom') && !roles.includes('gerente')) return
-    if (!tenantId) return
+  const podeAcessar = isAuthenticated && !!user && (roles.includes('garcom') || roles.includes('gerente')) && !!tenantId
 
+  // Configura o tenant/token ANTES de qualquer página filha montar. Isso não
+  // pode ficar num useEffect aqui: efeitos de componentes filhos (ex.: o
+  // load() da MenuManagementPage) rodam ANTES do useEffect do pai no mesmo
+  // commit, então a primeira requisição saía sem X-Tenant-Id (sem fallback
+  // em build de produção) e o BFF respondia 400 antes mesmo de repassar pro
+  // menu-service. Chamar direto no corpo do componente garante que os
+  // defaults do axios já estão prontos no primeiro render das rotas.
+  if (podeAcessar && tenantId) {
     setTenantId(tenantId)
     setAuthTokenGetter(() => getAccessTokenSilently())
     signalRService.setTenantId(tenantId)
+    signalRService.setAuthTokenGetter(() => getAccessTokenSilently())
+  }
+
+  useEffect(() => {
+    if (!podeAcessar) return
     signalRService.connect().catch(console.error)
-  }, [isAuthenticated, user, tenantId, getAccessTokenSilently])
+  }, [podeAcessar])
 
   useOrderNotifications()
   usePaymentRequestNotifications()

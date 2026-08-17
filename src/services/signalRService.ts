@@ -6,9 +6,28 @@ class SignalRService {
   private connection: signalR.HubConnection | null = null
   private listeners: Map<string, Set<(data: string) => void>> = new Map()
   private tenantId: string = '00000000-0000-0000-0000-000000000001'
+  private getAccessToken: (() => Promise<string>) | null = null
 
   setTenantId(tenantId: string) {
     this.tenantId = tenantId
+  }
+
+  setAuthTokenGetter(getter: () => Promise<string>) {
+    this.getAccessToken = getter
+  }
+
+  private async authHeaders(): Promise<Record<string, string>> {
+    const headers: Record<string, string> = { 'X-Tenant-Id': this.tenantId }
+    if (this.getAccessToken) {
+      try {
+        const token = await this.getAccessToken()
+        headers['Authorization'] = `Bearer ${token}`
+      } catch {
+        // Sem token disponível — segue sem Authorization, o backend rejeita
+        // com 401 se a rota exigir login.
+      }
+    }
+    return headers
   }
 
   async connect() {
@@ -28,7 +47,7 @@ class SignalRService {
 
     this.connection = new signalR.HubConnectionBuilder()
       .withUrl(`${BASE_URL}/hubs/orders`, {
-        headers: { 'X-Tenant-Id': this.tenantId }
+        headers: await this.authHeaders()
       })
       .withAutomaticReconnect([0, 2000, 5000, 10000])
       .configureLogging(signalR.LogLevel.Warning)
@@ -76,8 +95,11 @@ class SignalRService {
   private async fetchAndNotify() {
     try {
       const response = await fetch(`${BASE_URL}/api/orders`, {
-        headers: { 'X-Tenant-Id': this.tenantId }
+        headers: await this.authHeaders()
       })
+      if (!response.ok) {
+        throw new Error(`Falha ao buscar pedidos: HTTP ${response.status}`)
+      }
       const orders = await response.json()
       console.log(`[SignalR] fetchAndNotify: ${orders.length} pedidos carregados inicialmente`)
       this.listeners.get('OrdersUpdated')?.forEach(cb => cb(JSON.stringify(orders)))
