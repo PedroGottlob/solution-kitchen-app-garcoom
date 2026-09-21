@@ -5,7 +5,7 @@ import App from './App.tsx'
 import { applyBranding, loadBranding, mockRestaurantBranding } from './services/brandingService'
 
 async function bootstrap() {
-  const useMockBranding = import.meta.env.DEV && import.meta.env.VITE_USE_MOCK_BRANDING !== 'false'
+  const useMockBranding = import.meta.env.VITE_USE_MOCK_BRANDING === 'true'
   const branding = useMockBranding
     ? mockRestaurantBranding
     : await loadBranding(window.location.host)
