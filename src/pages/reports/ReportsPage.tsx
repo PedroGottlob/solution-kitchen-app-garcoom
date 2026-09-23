@@ -66,6 +66,10 @@ export function ReportsPage() {
   function handleExportPdf() {
     if (!report) return
 
+    // Paleta oficial da identidade visual do Solution Kitchen.
+    const BRAND_ORANGE: [number, number, number] = [234, 88, 12] // #EA580C
+    const BRAND_GRAPHITE: [number, number, number] = [28, 25, 23] // #1C1917
+
     const doc = new jsPDF({ unit: 'pt', format: 'a4' })
     const marginX = 48
     const pageWidth = doc.internal.pageSize.getWidth()
@@ -80,9 +84,10 @@ export function ReportsPage() {
       }
     }
 
-    function writeLine(text: string, { bold = false, size = 10.5 }: { bold?: boolean; size?: number } = {}) {
+    function writeLine(text: string, { bold = false, size = 10.5, color = BRAND_GRAPHITE }: { bold?: boolean; size?: number; color?: [number, number, number] } = {}) {
       doc.setFont('helvetica', bold ? 'bold' : 'normal')
       doc.setFontSize(size)
+      doc.setTextColor(...color)
       const wrapped = doc.splitTextToSize(text, maxWidth) as string[]
       for (const w of wrapped) {
         ensureSpace(size * 1.4)
@@ -91,8 +96,29 @@ export function ReportsPage() {
       }
     }
 
+    // Marca: o mesmo círculo + marcadores de QR code da logo do produto,
+    // desenhado vetorialmente (fica nítido em qualquer zoom/impressão).
+    const iconCx = marginX + 8
+    const iconCy = y - 2
+    doc.setDrawColor(...BRAND_ORANGE)
+    doc.setLineWidth(1.6)
+    doc.circle(iconCx, iconCy, 8, 'S')
+    doc.setFillColor(...BRAND_ORANGE)
+    doc.roundedRect(iconCx - 3.2, iconCy - 3.2, 4.2, 4.2, 0.8, 0.8, 'F')
+    doc.roundedRect(iconCx + 1.6, iconCy - 3.2, 2.4, 2.4, 0.6, 0.6, 'F')
+    doc.roundedRect(iconCx - 3.2, iconCy + 1.6, 2.4, 2.4, 0.6, 0.6, 'F')
+
+    doc.setFont('helvetica', 'bold')
+    doc.setFontSize(9)
+    doc.setTextColor(...BRAND_GRAPHITE)
+    doc.text('Solution', marginX + 22, iconCy - 1)
+    doc.setTextColor(...BRAND_ORANGE)
+    doc.text('Kitchen', marginX + 22 + doc.getTextWidth('Solution '), iconCy - 1)
+    y += 20
+
     doc.setFont('helvetica', 'bold')
     doc.setFontSize(18)
+    doc.setTextColor(...BRAND_GRAPHITE)
     doc.text('Relatório Semanal', marginX, y)
     y += 22
 
@@ -100,29 +126,38 @@ export function ReportsPage() {
     doc.setFontSize(10)
     doc.setTextColor(120)
     doc.text(`Gerado em ${new Date(report.generatedAt).toLocaleString('pt-BR')}`, marginX, y)
-    doc.setTextColor(0)
-    y += 26
+    y += 12
+    doc.setDrawColor(...BRAND_ORANGE)
+    doc.setLineWidth(1.2)
+    doc.line(marginX, y, pageWidth - marginX, y)
+    y += 20
 
     writeLine(`Faturamento: R$ ${report.currentWeek.revenue.toFixed(2)}`, { bold: true, size: 12 })
     if (variation !== null) {
-      writeLine(`${variation >= 0 ? 'Alta' : 'Queda'} de ${Math.abs(variation).toFixed(1)}% vs. semana anterior`)
+      writeLine(`${variation >= 0 ? 'Alta' : 'Queda'} de ${Math.abs(variation).toFixed(1)}% vs. semana anterior`, {
+        color: variation >= 0 ? [5, 150, 105] : [220, 38, 38],
+      })
     }
     writeLine(`Pedidos: ${report.currentWeek.orderCount}  ·  Ticket médio: R$ ${report.currentWeek.averageTicket.toFixed(2)}`)
     y += 6
 
     if (report.currentWeek.topItems.length > 0) {
-      writeLine('Mais vendidos da semana', { bold: true, size: 12 })
+      writeLine('Mais vendidos da semana', { bold: true, size: 12, color: BRAND_ORANGE })
       report.currentWeek.topItems.slice(0, 5).forEach((item, i) => {
         writeLine(`${i + 1}. ${item.name} — ${item.quantity}x`)
       })
       y += 6
     }
 
-    writeLine('Análise', { bold: true, size: 12 })
+    writeLine('Análise', { bold: true, size: 12, color: BRAND_ORANGE })
     y += 2
 
     for (const line of markdownToPdfLines(report.analysis)) {
-      writeLine(line.text, { bold: line.bold, size: line.heading ? 12 : 10.5 })
+      writeLine(line.text, {
+        bold: line.bold,
+        size: line.heading ? 12 : 10.5,
+        color: line.heading ? BRAND_ORANGE : BRAND_GRAPHITE,
+      })
       if (line.heading) y += 2
     }
 
