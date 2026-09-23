@@ -2,7 +2,42 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import { jsPDF } from 'jspdf'
 import { reportService, type WeeklyReport } from '../../services/reportService'
+
+// Converte o markdown simples que o modelo devolve (#, ##, **negrito**,
+// listas, tabela) em linhas de texto pro jsPDF, que não renderiza HTML/MD
+// nativamente. Não tenta ser um parser completo — só o suficiente pro
+// formato fixo que o prompt do relatório pede.
+function markdownToPdfLines(markdown: string): { text: string; bold: boolean; heading: boolean }[] {
+  const lines = markdown.split('\n')
+  const result: { text: string; bold: boolean; heading: boolean }[] = []
+
+  for (const raw of lines) {
+    const line = raw.trim()
+    if (!line || line === '---') continue
+
+    const headingMatch = line.match(/^#{1,3}\s+(.*)/)
+    if (headingMatch) {
+      result.push({ text: headingMatch[1].replace(/\*\*/g, ''), bold: true, heading: true })
+      continue
+    }
+
+    const listMatch = line.match(/^(?:[-*]|\d+\.)\s+(.*)/)
+    const content = listMatch ? `•  ${listMatch[1]}` : line
+
+    if (content.startsWith('|')) {
+      const cells = content.split('|').map((c) => c.trim()).filter(Boolean)
+      if (cells.every((c) => /^-+$/.test(c))) continue
+      result.push({ text: cells.join('   |   ').replace(/\*\*/g, ''), bold: false, heading: false })
+      continue
+    }
+
+    result.push({ text: content.replace(/\*\*/g, ''), bold: false, heading: false })
+  }
+
+  return result
+}
 
 export function ReportsPage() {
   const navigate = useNavigate()
@@ -27,6 +62,72 @@ export function ReportsPage() {
   const variation = report && report.previousWeek.revenue > 0
     ? ((report.currentWeek.revenue - report.previousWeek.revenue) / report.previousWeek.revenue) * 100
     : null
+
+  function handleExportPdf() {
+    if (!report) return
+
+    const doc = new jsPDF({ unit: 'pt', format: 'a4' })
+    const marginX = 48
+    const pageWidth = doc.internal.pageSize.getWidth()
+    const pageHeight = doc.internal.pageSize.getHeight()
+    const maxWidth = pageWidth - marginX * 2
+    let y = 56
+
+    function ensureSpace(lineHeight: number) {
+      if (y + lineHeight > pageHeight - 48) {
+        doc.addPage()
+        y = 56
+      }
+    }
+
+    function writeLine(text: string, { bold = false, size = 10.5 }: { bold?: boolean; size?: number } = {}) {
+      doc.setFont('helvetica', bold ? 'bold' : 'normal')
+      doc.setFontSize(size)
+      const wrapped = doc.splitTextToSize(text, maxWidth) as string[]
+      for (const w of wrapped) {
+        ensureSpace(size * 1.4)
+        doc.text(w, marginX, y)
+        y += size * 1.4
+      }
+    }
+
+    doc.setFont('helvetica', 'bold')
+    doc.setFontSize(18)
+    doc.text('Relatório Semanal', marginX, y)
+    y += 22
+
+    doc.setFont('helvetica', 'normal')
+    doc.setFontSize(10)
+    doc.setTextColor(120)
+    doc.text(`Gerado em ${new Date(report.generatedAt).toLocaleString('pt-BR')}`, marginX, y)
+    doc.setTextColor(0)
+    y += 26
+
+    writeLine(`Faturamento: R$ ${report.currentWeek.revenue.toFixed(2)}`, { bold: true, size: 12 })
+    if (variation !== null) {
+      writeLine(`${variation >= 0 ? 'Alta' : 'Queda'} de ${Math.abs(variation).toFixed(1)}% vs. semana anterior`)
+    }
+    writeLine(`Pedidos: ${report.currentWeek.orderCount}  ·  Ticket médio: R$ ${report.currentWeek.averageTicket.toFixed(2)}`)
+    y += 6
+
+    if (report.currentWeek.topItems.length > 0) {
+      writeLine('Mais vendidos da semana', { bold: true, size: 12 })
+      report.currentWeek.topItems.slice(0, 5).forEach((item, i) => {
+        writeLine(`${i + 1}. ${item.name} — ${item.quantity}x`)
+      })
+      y += 6
+    }
+
+    writeLine('Análise', { bold: true, size: 12 })
+    y += 2
+
+    for (const line of markdownToPdfLines(report.analysis)) {
+      writeLine(line.text, { bold: line.bold, size: line.heading ? 12 : 10.5 })
+      if (line.heading) y += 2
+    }
+
+    doc.save(`relatorio-semanal-${new Date(report.generatedAt).toISOString().slice(0, 10)}.pdf`)
+  }
 
   return (
     <div className="min-h-screen bg-zinc-50 flex flex-col pb-24">
@@ -162,13 +263,22 @@ export function ReportsPage() {
               </div>
             </div>
 
-            <button
-              onClick={handleGenerate}
-              className="py-3 rounded-xl bg-zinc-200 text-zinc-700 font-medium text-sm cursor-pointer hover:bg-zinc-300 transition-colors flex items-center justify-center gap-2"
-            >
-              <i className="ti ti-refresh" />
-              Gerar novamente
-            </button>
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                onClick={handleExportPdf}
+                className="py-3 rounded-xl bg-accent-600 text-white font-medium text-sm cursor-pointer hover:bg-accent-500 transition-colors flex items-center justify-center gap-2"
+              >
+                <i className="ti ti-file-type-pdf" />
+                Exportar PDF
+              </button>
+              <button
+                onClick={handleGenerate}
+                className="py-3 rounded-xl bg-zinc-200 text-zinc-700 font-medium text-sm cursor-pointer hover:bg-zinc-300 transition-colors flex items-center justify-center gap-2"
+              >
+                <i className="ti ti-refresh" />
+                Gerar novamente
+              </button>
+            </div>
           </>
         )}
       </div>
