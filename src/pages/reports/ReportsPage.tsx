@@ -211,7 +211,7 @@ export function ReportsPage() {
 
     // Numeração de página — só faz sentido saber o total depois de escrever
     // tudo, então carimba o rodapé numa segunda passada por página.
-    const totalPages = doc.internal.getNumberOfPages()
+    const totalPages = doc.getNumberOfPages()
     for (let p = 1; p <= totalPages; p++) {
       doc.setPage(p)
       doc.setFont('helvetica', 'normal')
