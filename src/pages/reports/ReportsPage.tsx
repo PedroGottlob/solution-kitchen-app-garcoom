@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import { reportService, type WeeklyReport } from '../../services/reportService'
 
 export function ReportsPage() {
@@ -129,8 +131,34 @@ export function ReportsPage() {
                   Análise
                 </p>
               </div>
-              <div className="text-zinc-700 text-sm leading-relaxed whitespace-pre-wrap">
-                {report.analysis}
+              <div className="text-zinc-700 text-sm leading-relaxed [&>*]:mb-3 [&>*:last-child]:mb-0">
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  components={{
+                    h1: ({ children }) => <h1 className="text-zinc-900 text-base font-semibold">{children}</h1>,
+                    h2: ({ children }) => <h2 className="text-zinc-900 text-sm font-semibold uppercase tracking-wide">{children}</h2>,
+                    h3: ({ children }) => <h3 className="text-zinc-900 text-sm font-semibold">{children}</h3>,
+                    p: ({ children }) => <p>{children}</p>,
+                    strong: ({ children }) => <strong className="text-zinc-900 font-semibold">{children}</strong>,
+                    ul: ({ children }) => <ul className="list-disc pl-5 flex flex-col gap-1">{children}</ul>,
+                    ol: ({ children }) => <ol className="list-decimal pl-5 flex flex-col gap-1">{children}</ol>,
+                    li: ({ children }) => <li>{children}</li>,
+                    hr: () => <hr className="border-accent-200" />,
+                    table: ({ children }) => (
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-left border-collapse">{children}</table>
+                      </div>
+                    ),
+                    th: ({ children }) => (
+                      <th className="border-b border-accent-200 pb-1 pr-3 text-zinc-500 text-xs font-medium uppercase">{children}</th>
+                    ),
+                    td: ({ children }) => (
+                      <td className="border-b border-accent-100 py-1 pr-3">{children}</td>
+                    ),
+                  }}
+                >
+                  {report.analysis}
+                </ReactMarkdown>
               </div>
             </div>
 
