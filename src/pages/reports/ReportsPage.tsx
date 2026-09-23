@@ -17,9 +17,13 @@ function markdownToPdfLines(markdown: string): { text: string; bold: boolean; he
     const line = raw.trim()
     if (!line || line === '---') continue
 
-    const headingMatch = line.match(/^#{1,3}\s+(.*)/)
+    const headingMatch = line.match(/^(#{1,3})\s+(.*)/)
     if (headingMatch) {
-      result.push({ text: headingMatch[1].replace(/\*\*/g, ''), bold: true, heading: true })
+      // Título nível 1 (#) é redundante — o PDF já tem "Relatório Semanal"
+      // e a seção "Análise" cobrindo esse papel; o modelo às vezes devolve
+      // um também, o que duplicava o cabeçalho. Só nível 2/3 vira seção.
+      if (headingMatch[1] === '#') continue
+      result.push({ text: headingMatch[2].replace(/\*\*/g, ''), bold: true, heading: true })
       continue
     }
 
@@ -84,13 +88,16 @@ export function ReportsPage() {
       }
     }
 
-    function writeLine(text: string, { bold = false, size = 10.5, color = BRAND_GRAPHITE }: { bold?: boolean; size?: number; color?: [number, number, number] } = {}) {
+    function writeLine(text: string, { bold = false, size = 10.5, color = BRAND_GRAPHITE, reserve = 0 }: { bold?: boolean; size?: number; color?: [number, number, number]; reserve?: number } = {}) {
       doc.setFont('helvetica', bold ? 'bold' : 'normal')
       doc.setFontSize(size)
       doc.setTextColor(...color)
       const wrapped = doc.splitTextToSize(text, maxWidth) as string[]
-      for (const w of wrapped) {
-        ensureSpace(size * 1.4)
+      for (const [i, w] of wrapped.entries()) {
+        // Numa linha de título, reserva espaço extra pra não deixar ele
+        // "órfão" sozinho no fim da página, sem nenhuma linha de corpo
+        // depois — se não couber os dois, os dois vão pra próxima página.
+        ensureSpace(size * 1.4 + (i === 0 ? reserve : 0))
         doc.text(w, marginX, y)
         y += size * 1.4
       }
@@ -142,14 +149,14 @@ export function ReportsPage() {
     y += 6
 
     if (report.currentWeek.topItems.length > 0) {
-      writeLine('Mais vendidos da semana', { bold: true, size: 12, color: BRAND_ORANGE })
+      writeLine('Mais vendidos da semana', { bold: true, size: 12, color: BRAND_ORANGE, reserve: 20 })
       report.currentWeek.topItems.slice(0, 5).forEach((item, i) => {
         writeLine(`${i + 1}. ${item.name} — ${item.quantity}x`)
       })
       y += 6
     }
 
-    writeLine('Análise', { bold: true, size: 12, color: BRAND_ORANGE })
+    writeLine('Análise', { bold: true, size: 12, color: BRAND_ORANGE, reserve: 20 })
     y += 2
 
     for (const line of markdownToPdfLines(report.analysis)) {
@@ -157,6 +164,7 @@ export function ReportsPage() {
         bold: line.bold,
         size: line.heading ? 12 : 10.5,
         color: line.heading ? BRAND_ORANGE : BRAND_GRAPHITE,
+        reserve: line.heading ? 20 : 0,
       })
       if (line.heading) y += 2
     }
