@@ -9,9 +9,9 @@ import { reportService, type WeeklyReport } from '../../services/reportService'
 // listas, tabela) em linhas de texto pro jsPDF, que não renderiza HTML/MD
 // nativamente. Não tenta ser um parser completo — só o suficiente pro
 // formato fixo que o prompt do relatório pede.
-function markdownToPdfLines(markdown: string): { text: string; bold: boolean; heading: boolean }[] {
+function markdownToPdfLines(markdown: string): { text: string; bold: boolean; heading: boolean; bullet: boolean }[] {
   const lines = markdown.split('\n')
-  const result: { text: string; bold: boolean; heading: boolean }[] = []
+  const result: { text: string; bold: boolean; heading: boolean; bullet: boolean }[] = []
 
   for (const raw of lines) {
     const line = raw.trim()
@@ -23,21 +23,22 @@ function markdownToPdfLines(markdown: string): { text: string; bold: boolean; he
       // e a seção "Análise" cobrindo esse papel; o modelo às vezes devolve
       // um também, o que duplicava o cabeçalho. Só nível 2/3 vira seção.
       if (headingMatch[1] === '#') continue
-      result.push({ text: headingMatch[2].replace(/\*\*/g, ''), bold: true, heading: true })
+      result.push({ text: headingMatch[2].replace(/\*\*/g, ''), bold: true, heading: true, bullet: false })
       continue
     }
 
     const listMatch = line.match(/^(?:[-*]|\d+\.)\s+(.*)/)
-    const content = listMatch ? `•  ${listMatch[1]}` : line
+    const content = listMatch ? listMatch[1] : line
+    const bullet = !!listMatch
 
     if (content.startsWith('|')) {
       const cells = content.split('|').map((c) => c.trim()).filter(Boolean)
       if (cells.every((c) => /^-+$/.test(c))) continue
-      result.push({ text: cells.join('   |   ').replace(/\*\*/g, ''), bold: false, heading: false })
+      result.push({ text: cells.join('   |   ').replace(/\*\*/g, ''), bold: false, heading: false, bullet: false })
       continue
     }
 
-    result.push({ text: content.replace(/\*\*/g, ''), bold: false, heading: false })
+    result.push({ text: content.replace(/\*\*/g, ''), bold: false, heading: false, bullet })
   }
 
   return result
@@ -88,17 +89,39 @@ export function ReportsPage() {
       }
     }
 
-    function writeLine(text: string, { bold = false, size = 10.5, color = BRAND_GRAPHITE, reserve = 0 }: { bold?: boolean; size?: number; color?: [number, number, number]; reserve?: number } = {}) {
+    function writeLine(
+      text: string,
+      {
+        bold = false,
+        size = 10.5,
+        color = BRAND_GRAPHITE,
+        reserve = 0,
+        indent = 0,
+        prefixChar,
+      }: {
+        bold?: boolean
+        size?: number
+        color?: [number, number, number]
+        reserve?: number
+        indent?: number
+        prefixChar?: string
+      } = {}
+    ) {
       doc.setFont('helvetica', bold ? 'bold' : 'normal')
       doc.setFontSize(size)
       doc.setTextColor(...color)
-      const wrapped = doc.splitTextToSize(text, maxWidth) as string[]
+      const x = marginX + indent
+      const wrapped = doc.splitTextToSize(text, maxWidth - indent) as string[]
       for (const [i, w] of wrapped.entries()) {
         // Numa linha de título, reserva espaço extra pra não deixar ele
         // "órfão" sozinho no fim da página, sem nenhuma linha de corpo
         // depois — se não couber os dois, os dois vão pra próxima página.
         ensureSpace(size * 1.4 + (i === 0 ? reserve : 0))
-        doc.text(w, marginX, y)
+        // O marcador só entra na primeira linha visual — as linhas de
+        // continuação (quebra de texto longo) ficam alinhadas com o texto,
+        // não com o marcador, pra dar o "recuo pendurado" de lista de verdade.
+        if (i === 0 && prefixChar) doc.text(prefixChar, marginX, y)
+        doc.text(w, x, y)
         y += size * 1.4
       }
     }
@@ -167,14 +190,34 @@ export function ReportsPage() {
     writeLine('Análise', { bold: true, size: 12, color: BRAND_ORANGE, reserve: 20 })
     y += 2
 
+    let prevBullet = false
     for (const line of markdownToPdfLines(report.analysis)) {
+      // Respiro extra na transição parágrafo -> lista e lista -> parágrafo,
+      // senão os bullets colam direto no texto corrido e ficam difíceis
+      // de escanear visualmente.
+      if (line.bullet !== prevBullet && !line.heading) y += 3
+      prevBullet = line.bullet
+
       writeLine(line.text, {
         bold: line.bold,
         size: line.heading ? 12 : 10.5,
         color: line.heading ? BRAND_ORANGE : BRAND_GRAPHITE,
         reserve: line.heading ? 20 : 0,
+        indent: line.bullet ? 14 : 0,
+        prefixChar: line.bullet ? '•' : undefined,
       })
       if (line.heading) y += 2
+    }
+
+    // Numeração de página — só faz sentido saber o total depois de escrever
+    // tudo, então carimba o rodapé numa segunda passada por página.
+    const totalPages = doc.internal.getNumberOfPages()
+    for (let p = 1; p <= totalPages; p++) {
+      doc.setPage(p)
+      doc.setFont('helvetica', 'normal')
+      doc.setFontSize(8.5)
+      doc.setTextColor(160)
+      doc.text(`Solution Kitchen  ·  Página ${p} de ${totalPages}`, pageWidth - marginX, pageHeight - 28, { align: 'right' })
     }
 
     doc.save(`relatorio-semanal-${new Date(report.generatedAt).toISOString().slice(0, 10)}.pdf`)
