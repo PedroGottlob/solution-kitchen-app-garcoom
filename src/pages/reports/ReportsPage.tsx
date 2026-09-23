@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import { jsPDF } from 'jspdf'
+import { jsPDF, GState } from 'jspdf'
 import { reportService, type WeeklyReport } from '../../services/reportService'
 
 // Converte o markdown simples que o modelo devolve (#, ##, **negrito**,
@@ -103,41 +103,49 @@ export function ReportsPage() {
       }
     }
 
+    // Círculo laranja translúcido sangrando do canto superior direito —
+    // mesmo recurso da capa do material de identidade visual.
+    doc.saveGraphicsState()
+    doc.setGState(new GState({ opacity: 0.08 }))
+    doc.setFillColor(...BRAND_ORANGE)
+    doc.circle(pageWidth + 40, 20, 170, 'F')
+    doc.restoreGraphicsState()
+
     // Marca: o mesmo círculo + marcadores de QR code da logo do produto,
     // desenhado vetorialmente (fica nítido em qualquer zoom/impressão).
-    const iconCx = marginX + 8
-    const iconCy = y - 2
+    const iconCx = marginX + 10
+    const iconCy = y
     doc.setDrawColor(...BRAND_ORANGE)
-    doc.setLineWidth(1.6)
-    doc.circle(iconCx, iconCy, 8, 'S')
+    doc.setLineWidth(1.8)
+    doc.circle(iconCx, iconCy, 10, 'S')
     doc.setFillColor(...BRAND_ORANGE)
-    doc.roundedRect(iconCx - 3.2, iconCy - 3.2, 4.2, 4.2, 0.8, 0.8, 'F')
-    doc.roundedRect(iconCx + 1.6, iconCy - 3.2, 2.4, 2.4, 0.6, 0.6, 'F')
-    doc.roundedRect(iconCx - 3.2, iconCy + 1.6, 2.4, 2.4, 0.6, 0.6, 'F')
+    doc.roundedRect(iconCx - 4, iconCy - 4, 5, 5, 1, 1, 'F')
+    doc.roundedRect(iconCx + 2, iconCy - 4, 3, 3, 0.8, 0.8, 'F')
+    doc.roundedRect(iconCx - 4, iconCy + 2, 3, 3, 0.8, 0.8, 'F')
 
     doc.setFont('helvetica', 'bold')
-    doc.setFontSize(9)
+    doc.setFontSize(11)
     doc.setTextColor(...BRAND_GRAPHITE)
-    doc.text('Solution', marginX + 22, iconCy - 1)
+    doc.text('Solution', marginX + 26, iconCy + 3)
     doc.setTextColor(...BRAND_ORANGE)
-    doc.text('Kitchen', marginX + 22 + doc.getTextWidth('Solution '), iconCy - 1)
-    y += 20
+    doc.text('Kitchen', marginX + 26 + doc.getTextWidth('Solution '), iconCy + 3)
+    y += 44
 
     doc.setFont('helvetica', 'bold')
-    doc.setFontSize(18)
+    doc.setFontSize(20)
     doc.setTextColor(...BRAND_GRAPHITE)
     doc.text('Relatório Semanal', marginX, y)
-    y += 22
+    y += 20
 
     doc.setFont('helvetica', 'normal')
-    doc.setFontSize(10)
-    doc.setTextColor(120)
-    doc.text(`Gerado em ${new Date(report.generatedAt).toLocaleString('pt-BR')}`, marginX, y)
-    y += 12
+    doc.setFontSize(9.5)
+    doc.setTextColor(140)
+    doc.text(`GERADO EM ${new Date(report.generatedAt).toLocaleString('pt-BR').toUpperCase()}`, marginX, y)
+    y += 16
     doc.setDrawColor(...BRAND_ORANGE)
     doc.setLineWidth(1.2)
-    doc.line(marginX, y, pageWidth - marginX, y)
-    y += 20
+    doc.line(marginX, y, marginX + 64, y)
+    y += 26
 
     writeLine(`Faturamento: R$ ${report.currentWeek.revenue.toFixed(2)}`, { bold: true, size: 12 })
     if (variation !== null) {
