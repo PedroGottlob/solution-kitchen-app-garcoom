@@ -9,36 +9,52 @@ import { reportService, type WeeklyReport } from '../../services/reportService'
 // listas, tabela) em linhas de texto pro jsPDF, que não renderiza HTML/MD
 // nativamente. Não tenta ser um parser completo — só o suficiente pro
 // formato fixo que o prompt do relatório pede.
-function markdownToPdfLines(markdown: string): { text: string; bold: boolean; heading: boolean; bullet: boolean }[] {
+function markdownToPdfLines(
+  markdown: string
+): { text: string; bold: boolean; heading: boolean; bullet: boolean; indented: boolean }[] {
   const lines = markdown.split('\n')
-  const result: { text: string; bold: boolean; heading: boolean; bullet: boolean }[] = []
+  const result: { text: string; bold: boolean; heading: boolean; bullet: boolean; indented: boolean }[] = []
+
+  // Quando o modelo escreve um item de lista com a explicação na linha de
+  // baixo, sem marcador próprio (ex.: "- **Item**\nExplicação..."), essa
+  // linha de explicação precisa herdar o recuo do bullet — senão ela cai
+  // solta na margem e quebra a ligação visual com o item. Uma linha em
+  // branco entre elas indica um parágrafo novo de verdade, não continuação.
+  let attachToBullet = false
 
   for (const raw of lines) {
     const line = raw.trim()
-    if (!line || line === '---') continue
+    if (!line || line === '---') {
+      attachToBullet = false
+      continue
+    }
 
     const headingMatch = line.match(/^(#{1,3})\s+(.*)/)
     if (headingMatch) {
+      attachToBullet = false
       // Título nível 1 (#) é redundante — o PDF já tem "Relatório Semanal"
       // e a seção "Análise" cobrindo esse papel; o modelo às vezes devolve
       // um também, o que duplicava o cabeçalho. Só nível 2/3 vira seção.
       if (headingMatch[1] === '#') continue
-      result.push({ text: headingMatch[2].replace(/\*\*/g, ''), bold: true, heading: true, bullet: false })
+      result.push({ text: headingMatch[2].replace(/\*\*/g, ''), bold: true, heading: true, bullet: false, indented: false })
       continue
     }
 
     const listMatch = line.match(/^(?:[-*]|\d+\.)\s+(.*)/)
     const content = listMatch ? listMatch[1] : line
     const bullet = !!listMatch
+    const indented = !bullet && attachToBullet
+    attachToBullet = bullet || indented
 
     if (content.startsWith('|')) {
+      attachToBullet = false
       const cells = content.split('|').map((c) => c.trim()).filter(Boolean)
       if (cells.every((c) => /^-+$/.test(c))) continue
-      result.push({ text: cells.join('   |   ').replace(/\*\*/g, ''), bold: false, heading: false, bullet: false })
+      result.push({ text: cells.join('   |   ').replace(/\*\*/g, ''), bold: false, heading: false, bullet: false, indented: false })
       continue
     }
 
-    result.push({ text: content.replace(/\*\*/g, ''), bold: false, heading: false, bullet })
+    result.push({ text: content.replace(/\*\*/g, ''), bold: false, heading: false, bullet, indented })
   }
 
   return result
@@ -190,20 +206,21 @@ export function ReportsPage() {
     writeLine('Análise', { bold: true, size: 12, color: BRAND_ORANGE, reserve: 20 })
     y += 2
 
-    let prevBullet = false
+    let prevGrouped = false
     for (const line of markdownToPdfLines(report.analysis)) {
       // Respiro extra na transição parágrafo -> lista e lista -> parágrafo,
       // senão os bullets colam direto no texto corrido e ficam difíceis
       // de escanear visualmente.
-      if (line.bullet !== prevBullet && !line.heading) y += 3
-      prevBullet = line.bullet
+      const grouped = line.bullet || line.indented
+      if (grouped !== prevGrouped && !line.heading) y += 3
+      prevGrouped = grouped
 
       writeLine(line.text, {
         bold: line.bold,
         size: line.heading ? 12 : 10.5,
         color: line.heading ? BRAND_ORANGE : BRAND_GRAPHITE,
         reserve: line.heading ? 20 : 0,
-        indent: line.bullet ? 14 : 0,
+        indent: grouped ? 14 : 0,
         prefixChar: line.bullet ? '•' : undefined,
       })
       if (line.heading) y += 2
