@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import { jsPDF, GState } from 'jspdf'
 import { reportService, type WeeklyReport } from '../../services/reportService'
 
 // Converte o markdown simples que o modelo devolve (#, ##, **negrito**,
@@ -43,7 +42,7 @@ function markdownToPdfLines(
     const listMatch = line.match(/^(?:[-*]|\d+\.)\s+(.*)/)
     const content = listMatch ? listMatch[1] : line
     const bullet = !!listMatch
-    const indented = !bullet && attachToBullet
+    const indented: boolean = !bullet && attachToBullet
     attachToBullet = bullet || indented
 
     if (content.startsWith('|')) {
@@ -84,8 +83,12 @@ export function ReportsPage() {
     ? ((report.currentWeek.revenue - report.previousWeek.revenue) / report.previousWeek.revenue) * 100
     : null
 
-  function handleExportPdf() {
+  async function handleExportPdf() {
     if (!report) return
+
+    // jsPDF (+ html2canvas/purify que ele puxa) pesa ~500 kB. Só é baixado
+    // quando alguém realmente exporta, em vez de entrar no bundle inicial.
+    const { jsPDF, GState } = await import('jspdf')
 
     // Paleta oficial da identidade visual do Solution Kitchen.
     const BRAND_ORANGE: [number, number, number] = [234, 88, 12] // #EA580C

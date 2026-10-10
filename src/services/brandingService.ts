@@ -68,6 +68,27 @@ export async function loadBranding(host: string): Promise<TenantBranding> {
   }
 }
 
+// Último branding bem-sucedido por host. Permite renderizar o app na hora,
+// já com a marca certa, sem esperar a resposta de /api/tenants/branding.
+const BRANDING_CACHE_PREFIX = 'sk:branding:'
+
+export function getCachedBranding(host: string): TenantBranding | null {
+  try {
+    const raw = localStorage.getItem(BRANDING_CACHE_PREFIX + host)
+    return raw ? toBranding(JSON.parse(raw)) : null
+  } catch {
+    return null
+  }
+}
+
+export function cacheBranding(host: string, branding: TenantBranding) {
+  try {
+    localStorage.setItem(BRANDING_CACHE_PREFIX + host, JSON.stringify(branding))
+  } catch {
+    // storage cheio/bloqueado: o cache é só otimização, ignora
+  }
+}
+
 function isColor(value: string) {
   return typeof CSS === 'undefined' || CSS.supports('color', value)
 }
